@@ -1,26 +1,29 @@
-"use client";
+'use client';
 
-const CREDENTIALS = { username: "demo-admin", password: "wheelpro-demo" };
+const AUTH_KEY = 'ww_admin_auth';
+const CREDENTIALS = { username: 'admin', password: 'westernwheelcraft2026' };
 
-export function isAdminAuthenticated() {
-  if (typeof window === "undefined") return false;
-  return window.localStorage.getItem("wheelpro-demo-admin") === "true";
-}
-
-export function loginAdmin(username: string, password: string) {
-  const valid = username === CREDENTIALS.username && password === CREDENTIALS.password;
-  if (valid) {
-    window.localStorage.setItem("wheelpro-demo-admin", "true");
+export function login(username: string, password: string): boolean {
+  if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
+    localStorage.setItem(AUTH_KEY, JSON.stringify({ username, at: Date.now() }));
+    return true;
   }
-  return valid;
+  return false;
 }
 
-export function logoutAdmin() {
-  if (typeof window !== "undefined") {
-    window.localStorage.removeItem("wheelpro-demo-admin");
+export function logout(): void {
+  localStorage.removeItem(AUTH_KEY);
+}
+
+export function isAuthenticated(): boolean {
+  if (typeof window === 'undefined') return false;
+  const raw = localStorage.getItem(AUTH_KEY);
+  if (!raw) return false;
+  try {
+    const data = JSON.parse(raw);
+    // Session expires after 8 hours
+    return Date.now() - data.at < 8 * 60 * 60 * 1000;
+  } catch {
+    return false;
   }
 }
-
-export const isAuthenticated = isAdminAuthenticated;
-export const login = loginAdmin;
-export const logout = logoutAdmin;

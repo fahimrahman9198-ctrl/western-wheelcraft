@@ -1,55 +1,186 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Send } from "lucide-react";
-import { siteConfig } from "@/lib/site";
+import { useState, FormEvent } from 'react';
+import { Button } from '@/components/ui/Button';
 
-export function ContactForm() {
-  const [submitted, setSubmitted] = useState(false);
+interface FormState {
+  name: string;
+  email: string;
+  phone: string;
+  region: string;
+  service: string;
+  message: string;
+}
 
+const regions = [
+  { value: 'lower-mainland', label: 'Lower Mainland — Shop Drop-Off' },
+  { value: 'vancouver-island', label: 'Vancouver Island — Mobile Fleet' },
+  { value: 'okanagan', label: 'Okanagan — Mobile Fleet' },
+  { value: 'kelowna', label: 'Kelowna — Mobile Fleet' },
+  { value: 'kamloops', label: 'Kamloops — Mobile Fleet' },
+];
+
+const services = [
+  { value: 'curb-rash', label: 'Curb Rash Repair' },
+  { value: 'oem-colour', label: 'OEM Color Matching' },
+  { value: 'diamond-cut', label: 'Diamond Cut Refinishing' },
+  { value: 'custom-finish', label: 'Custom Finish' },
+  { value: 'powder-coat', label: 'Powder Coating' },
+  { value: 'full-restore', label: 'Full Restoration' },
+  { value: 'other', label: 'Other / Not Sure' },
+];
+
+const inputClass =
+  'w-full rounded-xl border border-brand-ash bg-brand-graphite px-4 py-3 font-body text-body-sm text-brand-white placeholder-brand-silver/60 outline-none transition-all duration-200 focus:border-brand-red focus:ring-2 focus:ring-brand-red/20';
+
+const labelClass = 'mb-1.5 block font-body text-body-sm font-semibold text-brand-smoke';
+
+function IconCheck() {
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        setSubmitted(true);
-      }}
-      className="rounded-lg border border-white/10 bg-white/[0.04] p-6"
-    >
-      <div className="grid gap-4 md:grid-cols-2">
-        <Field label="Name" placeholder="Your name" />
-        <Field label="Email" placeholder="you@example.com" type="email" />
-        <Field label="Business type" placeholder="Wheel repair, detailing, dealer vendor" />
-        <Field label="Main bottleneck" placeholder="Quotes, booking, deposits, follow-up" />
-      </div>
-      <label className="mt-4 block">
-        <span className="text-sm font-medium text-white">Message</span>
-        <textarea
-          className="mt-2 min-h-32 w-full rounded-lg border border-white/10 bg-lab-950/70 px-3 py-3 text-sm text-white outline-none placeholder:text-steel-500 focus:border-cyan-300/60"
-          placeholder={`Tell ${siteConfig.agencyName} what workflow you want to improve.`}
-        />
-      </label>
-      {submitted && (
-        <p className="mt-4 rounded-lg border border-success-400/25 bg-success-400/10 p-3 text-sm text-success-400">
-          Demo form submitted locally. For real contact, email {siteConfig.email}.
-        </p>
-      )}
-      <button className="mt-5 inline-flex items-center gap-2 rounded-lg border border-electric-400 bg-electric-500 px-5 py-3 text-sm font-semibold text-white">
-        <Send className="h-4 w-4" aria-hidden="true" />
-        Send Demo Message
-      </button>
-    </form>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
-function Field({ label, placeholder, type = "text" }: { label: string; placeholder: string; type?: string }) {
+export function ContactForm() {
+  const [form, setForm] = useState<FormState>({
+    name: '', email: '', phone: '', region: '', service: '', message: '',
+  });
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setSubmitted(true);
+    }, 1000);
+  }
+
+  if (submitted) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-3xl border border-success/30 bg-success/10 px-8 py-16 text-center">
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-success/20 text-success">
+          <IconCheck />
+        </div>
+        <h3 className="mb-2 font-display text-display-sm text-brand-white">Message Sent!</h3>
+        <p className="font-body text-body-md text-brand-smoke">
+          Thanks, {form.name.split(' ')[0]}. We&rsquo;ll review your request and get back to
+          you within a few hours — usually sooner.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <label className="block">
-      <span className="text-sm font-medium text-white">{label}</span>
-      <input
-        type={type}
-        placeholder={placeholder}
-        className="mt-2 w-full rounded-lg border border-white/10 bg-lab-950/70 px-3 py-3 text-sm text-white outline-none placeholder:text-steel-500 focus:border-cyan-300/60"
-      />
-    </label>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label htmlFor="name" className={labelClass}>Full Name *</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            autoComplete="name"
+            placeholder="John Smith"
+            value={form.name}
+            onChange={handleChange}
+            className={inputClass}
+          />
+        </div>
+        <div>
+          <label htmlFor="email" className={labelClass}>Email *</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="john@example.com"
+            value={form.email}
+            onChange={handleChange}
+            className={inputClass}
+          />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="phone" className={labelClass}>Phone Number</label>
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          placeholder="604-555-0100"
+          value={form.phone}
+          onChange={handleChange}
+          className={inputClass}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="region" className={labelClass}>Your Region *</label>
+        <select
+          id="region"
+          name="region"
+          required
+          value={form.region}
+          onChange={handleChange}
+          className={inputClass}
+        >
+          <option value="" disabled>Select your region…</option>
+          {regions.map((r) => (
+            <option key={r.value} value={r.value}>{r.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label htmlFor="service" className={labelClass}>Service Needed</label>
+        <select
+          id="service"
+          name="service"
+          value={form.service}
+          onChange={handleChange}
+          className={inputClass}
+        >
+          <option value="" disabled>Select a service…</option>
+          {services.map((s) => (
+            <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label htmlFor="message" className={labelClass}>Message / Damage Description</label>
+        <textarea
+          id="message"
+          name="message"
+          rows={4}
+          placeholder="Describe the damage or what you're looking for — photos can be emailed separately to info@westernwheelcraft.ca"
+          value={form.message}
+          onChange={handleChange}
+          className={`${inputClass} resize-none`}
+        />
+      </div>
+
+      <Button type="submit" variant="primary" size="lg" loading={loading} className="w-full justify-center">
+        Send Message
+      </Button>
+
+      <p className="text-center font-body text-caption text-brand-silver">
+        Or call us directly at{' '}
+        <a href="tel:+16047106174" className="text-brand-smoke hover:text-brand-red transition-colors">
+          604.710.6174
+        </a>
+      </p>
+    </form>
   );
 }

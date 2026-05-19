@@ -4,22 +4,23 @@
 
 @layer base {
   :root {
-    --font-archivo: "Arial Black", "Inter", system-ui, sans-serif;
-    --font-manrope: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --font-jetbrains: "SFMono-Regular", "Cascadia Code", "Liberation Mono", Menlo, Consolas, monospace;
+    --font-archivo: "Archivo Black", sans-serif;
+    --font-manrope: "Manrope", sans-serif;
+    --font-jetbrains: "JetBrains Mono", monospace;
 
-    --brand-red: #2F8CFF;
-    --brand-red-hover: #5DA8FF;
-    --brand-red-glow: rgba(47, 140, 255, 0.4);
-    --brand-jet: #05070B;
-    --brand-jet-light: #070B12;
-    --brand-graphite: #0D111A;
-    --brand-graphite-light: #111827;
-    --brand-ash: #1F2937;
-    --brand-silver: #64748B;
-    --brand-smoke: #CBD5E1;
-    --brand-white: #F8FAFC;
-    --brand-cream: #E2E8F0;
+    /* Core brand primitives */
+    --brand-red: #D81E2A;
+    --brand-red-hover: #B51822;
+    --brand-red-glow: rgba(216, 30, 42, 0.4);
+    --brand-jet: #0A0A0B;
+    --brand-jet-light: #111113;
+    --brand-graphite: #1E1E22;
+    --brand-graphite-light: #2A2A30;
+    --brand-ash: #3A3A42;
+    --brand-silver: #8A8A95;
+    --brand-smoke: #C4C4CC;
+    --brand-white: #F5F5F7;
+    --brand-cream: #E8E8EC;
 
     /* Semantic surface tokens */
     --surface-base: var(--brand-jet);
@@ -90,7 +91,7 @@
   }
 
   ::selection {
-    @apply bg-electric-500/30 text-brand-white;
+    @apply bg-brand-red/30 text-brand-white;
   }
 
   ::-webkit-scrollbar {
@@ -136,9 +137,9 @@
     );
   }
 
-  /* Utility: blue accent line */
+  /* Utility: red accent line */
   .accent-line {
-    @apply h-px w-16 bg-electric-500;
+    @apply h-px w-16 bg-brand-red;
   }
 
   /* Utility: glass card effect */
@@ -156,7 +157,7 @@
   /* Text gradient utility */
   .text-gradient-red {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, #2F8CFF 0%, #36D8FF 100%);
+    background-image: linear-gradient(135deg, #D81E2A 0%, #FF4D5A 100%);
   }
 
   /* Prevent layout shift from scrollbar */
