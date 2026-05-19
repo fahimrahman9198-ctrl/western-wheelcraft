@@ -10,32 +10,6 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        lab: {
-          950: "#05070B",
-          900: "#070B12",
-          850: "#0A0F18",
-        },
-        carbon: {
-          900: "#0D111A",
-          800: "#111827",
-          700: "#1F2937",
-        },
-        electric: {
-          500: "#2F8CFF",
-          400: "#5DA8FF",
-          300: "#93C5FD",
-        },
-        cyan: {
-          400: "#36D8FF",
-          300: "#67E8F9",
-        },
-        steel: {
-          500: "#64748B",
-          400: "#94A3B8",
-          300: "#CBD5E1",
-          200: "#E2E8F0",
-          100: "#F8FAFC",
-        },
         brand: {
           red: "#D81E2A",
           "red-hover": "#B51822",
@@ -52,12 +26,10 @@ const config: Config = {
         },
         success: {
           DEFAULT: "#22C55E",
-          "400": "#4ADE80",
           dark: "#16A34A",
         },
         warning: {
           DEFAULT: "#EAB308",
-          "400": "#FACC15",
           dark: "#CA8A04",
         },
       },
