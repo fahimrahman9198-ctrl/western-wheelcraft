@@ -49,18 +49,43 @@ export function ContactForm() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    setError('');
     setLoading(true);
-    setTimeout(() => {
+
+    try {
+      const response = await fetch('/api/quotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'contact_form',
+          customerName: form.name,
+          customerEmail: form.email,
+          customerPhone: form.phone || undefined,
+          region: form.region || undefined,
+          requestedService: form.service || undefined,
+          damageDescription: form.message || undefined,
+          marketingConsent: false,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Unable to save contact request.');
+      }
+
       setLoading(false);
       setSubmitted(true);
-    }, 1000);
+    } catch {
+      setLoading(false);
+      setError('We could not save your request. Please try again or call us directly.');
+    }
   }
 
   if (submitted) {
@@ -174,6 +199,12 @@ export function ContactForm() {
       <Button type="submit" variant="primary" size="lg" loading={loading} className="w-full justify-center">
         Send Message
       </Button>
+
+      {error && (
+        <p className="rounded-lg border border-brand-red/30 bg-brand-red/10 px-3 py-2 text-center font-body text-body-sm text-brand-red">
+          {error}
+        </p>
+      )}
 
       <p className="text-center font-body text-caption text-brand-silver">
         Or call us directly at{' '}

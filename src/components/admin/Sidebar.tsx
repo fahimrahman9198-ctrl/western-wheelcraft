@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { SignOutButton } from '@clerk/nextjs';
+import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   CalendarDays,
+  FileQuestion,
   FileText,
   Users,
   BarChart3,
@@ -15,10 +17,11 @@ import {
   X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { logout } from '@/lib/admin-auth';
+import type { AdminUser } from '@/lib/admin-auth';
 
 const navItems = [
   { label: 'Overview', href: '/admin', icon: LayoutDashboard, exact: true },
+  { label: 'Leads', href: '/admin/leads', icon: FileQuestion },
   { label: 'Bookings', href: '/admin/bookings', icon: CalendarDays },
   { label: 'Invoices', href: '/admin/invoices', icon: FileText },
   { label: 'Customers', href: '/admin/customers', icon: Users },
@@ -27,18 +30,13 @@ const navItems = [
 ];
 
 interface SidebarProps {
+  adminUser: AdminUser;
   mobileOpen?: boolean;
   onMobileClose?: () => void;
 }
 
-export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
+export function Sidebar({ adminUser, mobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
-
-  function handleLogout() {
-    logout();
-    router.push('/admin/login');
-  }
 
   function isActive(item: typeof navItems[0]) {
     if (item.exact) return pathname === item.href;
@@ -108,19 +106,22 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
       <div className="border-t border-brand-graphite p-3">
         <div className="flex items-center gap-3 rounded-lg px-3 py-2.5">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-red text-white font-display text-sm">
-            T
+            {adminUser.displayName.charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0">
-            <p className="text-body-sm font-medium text-brand-white truncate">Tony</p>
-            <p className="text-caption text-brand-silver">Owner</p>
+            <p className="text-body-sm font-medium text-brand-white truncate">
+              {adminUser.displayName}
+            </p>
+            <p className="text-caption text-brand-silver capitalize">{adminUser.role}</p>
           </div>
-          <button
-            onClick={handleLogout}
-            title="Sign out"
-            className="ml-auto rounded-lg p-1.5 text-brand-silver hover:bg-brand-graphite hover:text-brand-red transition-colors"
-          >
-            <LogOut size={15} />
-          </button>
+          <SignOutButton redirectUrl="/admin/login">
+            <button
+              title="Sign out"
+              className="ml-auto rounded-lg p-1.5 text-brand-silver hover:bg-brand-graphite hover:text-brand-red transition-colors"
+            >
+              <LogOut size={15} />
+            </button>
+          </SignOutButton>
         </div>
       </div>
     </div>

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { saveBooking } from '@/lib/payment-utils';
 import { cn } from '@/lib/utils';
 
 const TIMES = ['8:00 AM','9:00 AM','10:00 AM','11:00 AM','1:00 PM','2:00 PM','3:00 PM','4:00 PM'];
@@ -29,15 +28,25 @@ function maxDate() {
 export default function BookingWizardPage() {
   const router = useRouter();
   const [serviceType, setServiceType]   = useState<'shop' | 'mobile'>('shop');
+  const [customerName, setCustomerName] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
   const [date, setDate]                 = useState('');
   const [time, setTime]                 = useState('');
   const [vehicle, setVehicle]           = useState('');
   const [region, setRegion]             = useState('vi');
   const [notes, setNotes]               = useState('');
   const [errors, setErrors]             = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const validate = () => {
     const e: Record<string, string> = {};
+    if (!customerName.trim()) e.customerName = 'Please enter your name';
+    if (!customerEmail.trim()) e.customerEmail = 'Please enter your email';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) e.customerEmail = 'Please enter a valid email';
+    if (!customerPhone.trim()) e.customerPhone = 'Please enter your phone number';
+    else if (customerPhone.replace(/\D/g, '').length < 10) e.customerPhone = 'Please enter a 10-digit phone number';
     if (!date)    e.date    = 'Please select a date';
     if (!time)    e.time    = 'Please select a time';
     if (!vehicle) e.vehicle = 'Please enter your vehicle';
@@ -45,18 +54,43 @@ export default function BookingWizardPage() {
     return Object.keys(e).length === 0;
   };
 
-  const proceed = () => {
+  const proceed = async () => {
     if (!validate()) return;
+    setSubmitting(true);
+    setSubmitError('');
+
     const fee = serviceType === 'mobile'
       ? MOBILE_REGIONS.find(r => r.value === region)?.fee ?? 40
       : 0;
-    saveBooking({
-      serviceType, date, time, vehicle,
-      region: serviceType === 'mobile' ? region : 'lm-shop',
-      notes,
-      estimatedTotal: 350 + fee, // rough placeholder shown in checkout
-    });
-    router.push('/booking/checkout');
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName,
+          customerEmail,
+          customerPhone,
+          serviceType,
+          scheduledDate: date,
+          startTime: time,
+          vehicleDescription: vehicle,
+          region: serviceType === 'mobile' ? region : 'lm-shop',
+          notes: notes || undefined,
+          estimatedTotal: 350 + fee,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Unable to save booking request.');
+      }
+
+      const result = await response.json() as { bookingNumber: string };
+      router.push(`/booking/success?booking=${encodeURIComponent(result.bookingNumber)}`);
+    } catch {
+      setSubmitting(false);
+      setSubmitError('We could not save your booking request. Please try again or call us directly.');
+    }
   };
 
   return (
@@ -73,6 +107,45 @@ export default function BookingWizardPage() {
       <div className="section-container pt-10">
         <div className="mx-auto max-w-xl">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-7">
+            {/* Contact */}
+            <div>
+              <p className="mb-3 font-display text-body-md text-brand-white">Your Details</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="sm:col-span-2">
+                  <label className="font-body text-body-sm font-semibold text-brand-white">Full Name</label>
+                  <input
+                    type="text"
+                    value={customerName}
+                    onChange={e => { setCustomerName(e.target.value); setErrors(s => ({ ...s, customerName: '' })); }}
+                    placeholder="Jane Smith"
+                    className="mt-1.5 w-full rounded-xl border border-brand-ash bg-brand-graphite px-4 py-3 font-body text-body-sm text-brand-white placeholder-brand-silver focus:border-brand-red focus:outline-none"
+                  />
+                  {errors.customerName && <p className="mt-1 font-body text-caption text-brand-red">{errors.customerName}</p>}
+                </div>
+                <div>
+                  <label className="font-body text-body-sm font-semibold text-brand-white">Email</label>
+                  <input
+                    type="email"
+                    value={customerEmail}
+                    onChange={e => { setCustomerEmail(e.target.value); setErrors(s => ({ ...s, customerEmail: '' })); }}
+                    placeholder="jane@example.com"
+                    className="mt-1.5 w-full rounded-xl border border-brand-ash bg-brand-graphite px-4 py-3 font-body text-body-sm text-brand-white placeholder-brand-silver focus:border-brand-red focus:outline-none"
+                  />
+                  {errors.customerEmail && <p className="mt-1 font-body text-caption text-brand-red">{errors.customerEmail}</p>}
+                </div>
+                <div>
+                  <label className="font-body text-body-sm font-semibold text-brand-white">Phone</label>
+                  <input
+                    type="tel"
+                    value={customerPhone}
+                    onChange={e => { setCustomerPhone(e.target.value); setErrors(s => ({ ...s, customerPhone: '' })); }}
+                    placeholder="604.555.1234"
+                    className="mt-1.5 w-full rounded-xl border border-brand-ash bg-brand-graphite px-4 py-3 font-body text-body-sm text-brand-white placeholder-brand-silver focus:border-brand-red focus:outline-none"
+                  />
+                  {errors.customerPhone && <p className="mt-1 font-body text-caption text-brand-red">{errors.customerPhone}</p>}
+                </div>
+              </div>
+            </div>
 
             {/* Service type */}
             <div>
@@ -199,13 +272,21 @@ export default function BookingWizardPage() {
 
             <button
               onClick={proceed}
+              disabled={submitting}
               className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-brand-red font-display text-body-md text-white hover:bg-brand-red-hover hover:shadow-red-glow transition-all duration-300"
             >
-              Continue to Payment
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              {submitting ? 'Saving Request…' : 'Request Booking'}
+              {!submitting && (
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
             </button>
+            {submitError && (
+              <p className="rounded-lg border border-brand-red/30 bg-brand-red/10 px-3 py-2 text-center font-body text-body-sm text-brand-red">
+                {submitError}
+              </p>
+            )}
           </motion.div>
         </div>
       </div>

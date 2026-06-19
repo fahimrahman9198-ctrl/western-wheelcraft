@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { toast } from 'sonner';
 import {
@@ -14,20 +14,30 @@ import {
   Circle,
   X,
 } from 'lucide-react';
+import {
+  DEFAULT_ADMIN_SETTINGS,
+  type AdminSettingsPayload,
+  type AdminSettingsSection,
+  type BusinessSettings,
+  type EmailTemplate,
+  type PricingRow,
+  type PricingSettings,
+} from '@/lib/admin-settings-data';
 
 // ---------------------------------------------------------------------------
 // Business Info Tab
 // ---------------------------------------------------------------------------
 
-function BusinessInfoTab() {
-  const [form, setForm] = useState({
-    companyName: 'Western Wheelcraft Ltd.',
-    address: '3756 Napier St, Burnaby BC V5C 3E5',
-    phone: '604.710.6174',
-    email: 'info@westernwheelcraft.ca',
-    gst: '12345 6789 BC0001',
-    website: 'westernwheelcraft.ca',
-  });
+function BusinessInfoTab({
+  value,
+  saving,
+  onSave,
+}: {
+  value: BusinessSettings;
+  saving: boolean;
+  onSave: (value: BusinessSettings) => Promise<void>;
+}) {
+  const [form, setForm] = useState(value);
 
   const field = (label: string, key: keyof typeof form, type = 'text') => (
     <div key={key}>
@@ -68,10 +78,11 @@ function BusinessInfoTab() {
 
       <div className="flex justify-end">
         <button
-          onClick={() => toast.success('Business info saved')}
+          onClick={() => void onSave(form)}
+          disabled={saving}
           className="rounded-lg bg-brand-red px-5 py-2.5 text-body-sm font-semibold text-brand-white hover:bg-brand-red-hover transition-colors"
         >
-          Save Changes
+          {saving ? 'Saving...' : 'Save Changes'}
         </button>
       </div>
     </div>
@@ -81,8 +92,6 @@ function BusinessInfoTab() {
 // ---------------------------------------------------------------------------
 // Pricing Tab
 // ---------------------------------------------------------------------------
-
-type PricingRow = { label: string; value: number; unit: string };
 
 function PricingSection({
   title,
@@ -121,35 +130,19 @@ function PricingSection({
   );
 }
 
-function PricingTab() {
-  const [base, setBase] = useState<PricingRow[]>([
-    { label: 'OEM Refinish – Light Damage', value: 300, unit: '$/wheel' },
-    { label: 'OEM Refinish – Medium Damage', value: 400, unit: '$/wheel' },
-    { label: 'OEM Refinish – Heavy Damage', value: 500, unit: '$/wheel' },
-    { label: 'Curb Rash Repair', value: 200, unit: '$' },
-    { label: 'Diamond Cut', value: 400, unit: '$/wheel' },
-    { label: 'Two-Tone Custom', value: 475, unit: '$/wheel' },
-    { label: 'Powder Coat', value: 350, unit: '$/wheel' },
-    { label: 'Custom Color Match', value: 50, unit: '+$/wheel' },
-    { label: 'Chrome Finish', value: 100, unit: '+$/wheel' },
-  ]);
-
-  const [size, setSize] = useState<PricingRow[]>([
-    { label: '18–19"', value: 25, unit: '+$' },
-    { label: '20–21"', value: 50, unit: '+$' },
-    { label: '22"+"', value: 75, unit: '+$' },
-  ]);
-
-  const [region, setRegion] = useState<PricingRow[]>([
-    { label: 'Lower Mainland Mobile', value: 40, unit: '+$' },
-    { label: 'Vancouver Island', value: 60, unit: '+$' },
-    { label: 'Okanagan & Interior', value: 80, unit: '+$' },
-  ]);
-
-  const [discounts, setDiscounts] = useState<PricingRow[]>([
-    { label: '4-Wheel Discount', value: 10, unit: '-%' },
-    { label: 'Trade Partner', value: 15, unit: '-%' },
-  ]);
+function PricingTab({
+  value,
+  saving,
+  onSave,
+}: {
+  value: PricingSettings;
+  saving: boolean;
+  onSave: (value: PricingSettings) => Promise<void>;
+}) {
+  const [base, setBase] = useState<PricingRow[]>(value.base);
+  const [size, setSize] = useState<PricingRow[]>(value.size);
+  const [region, setRegion] = useState<PricingRow[]>(value.region);
+  const [discounts, setDiscounts] = useState<PricingRow[]>(value.discounts);
 
   const update =
     (setter: React.Dispatch<React.SetStateAction<PricingRow[]>>) =>
@@ -165,10 +158,11 @@ function PricingTab() {
 
       <div className="flex justify-end">
         <button
-          onClick={() => toast.success('Pricing updated')}
+          onClick={() => void onSave({ base, size, region, discounts })}
+          disabled={saving}
           className="rounded-lg bg-brand-red px-5 py-2.5 text-body-sm font-semibold text-brand-white hover:bg-brand-red-hover transition-colors"
         >
-          Save Pricing
+          {saving ? 'Saving...' : 'Save Pricing'}
         </button>
       </div>
     </div>
@@ -203,7 +197,7 @@ function TeamTab() {
   const [addForm, setAddForm] = useState<AddMemberForm>({
     name: '',
     email: '',
-    role: 'Technician',
+    role: 'Manager',
     password: '',
   });
 
@@ -213,14 +207,14 @@ function TeamTab() {
       ...m,
       { id: Date.now(), name: addForm.name, role: addForm.role, email: addForm.email },
     ]);
-    setAddForm({ name: '', email: '', role: 'Technician', password: '' });
+    setAddForm({ name: '', email: '', role: 'Manager', password: '' });
     setShowAdd(false);
     toast.success('Team member added');
   };
 
   const handleRemove = (id: number) => {
     setMembers((m) => m.filter((mm) => mm.id !== id));
-    toast.success('Member removed (demo)');
+    toast.success('Member removed');
   };
 
   return (
@@ -280,7 +274,7 @@ function TeamTab() {
               >
                 <option>Owner</option>
                 <option>Manager</option>
-                <option>Technician</option>
+                <option>Accountant</option>
               </select>
             </div>
           </div>
@@ -337,7 +331,7 @@ function TeamTab() {
                 <td className="px-4 py-3.5">
                   <div className="flex items-center justify-end gap-2">
                     <button
-                      onClick={() => toast.info('Edit member (demo)')}
+                      onClick={() => toast.info('Role editing will be connected to Clerk user metadata in a later phase')}
                       className="flex items-center gap-1 rounded-md border border-brand-graphite px-2.5 py-1 text-caption text-brand-silver hover:text-brand-white hover:border-brand-graphite-light transition-colors"
                     >
                       <Pencil size={12} />
@@ -365,120 +359,15 @@ function TeamTab() {
 // Email Templates Tab
 // ---------------------------------------------------------------------------
 
-type EmailTemplate = {
-  id: string;
-  name: string;
-  description: string;
-  variables: string[];
-  content: string;
-};
-
-const DEFAULT_TEMPLATES: EmailTemplate[] = [
-  {
-    id: 'quote-sent',
-    name: 'Quote Sent',
-    description: 'Sent when a quote is emailed to a customer.',
-    variables: ['{customer_name}', '{amount}', '{date}'],
-    content: `Hi {customer_name},
-
-Thank you for reaching out to Western Wheelcraft! We've prepared a quote for your wheel refinishing service.
-
-Quote Total: {amount}
-Valid Until: {date}
-
-To accept this quote or ask any questions, simply reply to this email or give us a call at 604.710.6174.
-
-We look forward to restoring your wheels!
-
-– The Western Wheelcraft Team`,
-  },
-  {
-    id: 'booking-confirmation',
-    name: 'Booking Confirmation',
-    description: 'Sent immediately after a booking is confirmed.',
-    variables: ['{customer_name}', '{date}', '{service}'],
-    content: `Hi {customer_name},
-
-Your appointment is confirmed! Here's a summary:
-
-Service: {service}
-Date & Time: {date}
-
-Please ensure the vehicle is accessible at the scheduled time. If you need to reschedule, contact us at least 24 hours in advance.
-
-See you then!
-
-– Western Wheelcraft`,
-  },
-  {
-    id: 'appointment-reminder',
-    name: 'Appointment Reminder (24h before)',
-    description: 'Automated reminder sent 24 hours before the appointment.',
-    variables: ['{customer_name}', '{date}', '{service}'],
-    content: `Hi {customer_name},
-
-This is a friendly reminder that your appointment is tomorrow.
-
-Service: {service}
-Date & Time: {date}
-
-If you have any questions, reply to this email or call 604.710.6174.
-
-– Western Wheelcraft`,
-  },
-  {
-    id: 'invoice-sent',
-    name: 'Invoice Sent',
-    description: 'Sent when an invoice is issued to the customer.',
-    variables: ['{customer_name}', '{invoice_number}', '{amount}', '{date}'],
-    content: `Hi {customer_name},
-
-Please find your invoice attached for the services completed on {date}.
-
-Invoice #: {invoice_number}
-Amount Due: {amount}
-
-Payment is due within 14 days. You can pay via e-transfer to info@westernwheelcraft.ca.
-
-Thank you for your business!
-
-– Western Wheelcraft`,
-  },
-  {
-    id: 'payment-received',
-    name: 'Payment Received',
-    description: 'Sent when a payment is recorded for an invoice.',
-    variables: ['{customer_name}', '{invoice_number}', '{amount}', '{date}'],
-    content: `Hi {customer_name},
-
-We've received your payment — thank you!
-
-Invoice #: {invoice_number}
-Amount Paid: {amount}
-Payment Date: {date}
-
-Your receipt is attached for your records. We appreciate your prompt payment!
-
-– Western Wheelcraft`,
-  },
-  {
-    id: 'thank-you',
-    name: 'Thank You (post-service)',
-    description: 'Sent after the service is completed.',
-    variables: ['{customer_name}', '{service}', '{date}'],
-    content: `Hi {customer_name},
-
-Thank you for choosing Western Wheelcraft! We hope you're loving the results of your {service} completed on {date}.
-
-If you have a moment, we'd greatly appreciate a Google review — it helps our small team grow.
-
-We look forward to serving you again!
-
-– The Western Wheelcraft Team`,
-  },
-];
-
-function EmailTemplateRow({ template }: { template: EmailTemplate }) {
+function EmailTemplateRow({
+  template,
+  saving,
+  onSave,
+}: {
+  template: EmailTemplate;
+  saving: boolean;
+  onSave: (template: EmailTemplate) => Promise<void>;
+}) {
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState(template.content);
 
@@ -519,10 +408,11 @@ function EmailTemplateRow({ template }: { template: EmailTemplate }) {
           </div>
           <div className="flex justify-end">
             <button
-              onClick={() => toast.success('Template saved')}
+              onClick={() => void onSave({ ...template, content })}
+              disabled={saving}
               className="rounded-lg bg-brand-red px-4 py-2 text-body-sm font-semibold text-brand-white hover:bg-brand-red-hover transition-colors"
             >
-              Save Template
+              {saving ? 'Saving...' : 'Save Template'}
             </button>
           </div>
         </div>
@@ -531,11 +421,31 @@ function EmailTemplateRow({ template }: { template: EmailTemplate }) {
   );
 }
 
-function EmailTemplatesTab() {
+function EmailTemplatesTab({
+  value,
+  saving,
+  onSave,
+}: {
+  value: EmailTemplate[];
+  saving: boolean;
+  onSave: (value: EmailTemplate[]) => Promise<void>;
+}) {
+  const saveTemplate = async (template: EmailTemplate) => {
+    await onSave(value.map((item) => (item.id === template.id ? template : item)));
+  };
+
   return (
     <div className="space-y-3">
-      {DEFAULT_TEMPLATES.map((t) => (
-        <EmailTemplateRow key={t.id} template={t} />
+      <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3">
+        <p className="text-body-sm font-semibold text-amber-200">
+          Transactional email delivery is connected when Resend environment variables are configured.
+        </p>
+        <p className="mt-1 text-caption text-amber-100/80">
+          These templates remain draft content until template-driven sending is added to the production email workflow.
+        </p>
+      </div>
+      {value.map((t) => (
+        <EmailTemplateRow key={t.id} template={t} saving={saving} onSave={saveTemplate} />
       ))}
     </div>
   );
@@ -550,44 +460,76 @@ type Integration = {
   name: string;
   connected: boolean;
   description: string;
+  status: string;
 };
 
 const INTEGRATIONS: Integration[] = [
-  { id: 'stripe', name: 'Stripe', connected: true, description: 'Payment processing active' },
-  { id: 'resend', name: 'Resend (Email)', connected: true, description: 'Email delivery active' },
-  { id: 'twilio', name: 'Twilio (SMS)', connected: true, description: 'SMS notifications active' },
+  {
+    id: 'neon',
+    name: 'Neon Postgres',
+    connected: true,
+    status: 'Connected',
+    description: 'Quote, booking, lead, and customer records are saving to the production database.',
+  },
+  {
+    id: 'clerk',
+    name: 'Clerk Admin Auth',
+    connected: true,
+    status: 'Connected',
+    description: 'Admin routes are protected with Clerk and role checks for owner, manager, and accountant.',
+  },
+  {
+    id: 'stripe',
+    name: 'Stripe',
+    connected: false,
+    status: 'Implementation pending',
+    description: 'Payment and deposit flow still needs the real Stripe checkout/webhook implementation.',
+  },
+  {
+    id: 'resend',
+    name: 'Resend (Email)',
+    connected: true,
+    status: 'Transactional sending ready',
+    description: 'Contact, quote, and booking notifications send through Resend when production environment variables are configured.',
+  },
+  {
+    id: 'openai',
+    name: 'OpenAI Vision',
+    connected: false,
+    status: 'Implementation pending',
+    description: 'Damage assessment still needs real image storage and Vision API processing.',
+  },
+  {
+    id: 'storage',
+    name: 'Photo Storage',
+    connected: false,
+    status: 'Implementation pending',
+    description: 'Uploaded wheel photos are not persisted to production object storage yet.',
+  },
+  {
+    id: 'twilio',
+    name: 'Twilio (SMS)',
+    connected: false,
+    status: 'Future optional',
+    description: 'SMS notifications are not part of the current production path.',
+  },
   {
     id: 'gcal',
     name: 'Google Calendar',
     connected: false,
-    description: 'Sync bookings to Google Calendar',
+    status: 'Future optional',
+    description: 'Calendar sync can be added after core booking and email flows are live.',
   },
   {
     id: 'quickbooks',
     name: 'QuickBooks',
     connected: false,
-    description: 'Sync invoices to accounting',
-  },
-  {
-    id: 'stripe-atlas',
-    name: 'Stripe Atlas',
-    connected: false,
-    description: 'Corporate card management',
+    status: 'Future optional',
+    description: 'Accounting sync should wait until invoices/payments are production-ready.',
   },
 ];
 
 function IntegrationCard({ integration }: { integration: Integration }) {
-  const [connected, setConnected] = useState(integration.connected);
-
-  const toggle = () => {
-    setConnected((c) => !c);
-    if (connected) {
-      toast.success('Integration disconnected (demo)');
-    } else {
-      toast.success('Integration connected (demo)');
-    }
-  };
-
   return (
     <div className="rounded-xl border border-brand-graphite bg-brand-jet-light p-5 flex flex-col gap-4">
       <div className="flex items-start justify-between gap-3">
@@ -597,7 +539,7 @@ function IntegrationCard({ integration }: { integration: Integration }) {
           </p>
           <p className="mt-1 text-caption text-brand-silver">{integration.description}</p>
         </div>
-        {connected ? (
+        {integration.connected ? (
           <CheckCircle2 size={18} className="shrink-0 mt-0.5 text-green-400" />
         ) : (
           <Circle size={18} className="shrink-0 mt-0.5 text-brand-ash" />
@@ -606,23 +548,13 @@ function IntegrationCard({ integration }: { integration: Integration }) {
       <div className="flex items-center justify-between">
         <span
           className={`rounded-full px-2.5 py-0.5 text-caption font-medium ${
-            connected
+            integration.connected
               ? 'bg-green-500/15 text-green-400 border border-green-500/30'
               : 'bg-brand-graphite text-brand-silver border border-brand-graphite-light'
           }`}
         >
-          {connected ? 'Connected' : 'Not Connected'}
+          {integration.status}
         </span>
-        <button
-          onClick={toggle}
-          className={`rounded-lg px-3.5 py-1.5 text-caption font-semibold transition-colors ${
-            connected
-              ? 'border border-brand-graphite text-brand-silver hover:text-brand-white hover:border-brand-graphite-light'
-              : 'bg-brand-red text-brand-white hover:bg-brand-red-hover'
-          }`}
-        >
-          {connected ? 'Disconnect' : 'Connect'}
-        </button>
       </div>
     </div>
   );
@@ -630,10 +562,20 @@ function IntegrationCard({ integration }: { integration: Integration }) {
 
 function IntegrationsTab() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      {INTEGRATIONS.map((integration) => (
-        <IntegrationCard key={integration.id} integration={integration} />
-      ))}
+    <div className="space-y-4">
+      <div className="rounded-xl border border-brand-graphite bg-brand-graphite/30 px-4 py-3">
+        <p className="text-body-sm font-semibold text-brand-white">
+          Production status only
+        </p>
+        <p className="mt-1 text-caption text-brand-silver">
+          These cards reflect systems with real production code paths. API keys alone are not marked as connected.
+        </p>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {INTEGRATIONS.map((integration) => (
+          <IntegrationCard key={integration.id} integration={integration} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -650,14 +592,70 @@ const TABS = [
   { value: 'integrations', label: 'Integrations' },
 ] as const;
 
+type SavingSection = AdminSettingsSection | null;
+
 export default function SettingsPage() {
+  const [settings, setSettings] = useState<AdminSettingsPayload>(DEFAULT_ADMIN_SETTINGS);
+  const [loading, setLoading] = useState(true);
+  const [savingSection, setSavingSection] = useState<SavingSection>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadSettings() {
+      try {
+        const response = await fetch('/api/admin/settings', { cache: 'no-store' });
+        if (!response.ok) throw new Error('Unable to load admin settings.');
+        const payload = (await response.json()) as { settings: AdminSettingsPayload };
+        if (mounted) setSettings(payload.settings);
+      } catch (error) {
+        console.error(error);
+        toast.error('Unable to load saved settings. Showing defaults.');
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    void loadSettings();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const saveSetting = async <TSection extends AdminSettingsSection>(
+    section: TSection,
+    value: AdminSettingsPayload[TSection]
+  ) => {
+    setSavingSection(section);
+    try {
+      const response = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ section, value }),
+      });
+
+      if (!response.ok) throw new Error('Unable to save admin settings.');
+      const payload = (await response.json()) as { settings: AdminSettingsPayload };
+      setSettings(payload.settings);
+      toast.success('Settings saved to Neon');
+    } catch (error) {
+      console.error(error);
+      toast.error('Unable to save settings');
+    } finally {
+      setSavingSection(null);
+    }
+  };
+
   return (
     <div className="p-6">
       {/* Header */}
       <div className="mb-6">
         <h1 className="font-display text-display-sm text-brand-white">Settings</h1>
         <p className="mt-1 text-body-sm text-brand-silver">
-          Manage your business configuration and preferences.
+          {loading
+            ? 'Loading saved business configuration from Neon...'
+            : 'Manage your business configuration and preferences.'}
         </p>
       </div>
 
@@ -676,11 +674,21 @@ export default function SettingsPage() {
         </Tabs.List>
 
         <Tabs.Content value="business">
-          <BusinessInfoTab />
+          <BusinessInfoTab
+            key={JSON.stringify(settings.business)}
+            value={settings.business}
+            saving={savingSection === 'business'}
+            onSave={(value) => saveSetting('business', value)}
+          />
         </Tabs.Content>
 
         <Tabs.Content value="pricing">
-          <PricingTab />
+          <PricingTab
+            key={JSON.stringify(settings.pricing)}
+            value={settings.pricing}
+            saving={savingSection === 'pricing'}
+            onSave={(value) => saveSetting('pricing', value)}
+          />
         </Tabs.Content>
 
         <Tabs.Content value="team">
@@ -688,7 +696,12 @@ export default function SettingsPage() {
         </Tabs.Content>
 
         <Tabs.Content value="email">
-          <EmailTemplatesTab />
+          <EmailTemplatesTab
+            key={JSON.stringify(settings.emailTemplates)}
+            value={settings.emailTemplates}
+            saving={savingSection === 'emailTemplates'}
+            onSave={(value) => saveSetting('emailTemplates', value)}
+          />
         </Tabs.Content>
 
         <Tabs.Content value="integrations">

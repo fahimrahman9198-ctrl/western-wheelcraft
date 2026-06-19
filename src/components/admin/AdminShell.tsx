@@ -1,40 +1,26 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { Menu } from 'lucide-react';
 import { Sidebar } from './Sidebar';
-import { isAuthenticated } from '@/lib/admin-auth';
 import { Toaster } from 'sonner';
+import type { AdminUser } from '@/lib/admin-auth';
 
 interface AdminShellProps {
   children: React.ReactNode;
+  adminUser: AdminUser;
 }
 
-export function AdminShell({ children }: AdminShellProps) {
-  const router = useRouter();
-  const [ready, setReady] = useState(false);
+export function AdminShell({ children, adminUser }: AdminShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      router.replace('/admin/login');
-    } else {
-      setReady(true);
-    }
-  }, [router]);
-
-  if (!ready) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-brand-jet">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-brand-graphite border-t-brand-red" />
-      </div>
-    );
-  }
 
   return (
     <div className="flex min-h-screen bg-brand-jet">
-      <Sidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
+      <Sidebar
+        adminUser={adminUser}
+        mobileOpen={mobileOpen}
+        onMobileClose={() => setMobileOpen(false)}
+      />
 
       <div className="flex flex-1 flex-col min-w-0">
         {/* Mobile topbar */}

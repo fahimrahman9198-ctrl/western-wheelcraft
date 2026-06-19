@@ -2,11 +2,9 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import {
   saveConfirmation, generateConfirmationNumber, fmtCAD,
 } from '@/lib/payment-utils';
-import { processDemoPayment } from '@/lib/stripe-demo';
 import { StripePaymentForm } from '@/components/payment/StripePaymentForm';
 import { cn } from '@/lib/utils';
 
@@ -31,7 +29,6 @@ const MOCK_INVOICES: Invoice[] = [
 ];
 
 export default function DealershipInvoicesPage() {
-  const router = useRouter();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showPayment, setShowPayment] = useState(false);
   const [paid, setPaid] = useState<Set<string>>(new Set(['3', '4']));
@@ -44,7 +41,11 @@ export default function DealershipInvoicesPage() {
   const toggleSelect = (id: string) => {
     setSelected(prev => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
       return next;
     });
   };

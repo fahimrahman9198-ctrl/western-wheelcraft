@@ -108,7 +108,7 @@ export function calcPricing(
   const fp = FINISH_PREMIUM[finishType] ?? 0;
   const rf = REGION_FEE[region] ?? 0;
 
-  const wheels = billable.map((d, i) => ({
+  const wheels = billable.map((d) => ({
     label: `Wheel ${damage.indexOf(d) + 1} — ${d.level === 'light' ? 'Light' : 'Medium'} damage`,
     base: BASE_PRICE[d.level as 'light' | 'medium'],
     level: d.level,

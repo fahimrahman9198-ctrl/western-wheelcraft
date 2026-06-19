@@ -3,6 +3,7 @@ import { Archivo_Black, Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const archivoBlack = Archivo_Black({
   weight: "400",
@@ -109,16 +110,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en-CA"
-      className={`${archivoBlack.variable} ${manrope.variable} ${jetbrainsMono.variable} dark`}
-      suppressHydrationWarning
-    >
-      <body className="min-h-screen bg-brand-jet text-brand-white antialiased flex flex-col">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html
+        lang="en-CA"
+        className={`${archivoBlack.variable} ${manrope.variable} ${jetbrainsMono.variable} dark`}
+        suppressHydrationWarning
+      >
+        <body className="min-h-screen bg-brand-jet text-brand-white antialiased flex flex-col">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -1,138 +1,89 @@
-'use client';
-
-import { useMemo } from 'react';
 import Link from 'next/link';
 import {
   CalendarDays,
-  DollarSign,
   FileQuestion,
   Users,
   TrendingUp,
-  TrendingDown,
   AlertCircle,
   Clock,
   CheckCircle2,
   ChevronRight,
 } from 'lucide-react';
-import { bookings } from '@/lib/demo-data/bookings';
-import { invoices } from '@/lib/demo-data/invoices';
-import { quotes } from '@/lib/demo-data/quotes';
-
-const TODAY = '2026-05-07';
+import { getAdminOverviewData } from '@/lib/admin-data';
 
 const STATUS_COLORS: Record<string, string> = {
-  confirmed: 'bg-green-500/15 text-green-400 border-green-500/30',
-  pending: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
-  completed: 'bg-brand-ash/40 text-brand-silver border-brand-ash/50',
-  cancelled: 'bg-red-500/15 text-red-400 border-red-500/30',
+  new: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
+  sent: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
+  accepted: 'bg-green-500/15 text-green-400 border-green-500/30',
+  declined: 'bg-red-500/15 text-red-400 border-red-500/30',
+  expired: 'bg-brand-ash/40 text-brand-silver border-brand-ash/50',
 };
 
-const activity = [
-  { time: '9:23 AM', text: 'John Smith booked Mercedes refinish', type: 'booking', href: '/admin/bookings' },
-  { time: '9:01 AM', text: 'Quote sent to Sarah Lee ($1,400)', type: 'quote', href: '/admin/invoices' },
-  { time: '8:45 AM', text: 'Payment received from BMW Vancouver ($3,200)', type: 'payment', href: '/admin/invoices' },
-  { time: '8:30 AM', text: 'New lead: Kelowna customer (Audi)', type: 'lead', href: '/admin/customers' },
-  { time: '8:12 AM', text: 'Booking confirmed — Porsche Centre 11 AM', type: 'booking', href: '/admin/bookings' },
-  { time: '7:58 AM', text: 'Invoice WW-2026-038 marked as paid ($820)', type: 'payment', href: '/admin/invoices' },
-  { time: '7:45 AM', text: 'Ferrari Vancouver requested 3 sets this week', type: 'booking', href: '/admin/bookings' },
-  { time: '7:30 AM', text: 'Reminder sent to 2 customers for tomorrow', type: 'system', href: '/admin/bookings' },
-  { time: 'Yesterday', text: 'New customer: Priya Nair (North Van)', type: 'lead', href: '/admin/customers' },
-  { time: 'Yesterday', text: 'Invoice WW-2026-037 paid — McLaren Van. ($1,600)', type: 'payment', href: '/admin/invoices' },
-];
-
-const activityDot: Record<string, string> = {
-  booking: 'bg-blue-500',
-  quote: 'bg-yellow-500',
-  payment: 'bg-green-500',
-  lead: 'bg-purple-500',
-  system: 'bg-brand-silver',
+const sourceLabels: Record<string, string> = {
+  estimator: 'Estimator',
+  contact_form: 'Contact form',
+  phone: 'Phone',
+  email: 'Email',
+  referral: 'Referral',
 };
 
-const attention = [
-  {
-    text: '2 quotes pending follow-up (3+ days old)',
-    href: '/admin/invoices',
-    icon: FileQuestion,
-  },
-  {
-    text: 'Sarah Lee invoice unpaid (5 days overdue)',
-    href: '/admin/invoices',
-    icon: AlertCircle,
-  },
-  {
-    text: "Tomorrow's 9 AM slot still open",
-    href: '/admin/bookings',
-    icon: Clock,
-  },
-];
+function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(date);
+}
 
-export default function AdminOverviewPage() {
-  const todayBookings = useMemo(
-    () => bookings.filter((b) => b.date === TODAY && b.status !== 'cancelled'),
-    []
-  );
-  const todayRevenue = useMemo(
-    () => todayBookings.filter((b) => b.status === 'confirmed' || b.status === 'completed')
-      .reduce((s, b) => s + b.amount, 0),
-    [todayBookings]
-  );
-  const pendingQuotes = useMemo(
-    () => quotes.filter((q) => q.status === 'new' || q.status === 'sent').length,
-    []
-  );
-  const newLeads = useMemo(
-    () => quotes.filter((q) => {
-      const d = new Date(q.createdAt);
-      const cutoff = new Date('2026-05-06T00:00:00Z');
-      return d >= cutoff;
-    }).length,
-    []
-  );
+function money(value: string | null): string {
+  if (!value) return 'No estimate';
+  return Number(value).toLocaleString('en-CA', { style: 'currency', currency: 'CAD' });
+}
+
+export default async function AdminOverviewPage() {
+  const { recentQuotes, customerCount, pendingQuoteCount, newLeadCount, bookingCount } = await getAdminOverviewData();
 
   const stats = [
     {
-      label: "Today's Bookings",
-      value: `${todayBookings.length} Jobs`,
-      icon: CalendarDays,
-      trend: '+2 vs yesterday',
-      up: true,
-      href: '/admin/bookings',
-    },
-    {
-      label: "Today's Revenue",
-      value: `$${todayRevenue.toLocaleString()}`,
-      icon: DollarSign,
-      trend: '+18% vs avg',
-      up: true,
-      href: '/admin/invoices',
+      label: 'New Leads (24h)',
+      value: `${newLeadCount} Leads`,
+      icon: Users,
+      trend: 'From live forms',
+      href: '/admin/leads',
     },
     {
       label: 'Pending Quotes',
-      value: `${pendingQuotes} Quotes`,
+      value: `${pendingQuoteCount} Quotes`,
       icon: FileQuestion,
-      trend: '3 need follow-up',
-      up: false,
-      href: '/admin/invoices',
+      trend: 'New or sent',
+      href: '/admin/leads',
     },
     {
-      label: 'New Leads (24h)',
-      value: `${newLeads} Leads`,
+      label: 'Booking Requests',
+      value: `${bookingCount} Requests`,
+      icon: CalendarDays,
+      trend: 'Stored in Neon',
+      href: '/admin/bookings',
+    },
+    {
+      label: 'Customers',
+      value: `${customerCount} Records`,
       icon: Users,
-      trend: 'From estimator',
-      up: true,
+      trend: 'Stored in Neon',
       href: '/admin/customers',
     },
   ];
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
       <div>
         <h1 className="font-display text-display-sm text-brand-white">Overview</h1>
-        <p className="mt-1 text-body-sm text-brand-silver">Thursday, May 7, 2026</p>
+        <p className="mt-1 text-body-sm text-brand-silver">
+          Live lead and booking capture are connected. Invoices and payments remain staged for later phases.
+        </p>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
@@ -146,11 +97,7 @@ export default function AdminOverviewPage() {
                 <div className="rounded-lg bg-brand-graphite p-2">
                   <Icon size={18} className="text-brand-red" />
                 </div>
-                {stat.up ? (
-                  <TrendingUp size={14} className="text-green-400" />
-                ) : (
-                  <TrendingDown size={14} className="text-yellow-400" />
-                )}
+                <TrendingUp size={14} className="text-green-400" />
               </div>
               <p className="mt-3 font-mono text-display-sm text-brand-white">{stat.value}</p>
               <p className="mt-1 text-body-sm text-brand-silver">{stat.label}</p>
@@ -161,88 +108,102 @@ export default function AdminOverviewPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Today's Schedule */}
         <div className="lg:col-span-2 rounded-xl border border-brand-graphite bg-brand-jet-light">
           <div className="flex items-center justify-between border-b border-brand-graphite px-5 py-4">
-            <h2 className="font-display text-body-md text-brand-white">Today&rsquo;s Schedule</h2>
+            <h2 className="font-display text-body-md text-brand-white">Recent Leads</h2>
             <Link
-              href="/admin/bookings"
+              href="/admin/leads"
               className="flex items-center gap-1 text-caption text-brand-silver hover:text-brand-red transition-colors"
             >
               View all <ChevronRight size={12} />
             </Link>
           </div>
           <div className="divide-y divide-brand-graphite/60">
-            {todayBookings.length === 0 ? (
-              <p className="px-5 py-8 text-center text-body-sm text-brand-silver">No bookings today</p>
+            {recentQuotes.length === 0 ? (
+              <p className="px-5 py-8 text-center text-body-sm text-brand-silver">
+                No real leads yet. Submit the contact form or quote estimator to populate this view.
+              </p>
             ) : (
-              todayBookings.map((b) => (
-                <div key={b.id} className="flex items-center gap-4 px-5 py-3.5">
-                  <div className="w-14 shrink-0 text-center">
-                    <p className="font-mono text-body-sm text-brand-smoke">{b.startTime}</p>
-                  </div>
+              recentQuotes.map((quote) => (
+                <Link
+                  key={quote.id}
+                  href="/admin/leads"
+                  className="flex items-center gap-4 px-5 py-3.5 hover:bg-brand-graphite/30 transition-colors"
+                >
                   <div className="flex-1 min-w-0">
                     <p className="truncate text-body-sm font-medium text-brand-white">
-                      {b.customerName}
+                      {quote.customerName}
                     </p>
-                    <p className="truncate text-caption text-brand-silver">{b.service}</p>
+                    <p className="truncate text-caption text-brand-silver">
+                      {quote.requestedService ?? sourceLabels[quote.source] ?? quote.source}
+                    </p>
                   </div>
+                  <p className="hidden font-mono text-caption text-brand-silver sm:block">
+                    {money(quote.estimatedTotal)}
+                  </p>
                   <span
-                    className={`shrink-0 rounded-full border px-2.5 py-0.5 text-caption font-medium ${STATUS_COLORS[b.status]}`}
+                    className={`shrink-0 rounded-full border px-2.5 py-0.5 text-caption font-medium capitalize ${STATUS_COLORS[quote.status]}`}
                   >
-                    {b.status}
+                    {quote.status}
                   </span>
-                </div>
+                </Link>
               ))
             )}
           </div>
         </div>
 
-        {/* Right column */}
         <div className="space-y-6">
-          {/* Needs Attention */}
           <div className="rounded-xl border border-brand-red/30 bg-brand-red/5">
             <div className="flex items-center gap-2 border-b border-brand-red/20 px-5 py-4">
               <AlertCircle size={16} className="text-brand-red" />
               <h2 className="font-display text-body-md text-brand-white">Needs Attention</h2>
             </div>
             <div className="divide-y divide-brand-red/10">
-              {attention.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.text}
-                    href={item.href}
-                    className="flex items-start gap-3 px-5 py-3.5 hover:bg-brand-red/10 transition-colors"
-                  >
-                    <Icon size={14} className="mt-0.5 shrink-0 text-brand-red" />
-                    <p className="text-body-sm text-brand-smoke">{item.text}</p>
-                  </Link>
-                );
-              })}
+              <Link
+                href="/admin/leads"
+                className="flex items-start gap-3 px-5 py-3.5 hover:bg-brand-red/10 transition-colors"
+              >
+                <FileQuestion size={14} className="mt-0.5 shrink-0 text-brand-red" />
+                <p className="text-body-sm text-brand-smoke">
+                  {pendingQuoteCount} quote request{pendingQuoteCount === 1 ? '' : 's'} waiting for follow-up.
+                </p>
+              </Link>
+              <div className="flex items-start gap-3 px-5 py-3.5">
+                <Clock size={14} className="mt-0.5 shrink-0 text-brand-red" />
+                <p className="text-body-sm text-brand-smoke">
+                  Booking requests are live. Confirmation/rescheduling actions come in a later admin workflow phase.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Activity Feed */}
       <div className="rounded-xl border border-brand-graphite bg-brand-jet-light">
         <div className="border-b border-brand-graphite px-5 py-4">
           <h2 className="font-display text-body-md text-brand-white">Recent Activity</h2>
         </div>
         <div className="divide-y divide-brand-graphite/60">
-          {activity.map((item, i) => (
-            <Link
-              key={i}
-              href={item.href}
-              className="flex items-center gap-4 px-5 py-3.5 hover:bg-brand-graphite/30 transition-colors"
-            >
-              <span className={`h-2 w-2 shrink-0 rounded-full ${activityDot[item.type]}`} />
-              <span className="w-20 shrink-0 font-mono text-caption text-brand-silver">{item.time}</span>
-              <p className="flex-1 text-body-sm text-brand-smoke">{item.text}</p>
-              <CheckCircle2 size={13} className="shrink-0 text-brand-ash" />
-            </Link>
-          ))}
+          {recentQuotes.length === 0 ? (
+            <p className="px-5 py-8 text-center text-body-sm text-brand-silver">No activity yet</p>
+          ) : (
+            recentQuotes.map((quote) => (
+              <Link
+                key={quote.id}
+                href="/admin/leads"
+                className="flex items-center gap-4 px-5 py-3.5 hover:bg-brand-graphite/30 transition-colors"
+              >
+                <span className="h-2 w-2 shrink-0 rounded-full bg-brand-red" />
+                <span className="w-28 shrink-0 font-mono text-caption text-brand-silver">
+                  {formatDate(quote.createdAt)}
+                </span>
+                <p className="flex-1 text-body-sm text-brand-smoke">
+                  New {sourceLabels[quote.source] ?? quote.source} lead: {quote.customerName}
+                </p>
+                <CheckCircle2 size={13} className="shrink-0 text-brand-ash" />
+              </Link>
+            ))
+          )}
         </div>
       </div>
     </div>

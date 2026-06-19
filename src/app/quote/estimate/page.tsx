@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import { saveQuote, calcPricing } from '@/lib/payment-utils';
+import { calcPricing } from '@/lib/payment-utils';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -100,6 +100,7 @@ const STEP_LABELS = [
 ];
 
 const TOTAL_STEPS = 6;
+const MAX_PHOTOS = 8;
 
 // ── Pricing helpers ───────────────────────────────────────────────────────────
 
@@ -365,6 +366,9 @@ export default function EstimatePage() {
     marketingConsent: false, contactConsent: false,
   });
   const [contactErrors, setContactErrors] = useState<Partial<Record<keyof ContactInfo, string>>>({});
+  const [quoteSubmitting, setQuoteSubmitting] = useState(false);
+  const [quoteError, setQuoteError] = useState('');
+  const [savedQuoteNumber, setSavedQuoteNumber] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
 
   const go = (next: number) => {
@@ -377,7 +381,7 @@ export default function EstimatePage() {
   const addFiles = useCallback((files: FileList | File[]) => {
     const arr = Array.from(files).filter(f => f.type.startsWith('image/'));
     setPhotos(prev => {
-      const combined = [...prev, ...arr].slice(0, 8);
+      const combined = [...prev, ...arr].slice(0, MAX_PHOTOS);
       setPhotoUrls(combined.map(f => URL.createObjectURL(f)));
       return combined;
     });
@@ -432,6 +436,8 @@ export default function EstimatePage() {
   }, [vehicle.wheelCount]);
 
   useEffect(() => {
+    // Step 3 intentionally starts the prototype analysis animation when the user arrives.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (step === 3 && !analyzed) runAnalysis();
   }, [step, analyzed, runAnalysis]);
 
@@ -449,6 +455,93 @@ export default function EstimatePage() {
     if (!contact.contactConsent) errors.contactConsent = 'You must agree to be contacted about your quote';
     setContactErrors(errors);
     return Object.keys(errors).length === 0;
+  }
+
+  function selectedLocation(): string {
+    return contact.location === 'other' ? contact.otherCity : contact.location;
+  }
+
+  function damageSummary(): string {
+    const summary = damage
+      .map((wheel, index) => `Wheel ${index + 1}: ${DAMAGE_LABELS[wheel.level]} damage (${wheel.pct}%)`)
+      .join('\n');
+
+    const photoNote = photos.length > 0
+      ? `${photos.length} photo file(s) uploaded with this quote request.`
+      : 'No photos selected.';
+
+    return [
+      summary,
+      `Requested city/location: ${selectedLocation()}`,
+      `Contact consent: ${contact.contactConsent ? 'yes' : 'no'}`,
+      photoNote,
+    ].filter(Boolean).join('\n');
+  }
+
+  async function saveEstimatorLead(): Promise<boolean> {
+    if (savedQuoteNumber) return true;
+
+    setQuoteSubmitting(true);
+    setQuoteError('');
+
+    try {
+      if (photos.length < 1) {
+        throw new Error('At least one wheel photo is required.');
+      }
+
+      const pricing = calcPricing(damage, vehicle.wheelSize, finish.type, vehicle.region, vehicle.wheelCount);
+      const payload = {
+        source: 'estimator',
+        customerName: contact.fullName,
+        customerEmail: contact.email,
+        customerPhone: contact.phone || undefined,
+        region: selectedLocation() || vehicle.region,
+        marketingConsent: contact.marketingConsent,
+        vehicleYear: Number(vehicle.year) || undefined,
+        vehicleMake: vehicle.make || undefined,
+        vehicleModel: vehicle.model || undefined,
+        wheelSize: vehicle.wheelSize,
+        currentFinish: vehicle.currentFinish,
+        requestedService: 'Wheel refinishing',
+        requestedFinish: FINISHES.find(f => f.value === finish.type)?.label ?? finish.type,
+        wheelCount: vehicle.wheelCount,
+        damageDescription: damageSummary(),
+        estimatedSubtotal: pricing.subtotal,
+        estimatedGst: pricing.gst,
+        estimatedTotal: pricing.total,
+        pricingSnapshot: {
+          vehicle,
+          damage,
+          finish,
+          pricing,
+          selectedLocation: selectedLocation(),
+          selectedPhotoCount: photos.length,
+        },
+      };
+
+      const formData = new FormData();
+      formData.append('payload', JSON.stringify(payload));
+      photos.forEach(photo => formData.append('photos', photo));
+
+      const response = await fetch('/api/quotes', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const result = await response.json().catch(() => null) as { error?: string } | null;
+        throw new Error(result?.error ?? 'Unable to save quote request.');
+      }
+
+      const result = await response.json() as { quoteNumber?: string };
+      setSavedQuoteNumber(result.quoteNumber ?? '');
+      setQuoteSubmitting(false);
+      return true;
+    } catch {
+      setQuoteSubmitting(false);
+      setQuoteError('We could not save your quote request. Please try again or call us directly.');
+      return false;
+    }
   }
 
   // ── Pricing ──
@@ -532,7 +625,7 @@ export default function EstimatePage() {
                   <StepHeading
                     step={1}
                     title="Upload Wheel Photos"
-                    subtitle="Add 2–4 photos of your wheels. Include close-ups of any damage and a full-wheel shot."
+                    subtitle="Add at least 1 photo of your wheels. Include close-ups of any damage and a full-wheel shot when possible."
                   />
 
                   <div
@@ -612,10 +705,7 @@ export default function EstimatePage() {
                       {photos.length === 0
                         ? 'No photos added yet'
                         : `${photos.length} photo${photos.length !== 1 ? 's' : ''} added`}
-                      {photos.length > 0 && photos.length < 2 && (
-                        <span className="ml-2 text-warning">· Add at least 1 more</span>
-                      )}
-                      {photos.length >= 2 && (
+                      {photos.length >= 1 && (
                         <span className="ml-2 text-success">· Ready to continue</span>
                       )}
                     </p>
@@ -623,7 +713,7 @@ export default function EstimatePage() {
 
                   <NavButtons
                     onNext={() => go(2)}
-                    nextDisabled={photos.length < 2}
+                    nextDisabled={photos.length < 1}
                     nextLabel="Continue to Vehicle Info"
                   />
                 </div>
@@ -1034,7 +1124,7 @@ export default function EstimatePage() {
                   <StepHeading
                     step={5}
                     title="Almost there!"
-                    subtitle="Where should we send your quote? We'll email your detailed estimate and follow up to answer any questions."
+                    subtitle="Add your contact details so our team can review the estimate and follow up."
                   />
 
                   <div className="flex flex-col gap-5">
@@ -1182,16 +1272,24 @@ export default function EstimatePage() {
                     </div>
 
                     <p className="font-body text-caption text-brand-silver">
-                      We respect your privacy. Your details are used only to send your quote and follow up. We never sell your data.
+                      We respect your privacy. Your details are used only to prepare your quote and follow up. We never sell your data.
                     </p>
+                    {quoteError && (
+                      <p className="rounded-lg border border-brand-red/30 bg-brand-red/10 px-3 py-2 font-body text-body-sm text-brand-red">
+                        {quoteError}
+                      </p>
+                    )}
                   </div>
 
                   <NavButtons
                     onBack={() => go(4)}
-                    onNext={() => {
-                      if (validateContact()) go(6);
+                    onNext={async () => {
+                      if (!validateContact()) return;
+                      const saved = await saveEstimatorLead();
+                      if (saved) go(6);
                     }}
-                    nextLabel="Get My Quote →"
+                    nextLabel={quoteSubmitting ? 'Saving…' : 'Get My Quote →'}
+                    nextDisabled={quoteSubmitting}
                   />
                 </div>
               )}
@@ -1230,7 +1328,7 @@ export default function EstimatePage() {
                       <h2 className="mb-2 font-display text-display-sm text-brand-white">Manual Review Required</h2>
                       <p className="mb-6 font-body text-body-md text-brand-smoke">
                         All wheels have heavy damage — our technicians need to assess in person before quoting.
-                        We&rsquo;ve received your contact info and will reach out to <strong className="text-brand-white">{contact.email}</strong> shortly.
+                        We&rsquo;ve saved your request and will follow up using the contact details provided.
                       </p>
                       <Button href="tel:+16047106174" variant="primary" size="lg" leftIcon={<IconPhone />}>
                         Call 604.710.6174
@@ -1246,7 +1344,7 @@ export default function EstimatePage() {
                       <div className="mb-5 rounded-2xl border border-brand-graphite bg-brand-graphite px-5 py-4">
                         <p className="font-body text-body-sm text-brand-smoke">
                           Hi <strong className="text-brand-white">{contact.fullName.split(' ')[0]}</strong> — here&rsquo;s your personalised estimate.
-                          A copy will be sent to <strong className="text-brand-white">{contact.email}</strong>.
+                          Your request has been saved for team review{savedQuoteNumber ? ` as ${savedQuoteNumber}` : ''}.
                         </p>
                       </div>
 
@@ -1353,13 +1451,10 @@ export default function EstimatePage() {
                           rightIcon={<IconArrowRight />}
                           className="flex-1 justify-center"
                           onClick={() => {
-                            saveQuote({
-                              vehicle,
-                              damage,
-                              finish,
-                              pricing: calcPricing(damage, vehicle.wheelSize, finish.type, vehicle.region, vehicle.wheelCount),
-                            });
-                            router.push('/quote/checkout');
+                            const target = savedQuoteNumber
+                              ? `/quote/success?quote=${encodeURIComponent(savedQuoteNumber)}`
+                              : '/quote/success';
+                            router.push(target);
                           }}
                         >
                           Book This Service

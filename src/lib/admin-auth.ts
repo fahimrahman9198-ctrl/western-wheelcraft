@@ -1,29 +1,59 @@
-'use client';
+import 'server-only';
 
-const AUTH_KEY = 'ww_admin_auth';
-const CREDENTIALS = { username: 'admin', password: 'westernwheelcraft2026' };
+import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 
-export function login(username: string, password: string): boolean {
-  if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
-    localStorage.setItem(AUTH_KEY, JSON.stringify({ username, at: Date.now() }));
-    return true;
-  }
-  return false;
+export const ADMIN_ROLES = ['owner', 'manager', 'accountant'] as const;
+
+export type AdminRole = (typeof ADMIN_ROLES)[number];
+
+export interface AdminUser {
+  id: string;
+  username: string;
+  displayName: string;
+  role: AdminRole;
 }
 
-export function logout(): void {
-  localStorage.removeItem(AUTH_KEY);
+function splitEnvList(value: string | undefined): string[] {
+  return (value ?? '')
+    .split(',')
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
 }
 
-export function isAuthenticated(): boolean {
-  if (typeof window === 'undefined') return false;
-  const raw = localStorage.getItem(AUTH_KEY);
-  if (!raw) return false;
-  try {
-    const data = JSON.parse(raw);
-    // Session expires after 8 hours
-    return Date.now() - data.at < 8 * 60 * 60 * 1000;
-  } catch {
-    return false;
-  }
+function isAdminRole(value: unknown): value is AdminRole {
+  return typeof value === 'string' && ADMIN_ROLES.includes(value as AdminRole);
+}
+
+function roleFromUsername(username: string): AdminRole | null {
+  const normalized = username.toLowerCase();
+  const usernameRoles: Array<[AdminRole, string[]]> = [
+    ['owner', splitEnvList(process.env.ADMIN_OWNER_USERNAMES)],
+    ['manager', splitEnvList(process.env.ADMIN_MANAGER_USERNAMES)],
+    ['accountant', splitEnvList(process.env.ADMIN_ACCOUNTANT_USERNAMES)],
+  ];
+
+  return usernameRoles.find(([, usernames]) => usernames.includes(normalized))?.[0] ?? null;
+}
+
+export async function getCurrentAdminUser(): Promise<AdminUser | null> {
+  const user = await currentUser();
+  if (!user?.username) return null;
+
+  const metadataRole = user.publicMetadata.role ?? user.privateMetadata.role;
+  const role = roleFromUsername(user.username) ?? (isAdminRole(metadataRole) ? metadataRole : null);
+  if (!role) return null;
+
+  return {
+    id: user.id,
+    username: user.username,
+    displayName: user.fullName ?? user.username,
+    role,
+  };
+}
+
+export async function requireAdminUser(): Promise<AdminUser> {
+  const adminUser = await getCurrentAdminUser();
+  if (!adminUser) redirect('/admin/unauthorized');
+  return adminUser;
 }
