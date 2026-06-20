@@ -1,6 +1,6 @@
 import "server-only";
 
-import { asc, count, desc, eq, gte, inArray } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, inArray } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -26,7 +26,7 @@ export async function getAdminOverviewData() {
       db
         .select({ value: count() })
         .from(schema.quotes)
-        .where(inArray(schema.quotes.status, ["new", "sent"]))
+        .where(inArray(schema.quotes.status, ["new", "contacted", "quoted", "sent"]))
     ),
     countRows(
       db
@@ -47,7 +47,7 @@ export async function getAdminOverviewData() {
 }
 
 export async function getAdminLeadsData() {
-  return db.query.quotes.findMany({
+  const leads = await db.query.quotes.findMany({
     orderBy: [desc(schema.quotes.createdAt)],
     limit: 100,
     with: {
@@ -58,10 +58,13 @@ export async function getAdminLeadsData() {
       },
     },
   });
+
+  const activities = await getActivities('quote', leads.map((lead) => lead.id));
+  return leads.map((lead) => ({ ...lead, activities: activities.get(lead.id) ?? [] }));
 }
 
 export async function getAdminBookingsData() {
-  return db.query.bookings.findMany({
+  const bookings = await db.query.bookings.findMany({
     orderBy: [desc(schema.bookings.createdAt)],
     limit: 100,
     with: {
@@ -70,6 +73,9 @@ export async function getAdminBookingsData() {
       quote: true,
     },
   });
+
+  const activities = await getActivities('booking', bookings.map((booking) => booking.id));
+  return bookings.map((booking) => ({ ...booking, activities: activities.get(booking.id) ?? [] }));
 }
 
 export async function getAdminCustomersData() {
@@ -83,6 +89,8 @@ export async function getAdminCustomersData() {
     },
   });
 
+  const activities = await getActivities('customer', customers.map((customer) => customer.id));
+
   return customers.map((customer) => ({
     ...customer,
     quotes: [...customer.quotes].sort(
@@ -91,7 +99,32 @@ export async function getAdminCustomersData() {
     communications: [...customer.communications].sort(
       (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
     ),
+    activities: activities.get(customer.id) ?? [],
   }));
+}
+
+async function getActivities(entityType: string, entityIds: string[]) {
+  const byEntity = new Map<string, Array<typeof schema.adminActivities.$inferSelect>>();
+  if (entityIds.length === 0) return byEntity;
+
+  const activities = await db
+    .select()
+    .from(schema.adminActivities)
+    .where(
+      and(
+        eq(schema.adminActivities.entityType, entityType),
+        inArray(schema.adminActivities.entityId, entityIds)
+      )
+    )
+    .orderBy(desc(schema.adminActivities.createdAt));
+
+  for (const activity of activities) {
+    const entries = byEntity.get(activity.entityId) ?? [];
+    entries.push(activity);
+    byEntity.set(activity.entityId, entries);
+  }
+
+  return byEntity;
 }
 
 export async function getAdminInvoicesData() {

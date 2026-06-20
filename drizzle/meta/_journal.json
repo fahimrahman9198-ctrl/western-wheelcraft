@@ -8,6 +8,13 @@
       "when": 1780175973063,
       "tag": "0000_brainy_ironclad",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781918764755,
+      "tag": "0001_aspiring_firebird",
+      "breakpoints": true
     }
   ]
 }

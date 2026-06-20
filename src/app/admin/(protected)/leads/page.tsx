@@ -9,12 +9,18 @@ import {
   Wrench,
 } from 'lucide-react';
 import { getAdminLeadsData } from '@/lib/admin-data';
+import { LeadWorkflowControls } from '@/components/admin/WorkflowControls';
 
 const STATUS_COLORS: Record<string, string> = {
   new: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
+  contacted: 'bg-orange-500/15 text-orange-400 border-orange-500/30',
+  quoted: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
   sent: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
   accepted: 'bg-green-500/15 text-green-400 border-green-500/30',
+  booked: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30',
+  completed: 'bg-brand-ash/40 text-brand-silver border-brand-ash/50',
   declined: 'bg-red-500/15 text-red-400 border-red-500/30',
+  cancelled: 'bg-red-500/15 text-red-400 border-red-500/30',
   expired: 'bg-brand-ash/40 text-brand-silver border-brand-ash/50',
 };
 
@@ -199,6 +205,16 @@ export default async function AdminLeadsPage() {
                   </Link>
                 </div>
               )}
+
+              <LeadWorkflowControls
+                quoteId={lead.id}
+                status={lead.status}
+                estimatedSubtotal={lead.estimatedSubtotal}
+                activities={lead.activities.map((activity) => ({
+                  ...activity,
+                  createdAt: activity.createdAt.toISOString(),
+                }))}
+              />
             </article>
           ))}
         </div>

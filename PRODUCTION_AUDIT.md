@@ -6,9 +6,9 @@ Vercel project: `western-wheelcraft`
 
 ## Executive Summary
 
-Western Wheelcraft has moved from a sales prototype to a backend-enabled staging application. The application builds successfully and now has real Neon persistence, Clerk-protected admin routes, Vercel Blob upload code, Resend transactional email, and Neon-backed admin reporting.
+Western Wheelcraft has moved from a sales prototype to a backend-enabled staging application. The application builds successfully and now has real Neon persistence, Clerk-protected admin routes, Vercel Blob upload code, Resend transactional email, Neon-backed admin reporting, and audited admin operations.
 
-It is not ready for final public launch. The principal blockers are pending production Blob testing, incomplete admin operations, no Stripe payment workflow, simulated AI assessment, a demo-oriented dealership portal, security/legal/SEO work, and custom-domain cutover.
+It is not ready for final public launch. The principal blockers are no Stripe payment workflow, simulated AI assessment, a demo-oriented dealership portal, security/legal/SEO work, and custom-domain cutover.
 
 ## Verification Status
 
@@ -45,6 +45,9 @@ It is not ready for final public launch. The principal blockers are pending prod
 - Overview, leads, bookings, customers, invoices, analytics, and settings read Neon data.
 - Invoice and export actions that are not implemented are disabled instead of claiming success.
 - Quote photo counts and authenticated private thumbnails are available in admin leads.
+- Owner, manager, and accountant have equal access to lead, booking, customer-note, and pricing controls.
+- Lead status, booking status/schedule/amount, quote subtotal/GST/total, and internal notes persist to Neon.
+- Admin mutations write a durable audit trail with the Clerk user, role, action, entity, and timestamp.
 - Integration cards distinguish implemented systems from pending systems.
 
 ### Email
@@ -95,7 +98,7 @@ It is not ready for final public launch. The principal blockers are pending prod
 ## High-Priority Remaining Work
 
 - Run controlled production tests for contact, quote, booking, email, admin data, and Clerk roles.
-- Add server-authorized admin mutations for lead/quote status, booking confirmation, notes, price override, invoice creation, and payment state.
+- Add assignment controls and implement invoice/payment mutations only after Stripe is connected.
 - Disable or productionize the dealership portal, which still contains placeholder payment behavior.
 - Add rate limiting, bot protection, upload abuse controls, security headers, and production logging.
 - Confirm privacy, retention, cancellation, refund, photo consent, and marketing-consent policies.
@@ -132,12 +135,11 @@ Still required for later phases:
 
 1. Review and merge the production foundation branch.
 2. Test all currently implemented customer and admin flows.
-3. Add admin operational mutations.
-4. Implement Stripe, or explicitly launch with manual payment only.
-5. Replace or disable simulated AI.
-6. Disable or productionize the dealership portal.
-7. Complete security, legal, content, SEO, performance, and accessibility work.
-8. Attach the custom domain to Vercel and update only website DNS records.
+3. Implement Stripe, or explicitly launch with manual payment only.
+4. Replace or disable simulated AI.
+5. Disable or productionize the dealership portal.
+6. Complete security, legal, content, SEO, performance, and accessibility work.
+7. Attach the custom domain to Vercel and update only website DNS records.
 9. Run final production acceptance tests and owner sign-off.
 
 ## Current Readiness Verdict

@@ -24,7 +24,18 @@ export const bookingStatusEnum = pgEnum("booking_status", [
   "cancelled",
 ]);
 export const invoiceStatusEnum = pgEnum("invoice_status", ["draft", "unpaid", "paid", "overdue", "void"]);
-export const quoteStatusEnum = pgEnum("quote_status", ["new", "sent", "accepted", "declined", "expired"]);
+export const quoteStatusEnum = pgEnum("quote_status", [
+  "new",
+  "contacted",
+  "quoted",
+  "sent",
+  "accepted",
+  "booked",
+  "completed",
+  "declined",
+  "cancelled",
+  "expired",
+]);
 export const quoteSourceEnum = pgEnum("quote_source", [
   "estimator",
   "contact_form",
@@ -40,7 +51,11 @@ export const paymentStatusEnum = pgEnum("payment_status", [
   "refunded",
 ]);
 export const communicationTypeEnum = pgEnum("communication_type", ["email", "sms", "call", "note"]);
-export const communicationDirectionEnum = pgEnum("communication_direction", ["inbound", "outbound"]);
+export const communicationDirectionEnum = pgEnum("communication_direction", [
+  "inbound",
+  "outbound",
+  "internal",
+]);
 export const userRoleEnum = pgEnum("user_role", ["owner", "manager", "accountant", "it"]);
 export const quotePhotoKindEnum = pgEnum("quote_photo_kind", ["damage", "full_wheel", "vehicle", "other"]);
 export const aiAssessmentStatusEnum = pgEnum("ai_assessment_status", [
@@ -320,6 +335,26 @@ export const adminUsers = pgTable(
   })
 );
 
+export const adminActivities = pgTable(
+  "admin_activities",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    adminClerkUserId: varchar("admin_clerk_user_id", { length: 255 }).notNull(),
+    adminUsername: varchar("admin_username", { length: 160 }).notNull(),
+    adminRole: varchar("admin_role", { length: 40 }).notNull(),
+    action: varchar("action", { length: 80 }).notNull(),
+    entityType: varchar("entity_type", { length: 40 }).notNull(),
+    entityId: uuid("entity_id").notNull(),
+    summary: text("summary").notNull(),
+    metadata: jsonb("metadata"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    entityIdx: index("admin_activities_entity_idx").on(table.entityType, table.entityId),
+    adminIdx: index("admin_activities_admin_idx").on(table.adminClerkUserId),
+  })
+);
+
 export const adminSettings = pgTable("admin_settings", {
   key: varchar("key", { length: 120 }).primaryKey(),
   value: jsonb("value").notNull(),
@@ -422,6 +457,7 @@ export type PaymentStatus = (typeof paymentStatusEnum.enumValues)[number];
 export type CommunicationType = (typeof communicationTypeEnum.enumValues)[number];
 export type CommunicationDirection = (typeof communicationDirectionEnum.enumValues)[number];
 export type UserRole = (typeof userRoleEnum.enumValues)[number];
+export type AdminActivity = typeof adminActivities.$inferSelect;
 
 export type Customer = typeof customers.$inferSelect;
 export type NewCustomer = typeof customers.$inferInsert;

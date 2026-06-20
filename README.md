@@ -46,6 +46,9 @@ npm run db:studio    # Open Drizzle Studio
 - Real contact, quote, photo, and booking persistence through App Router API routes.
 - Clerk server-side protection for `/admin` with owner, manager, and accountant roles.
 - Neon-backed admin overview, leads, bookings, customers, invoices, analytics, and settings.
+- Admin lead and booking workflow controls persist status, schedule, and price changes with an audit trail.
+- Owner, manager, and accountant roles have equal access to operational and pricing controls.
+- Admin users can add internal customer, quote, and booking notes.
 - Resend admin notifications and customer confirmations for contact, quote, and booking submissions.
 - Quote photos upload to private Vercel Blob storage and are delivered through authenticated admin routes.
 - Customer success pages use server-issued quote and booking numbers.
@@ -54,7 +57,7 @@ npm run db:studio    # Open Drizzle Studio
 ## Remaining Launch Work
 
 - Complete production smoke testing for contact, quote, booking, email, photos, and admin roles.
-- Add real admin mutation workflows for statuses, assignments, notes, quote approval, and invoices.
+- Add assignment controls and real invoice creation after Stripe is connected.
 - Implement Stripe deposit, saved payment method, final charge, and verified webhooks.
 - Replace the simulated AI damage assessment with a real provider or disable it for launch.
 - Disable or productionize the dealership portal.

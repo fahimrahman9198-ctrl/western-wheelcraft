@@ -4,10 +4,10 @@ import {
   Mail,
   MessageSquare,
   Phone,
-  Search,
   Users,
 } from 'lucide-react';
 import { getAdminCustomersData } from '@/lib/admin-data';
+import { CustomerNoteForm } from '@/components/admin/WorkflowControls';
 
 function formatDate(date: Date | null): string {
   if (!date) return 'Never';
@@ -57,15 +57,6 @@ export default async function CustomersPage() {
               <p className="text-caption text-brand-silver">{label}</p>
             </div>
           ))}
-        </div>
-      </div>
-
-      <div className="rounded-xl border border-brand-graphite bg-brand-jet-light p-4">
-        <div className="flex items-center gap-3 rounded-lg border border-brand-graphite bg-brand-graphite px-3 py-2 text-brand-silver">
-          <Search size={16} />
-          <span className="text-body-sm">
-            Search and editing controls will be enabled after the read/write admin actions phase.
-          </span>
         </div>
       </div>
 
@@ -159,6 +150,27 @@ export default async function CustomersPage() {
                     {customer.notes}
                   </p>
                 )}
+
+                {customer.communications.filter((item) => item.direction === 'internal').length > 0 && (
+                  <div className="mt-4 border-t border-brand-graphite pt-4">
+                    <p className="text-caption font-semibold uppercase text-brand-ash">Recent internal notes</p>
+                    <div className="mt-2 space-y-2">
+                      {customer.communications
+                        .filter((item) => item.direction === 'internal')
+                        .slice(0, 3)
+                        .map((item) => (
+                          <div key={item.id} className="rounded-md bg-brand-graphite/40 p-3">
+                            <p className="whitespace-pre-line text-body-sm text-brand-smoke">{item.body}</p>
+                            <p className="mt-1 text-caption text-brand-silver">
+                              {item.createdBy ?? 'Admin'} · {formatDate(item.createdAt)}
+                            </p>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+
+                <CustomerNoteForm customerId={customer.id} />
               </article>
             );
           })}

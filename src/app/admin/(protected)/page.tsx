@@ -168,12 +168,15 @@ export default async function AdminOverviewPage() {
                   {pendingQuoteCount} quote request{pendingQuoteCount === 1 ? '' : 's'} waiting for follow-up.
                 </p>
               </Link>
-              <div className="flex items-start gap-3 px-5 py-3.5">
+              <Link
+                href="/admin/bookings"
+                className="flex items-start gap-3 px-5 py-3.5 transition-colors hover:bg-brand-red/10"
+              >
                 <Clock size={14} className="mt-0.5 shrink-0 text-brand-red" />
                 <p className="text-body-sm text-brand-smoke">
-                  Booking requests are live. Confirmation/rescheduling actions come in a later admin workflow phase.
+                  Booking confirmation, rescheduling, pricing, and completion controls are available.
                 </p>
-              </div>
+              </Link>
             </div>
           </div>
         </div>

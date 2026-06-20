@@ -9,6 +9,7 @@ import {
   Wrench,
 } from 'lucide-react';
 import { getAdminBookingsData } from '@/lib/admin-data';
+import { BookingWorkflowControls } from '@/components/admin/WorkflowControls';
 
 const STATUS_COLORS: Record<string, string> = {
   pending: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
@@ -61,7 +62,7 @@ export default async function AdminBookingsPage() {
         <div>
           <h1 className="font-display text-display-sm text-brand-white">Bookings</h1>
           <p className="mt-1 text-body-sm text-brand-silver">
-            Real booking requests saved in Neon. Confirm/reschedule actions come in a later admin workflow phase.
+            Confirm, reschedule, price, and track real booking requests saved in Neon.
           </p>
         </div>
         <div className="grid grid-cols-3 gap-3">
@@ -174,6 +175,18 @@ export default async function AdminBookingsPage() {
                   </p>
                 </div>
               )}
+
+              <BookingWorkflowControls
+                bookingId={booking.id}
+                status={booking.status}
+                amount={booking.amount}
+                scheduledDate={booking.scheduledDate}
+                startTime={booking.startTime}
+                activities={booking.activities.map((activity) => ({
+                  ...activity,
+                  createdAt: activity.createdAt.toISOString(),
+                }))}
+              />
             </article>
           ))}
         </div>
