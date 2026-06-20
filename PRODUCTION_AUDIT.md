@@ -17,6 +17,7 @@ It is not ready for final public launch. The principal blockers are pending prod
 - `npm run build`: passing as of 2026-06-19 with Next.js 16.2.6.
 - `npm audit fix`: removed the fixable high-severity `undici` advisories.
 - `npm audit --omit=dev`: reports two moderate transitive PostCSS advisories. npm's forced remedy would downgrade Next.js to 9.3.3, so it was not applied.
+- Private Vercel Blob: production OIDC upload passed on 2026-06-19; direct unauthenticated access returned `403` and test records were removed.
 - Vercel CLI: upgraded to 54.14.2.
 - `.env.local`: ignored by Git.
 - `.vercel`: ignored by Git.
@@ -64,13 +65,7 @@ It is not ready for final public launch. The principal blockers are pending prod
 
 ## Critical Launch Blockers
 
-### 1. Private photo storage requires final deployment testing
-
-- A private Vercel Blob store is connected to Production and Preview through OIDC.
-- Estimator uploads and authenticated admin delivery are implemented for private blobs.
-- The flow still requires a controlled deployment test before public launch.
-
-### 2. Stripe is not implemented
+### 1. Stripe is not implemented
 
 - No production 50 percent deposit flow.
 - No Stripe Customer or saved payment-method workflow.
@@ -78,28 +73,27 @@ It is not ready for final public launch. The principal blockers are pending prod
 - No final 50 percent charge, refund, dispute, or failed-payment workflow.
 - Invoice and payment tables exist but are not connected to Stripe events.
 
-### 3. AI assessment is simulated
+### 2. AI assessment is simulated
 
 - The estimator still generates random damage classifications and percentages.
 - No OpenAI API or Vercel AI Gateway integration exists.
 - No deterministic owner-approved pricing policy is applied to real model output.
 - AI results must be removed/disabled for launch or replaced with a reviewable production implementation.
 
-### 4. Custom domain still points to the legacy host
+### 3. Custom domain still points to the legacy host
 
 - Authoritative nameservers are `ns1` through `ns4.mysecurecloudhost.com`.
 - `westernwheelcraft.ca` currently resolves to legacy cPanel IP `192.250.237.73`.
 - The custom domain is not currently attached to the Vercel project.
 - Google Workspace MX and verification records must be preserved during website DNS cutover.
 
-### 5. Production changes are not yet committed
+### 4. Production foundation requires merge review
 
-- The repository contains a large dirty worktree covering all productionization phases.
-- Changes require final secret scanning, verification, commit, push, and deployment review.
+- The production foundation and private Blob work are committed on `codex/production-foundation`.
+- The branch requires review and merge into `main` before Git-connected production deployments use it automatically.
 
 ## High-Priority Remaining Work
 
-- Deploy and test private Vercel Blob quote uploads end to end.
 - Run controlled production tests for contact, quote, booking, email, admin data, and Clerk roles.
 - Add server-authorized admin mutations for lead/quote status, booking confirmation, notes, price override, invoice creation, and payment state.
 - Disable or productionize the dealership portal, which still contains placeholder payment behavior.
@@ -136,20 +130,19 @@ Still required for later phases:
 
 ## Recommended Launch Order
 
-1. Commit and push the production foundation.
-2. Deploy and test private Vercel Blob uploads and admin delivery.
-3. Redeploy and test all currently implemented flows.
-4. Add admin operational mutations.
-5. Implement Stripe, or explicitly launch with manual payment only.
-6. Replace or disable simulated AI.
-7. Disable or productionize the dealership portal.
-8. Complete security, legal, content, SEO, performance, and accessibility work.
-9. Attach the custom domain to Vercel and update only website DNS records.
-10. Run final production acceptance tests and owner sign-off.
+1. Review and merge the production foundation branch.
+2. Test all currently implemented customer and admin flows.
+3. Add admin operational mutations.
+4. Implement Stripe, or explicitly launch with manual payment only.
+5. Replace or disable simulated AI.
+6. Disable or productionize the dealership portal.
+7. Complete security, legal, content, SEO, performance, and accessibility work.
+8. Attach the custom domain to Vercel and update only website DNS records.
+9. Run final production acceptance tests and owner sign-off.
 
 ## Current Readiness Verdict
 
 - Backend-enabled staging: ready.
-- Controlled internal testing: ready after deploying this Blob integration.
+- Controlled internal testing: ready.
 - Public marketing launch with manual payments: possible after Blob, security/content cleanup, testing, and DNS cutover.
 - Full platform launch with payments and AI: not ready until Stripe and real AI phases are complete.

@@ -53,7 +53,6 @@ npm run db:studio    # Open Drizzle Studio
 
 ## Remaining Launch Work
 
-- Deploy and smoke-test private Blob photo upload and authenticated admin access.
 - Complete production smoke testing for contact, quote, booking, email, photos, and admin roles.
 - Add real admin mutation workflows for statuses, assignments, notes, quote approval, and invoices.
 - Implement Stripe deposit, saved payment method, final charge, and verified webhooks.
