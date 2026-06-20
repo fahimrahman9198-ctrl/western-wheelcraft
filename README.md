@@ -47,13 +47,13 @@ npm run db:studio    # Open Drizzle Studio
 - Clerk server-side protection for `/admin` with owner, manager, and accountant roles.
 - Neon-backed admin overview, leads, bookings, customers, invoices, analytics, and settings.
 - Resend admin notifications and customer confirmations for contact, quote, and booking submissions.
-- Quote photos uploaded to Vercel Blob when `BLOB_READ_WRITE_TOKEN` is configured.
+- Quote photos upload to private Vercel Blob storage and are delivered through authenticated admin routes.
 - Customer success pages use server-issued quote and booking numbers.
 - Fake card collection and demo payment processing removed from the primary customer flows.
 
 ## Remaining Launch Work
 
-- Configure Vercel Blob locally and in Vercel production, then test private photo access.
+- Deploy and smoke-test private Blob photo upload and authenticated admin access.
 - Complete production smoke testing for contact, quote, booking, email, photos, and admin roles.
 - Add real admin mutation workflows for statuses, assignments, notes, quote approval, and invoices.
 - Implement Stripe deposit, saved payment method, final charge, and verified webhooks.
@@ -74,7 +74,8 @@ Currently required for implemented core flows:
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
 - `ADMIN_NOTIFICATION_EMAIL`
-- `BLOB_READ_WRITE_TOKEN` for quote photo uploads
+- `BLOB_STORE_ID` with Vercel OIDC for production quote photo uploads
+- `BLOB_READ_WRITE_TOKEN` only as an optional local-development fallback
 
 Stripe and OpenAI variables are intentionally optional until those features are implemented.
 

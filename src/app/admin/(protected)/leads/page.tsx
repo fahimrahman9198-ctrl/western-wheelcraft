@@ -164,7 +164,7 @@ export default async function AdminLeadsPage() {
                       {lead.photos.slice(0, 4).map((photo, index) => (
                         <a
                           key={photo.id}
-                          href={photo.storageUrl}
+                          href={`/api/admin/quote-photos/${photo.id}`}
                           target="_blank"
                           rel="noreferrer"
                           className="relative aspect-square overflow-hidden rounded-md border border-brand-ash bg-brand-jet"
@@ -172,7 +172,7 @@ export default async function AdminLeadsPage() {
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={photo.storageUrl}
+                            src={`/api/admin/quote-photos/${photo.id}`}
                             alt={`Quote photo ${index + 1}`}
                             className="h-full w-full object-cover"
                             loading="lazy"

@@ -502,9 +502,9 @@ const INTEGRATIONS: Integration[] = [
   {
     id: 'storage',
     name: 'Photo Storage',
-    connected: false,
-    status: 'Implementation pending',
-    description: 'Uploaded wheel photos are not persisted to production object storage yet.',
+    connected: true,
+    status: 'Private Blob connected',
+    description: 'Uploaded wheel photos are stored in private Vercel Blob storage and served through authenticated admin routes.',
   },
   {
     id: 'twilio',

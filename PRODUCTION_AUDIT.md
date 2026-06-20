@@ -8,7 +8,7 @@ Vercel project: `western-wheelcraft`
 
 Western Wheelcraft has moved from a sales prototype to a backend-enabled staging application. The application builds successfully and now has real Neon persistence, Clerk-protected admin routes, Vercel Blob upload code, Resend transactional email, and Neon-backed admin reporting.
 
-It is not ready for final public launch. The principal blockers are missing production Blob configuration and testing, incomplete admin operations, no Stripe payment workflow, simulated AI assessment, a demo-oriented dealership portal, security/legal/SEO work, and custom-domain cutover. The working tree also contains a large productionization change set that must be committed and reviewed before deployment.
+It is not ready for final public launch. The principal blockers are pending production Blob testing, incomplete admin operations, no Stripe payment workflow, simulated AI assessment, a demo-oriented dealership portal, security/legal/SEO work, and custom-domain cutover.
 
 ## Verification Status
 
@@ -43,7 +43,7 @@ It is not ready for final public launch. The principal blockers are missing prod
 
 - Overview, leads, bookings, customers, invoices, analytics, and settings read Neon data.
 - Invoice and export actions that are not implemented are disabled instead of claiming success.
-- Quote photo counts and thumbnails are available in leads when Blob is configured.
+- Quote photo counts and authenticated private thumbnails are available in admin leads.
 - Integration cards distinguish implemented systems from pending systems.
 
 ### Email
@@ -64,11 +64,11 @@ It is not ready for final public launch. The principal blockers are missing prod
 
 ## Critical Launch Blockers
 
-### 1. Photo storage is not configured in production
+### 1. Private photo storage requires final deployment testing
 
-- `BLOB_READ_WRITE_TOKEN` is absent locally and in Vercel production.
-- Estimator submissions require a photo, so this can break the primary quote flow.
-- Blob currently uses public access in code. Private storage is recommended for customer vehicle photos.
+- A private Vercel Blob store is connected to Production and Preview through OIDC.
+- Estimator uploads and authenticated admin delivery are implemented for private blobs.
+- The flow still requires a controlled deployment test before public launch.
 
 ### 2. Stripe is not implemented
 
@@ -99,7 +99,7 @@ It is not ready for final public launch. The principal blockers are missing prod
 
 ## High-Priority Remaining Work
 
-- Configure private Vercel Blob and test quote uploads end to end.
+- Deploy and test private Vercel Blob quote uploads end to end.
 - Run controlled production tests for contact, quote, booking, email, admin data, and Clerk roles.
 - Add server-authorized admin mutations for lead/quote status, booking confirmation, notes, price override, invoice creation, and payment state.
 - Disable or productionize the dealership portal, which still contains placeholder payment behavior.
@@ -129,7 +129,7 @@ Present locally and in Vercel production:
 
 Still required for later phases:
 
-- `BLOB_READ_WRITE_TOKEN` for quote photos.
+- `BLOB_STORE_ID` and Vercel OIDC are configured automatically for the connected private Blob store; `BLOB_READ_WRITE_TOKEN` is only a local fallback.
 - `CLERK_WEBHOOK_SECRET` if Clerk user synchronization is implemented.
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_SECRET_KEY`, and `STRIPE_WEBHOOK_SECRET` for payments.
 - `OPENAI_API_KEY` and `OPENAI_VISION_MODEL`, or equivalent Vercel AI Gateway configuration, for real AI assessment.
@@ -137,7 +137,7 @@ Still required for later phases:
 ## Recommended Launch Order
 
 1. Commit and push the production foundation.
-2. Configure private Vercel Blob.
+2. Deploy and test private Vercel Blob uploads and admin delivery.
 3. Redeploy and test all currently implemented flows.
 4. Add admin operational mutations.
 5. Implement Stripe, or explicitly launch with manual payment only.
@@ -150,6 +150,6 @@ Still required for later phases:
 ## Current Readiness Verdict
 
 - Backend-enabled staging: ready.
-- Controlled internal testing: ready after Blob configuration.
+- Controlled internal testing: ready after deploying this Blob integration.
 - Public marketing launch with manual payments: possible after Blob, security/content cleanup, testing, and DNS cutover.
 - Full platform launch with payments and AI: not ready until Stripe and real AI phases are complete.

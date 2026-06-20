@@ -201,10 +201,6 @@ async function createVehicleIfPresent(customerId: string, input: QuoteLeadInput)
 async function persistQuotePhotos(quoteId: string, quoteNumber: string, photos: QuotePhotoUpload[]) {
   if (photos.length === 0) return [];
 
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    throw new Error("BLOB_READ_WRITE_TOKEN is required to upload quote photos.");
-  }
-
   const rows = [];
 
   for (const [index, upload] of photos.entries()) {
@@ -214,7 +210,7 @@ async function persistQuotePhotos(quoteId: string, quoteNumber: string, photos: 
       `quotes/${quoteNumber}/${index + 1}-${Date.now()}-${fileName}`,
       file,
       {
-        access: "public",
+        access: "private",
         addRandomSuffix: true,
       }
     );
