@@ -11,18 +11,21 @@ export default function BookingCheckoutPage() {
           >
             Back to Booking
           </Link>
-          <h1 className="mt-3 font-display text-display-md text-brand-white">Online Payment Pending</h1>
+          <h1 className="mt-3 font-display text-display-md text-brand-white">Booking Request Submitted</h1>
           <p className="font-body text-body-md text-brand-smoke">
-            Stripe checkout is not connected yet. Booking requests are saved without collecting payment.
+            Your booking request has been received. Our team will confirm your appointment and discuss payment details.
           </p>
         </div>
       </div>
 
       <div className="section-container pt-10">
         <div className="max-w-2xl rounded-2xl border border-brand-graphite bg-brand-graphite/50 p-6">
-          <p className="font-display text-body-md text-brand-white">No card details are collected here.</p>
+          <p className="font-display text-body-md text-brand-white">What happens next?</p>
           <p className="mt-3 font-body text-body-sm text-brand-silver">
-            Submit the booking request and Western Wheelcraft will confirm scheduling and payment directly.
+            You should receive a confirmation email shortly. Our team will contact you to confirm your appointment date and time.
+          </p>
+          <p className="mt-4 font-body text-body-sm text-brand-smoke">
+            We'll discuss pricing and payment details when we confirm your booking.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link

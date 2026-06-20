@@ -11,18 +11,21 @@ export default function QuoteCheckoutPage() {
           >
             Back to Estimator
           </Link>
-          <h1 className="mt-3 font-display text-display-md text-brand-white">Online Payment Pending</h1>
+          <h1 className="mt-3 font-display text-display-md text-brand-white">Quote Submitted</h1>
           <p className="font-body text-body-md text-brand-smoke">
-            Stripe checkout is not connected yet. Your quote request is saved for admin follow-up.
+            Your quote request has been received and saved. Our team will review your details and confirm final pricing.
           </p>
         </div>
       </div>
 
       <div className="section-container pt-10">
         <div className="max-w-2xl rounded-2xl border border-brand-graphite bg-brand-graphite/50 p-6">
-          <p className="font-display text-body-md text-brand-white">No card details are collected here.</p>
+          <p className="font-display text-body-md text-brand-white">What happens next?</p>
           <p className="mt-3 font-body text-body-sm text-brand-silver">
-            Western Wheelcraft will confirm the final quote and payment method directly until Stripe is enabled.
+            You should receive a confirmation email shortly. Our team will review your quote and contact you to discuss final pricing and payment options.
+          </p>
+          <p className="mt-4 font-body text-body-sm text-brand-smoke">
+            No payment is due at this time. We'll reach out within 24 hours with a final quote.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link

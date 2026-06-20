@@ -33,7 +33,7 @@ export const REGION_LABELS: Record<string, string> = {
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-export type DamageLevel = 'light' | 'medium' | 'heavy';
+export type DamageLevel = 'light' | 'medium' | 'heavy' | 'standard';
 
 export interface WheelDamage {
   level: DamageLevel;
@@ -91,6 +91,7 @@ export interface PricingBreakdown {
   total: number;
   hasHeavy: boolean;
   billableCount: number;
+  wheelCount?: number;
 }
 
 // ── Calculations ──────────────────────────────────────────────────────────────
@@ -127,6 +128,38 @@ export function calcPricing(
     finishPremium: fp * billable.length,
     regionFee: rf, wheelTotal, discountPct, discountAmount,
     afterDiscount, subtotal, gst, total, hasHeavy, billableCount: billable.length,
+    wheelCount,
+  };
+}
+
+export function calcFixedWheelPricing(wheelCount: number): PricingBreakdown {
+  const basePerWheel = 250;
+  let subtotal = wheelCount * basePerWheel;
+  const bulkDiscount = wheelCount >= 4 ? 100 : 0;
+  subtotal -= bulkDiscount;
+
+  const gst = subtotal * 0.05;
+  const total = subtotal + gst;
+
+  return {
+    wheels: Array.from({ length: wheelCount }, (_, i) => ({
+      label: `Wheel ${i + 1}`,
+      base: basePerWheel,
+      level: 'standard' as const,
+    })),
+    sizePremium: 0,
+    finishPremium: 0,
+    regionFee: 0,
+    wheelTotal: wheelCount * basePerWheel,
+    discountPct: wheelCount >= 4 ? (bulkDiscount / (wheelCount * basePerWheel)) : 0,
+    discountAmount: bulkDiscount,
+    afterDiscount: subtotal,
+    subtotal,
+    gst,
+    total,
+    hasHeavy: false,
+    billableCount: wheelCount,
+    wheelCount,
   };
 }
 

@@ -1,20 +1,13 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import { calcPricing } from '@/lib/payment-utils';
+import { calcFixedWheelPricing } from '@/lib/payment-utils';
 
 // ── Types ────────────────────────────────────────────────────────────────────
-
-type DamageLevel = 'light' | 'medium' | 'heavy';
-
-interface WheelDamage {
-  level: DamageLevel;
-  pct: number;
-}
 
 interface VehicleInfo {
   year: string;
@@ -93,7 +86,7 @@ const LOCATION_GROUPS = [
 const STEP_LABELS = [
   'Upload Photos',
   'Vehicle Info',
-  'AI Analysis',
+  'Wheel Count',
   'Select Finish',
   'Your Details',
   'Your Quote',
@@ -111,9 +104,6 @@ function sizePremium(size: string): number {
   return 0;
 }
 
-function basePrice(level: DamageLevel): number {
-  return level === 'light' ? 300 : level === 'medium' ? 400 : 0;
-}
 
 function getRegionFee(region: string): number {
   return REGIONS.find(r => r.value === region)?.fee ?? 0;
@@ -326,21 +316,6 @@ function NavButtons({
 
 // ── Damage level helpers ─────────────────────────────────────────────────────
 
-const DAMAGE_COLORS: Record<DamageLevel, string> = {
-  light:  'bg-success',
-  medium: 'bg-warning',
-  heavy:  'bg-brand-red',
-};
-const DAMAGE_LABELS: Record<DamageLevel, string> = {
-  light:  'Light',
-  medium: 'Medium',
-  heavy:  'Heavy',
-};
-const DAMAGE_DESCRIPTIONS: Record<DamageLevel, string> = {
-  light:  '≤30% — Curb scuffs, minor scratches',
-  medium: '30–70% — Gouges, significant curb rash',
-  heavy:  '70–95% — Structural damage, deep gouges',
-};
 
 // ── Main Page ────────────────────────────────────────────────────────────────
 
@@ -357,9 +332,6 @@ export default function EstimatePage() {
   });
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [analyzing, setAnalyzing] = useState(false);
-  const [analyzed, setAnalyzed]   = useState(false);
-  const [damage, setDamage]       = useState<WheelDamage[]>([]);
   const [finish, setFinish]       = useState<FinishSelection>({ type: 'oem', customColor: '#D81E2A' });
   const [contact, setContact]     = useState<ContactInfo>({
     fullName: '', email: '', phone: '', location: '', otherCity: '',
@@ -413,33 +385,11 @@ export default function EstimatePage() {
     setShowSuggestions(filtered.length > 0);
   };
 
-  // ── AI analysis simulation ──
+  // ── Wheel count (no AI analysis) ──
 
-  const runAnalysis = useCallback(() => {
-    setAnalyzing(true);
-    setAnalyzed(false);
-    setTimeout(() => {
-      const weights: DamageLevel[] = ['light','light','light','medium','medium','heavy'];
-      const generated: WheelDamage[] = Array.from({ length: vehicle.wheelCount }, (_, i) => {
-        const level = i === 0
-          ? 'medium'
-          : weights[Math.floor(Math.random() * weights.length)];
-        const pct = level === 'light'  ? Math.floor(Math.random() * 25 + 5)
-                  : level === 'medium' ? Math.floor(Math.random() * 35 + 32)
-                  :                      Math.floor(Math.random() * 20 + 72);
-        return { level, pct };
-      });
-      setDamage(generated);
-      setAnalyzing(false);
-      setAnalyzed(true);
-    }, 2200);
-  }, [vehicle.wheelCount]);
-
-  useEffect(() => {
-    // Step 3 intentionally starts the prototype analysis animation when the user arrives.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (step === 3 && !analyzed) runAnalysis();
-  }, [step, analyzed, runAnalysis]);
+  const updateWheelCount = useCallback((count: number) => {
+    setVehicle(v => ({ ...v, wheelCount: count }));
+  }, []);
 
   // ── Contact validation ──
 
@@ -461,23 +411,6 @@ export default function EstimatePage() {
     return contact.location === 'other' ? contact.otherCity : contact.location;
   }
 
-  function damageSummary(): string {
-    const summary = damage
-      .map((wheel, index) => `Wheel ${index + 1}: ${DAMAGE_LABELS[wheel.level]} damage (${wheel.pct}%)`)
-      .join('\n');
-
-    const photoNote = photos.length > 0
-      ? `${photos.length} photo file(s) uploaded with this quote request.`
-      : 'No photos selected.';
-
-    return [
-      summary,
-      `Requested city/location: ${selectedLocation()}`,
-      `Contact consent: ${contact.contactConsent ? 'yes' : 'no'}`,
-      photoNote,
-    ].filter(Boolean).join('\n');
-  }
-
   async function saveEstimatorLead(): Promise<boolean> {
     if (savedQuoteNumber) return true;
 
@@ -489,7 +422,7 @@ export default function EstimatePage() {
         throw new Error('At least one wheel photo is required.');
       }
 
-      const pricing = calcPricing(damage, vehicle.wheelSize, finish.type, vehicle.region, vehicle.wheelCount);
+      const pricing = calcFixedWheelPricing(vehicle.wheelCount);
       const payload = {
         source: 'estimator',
         customerName: contact.fullName,
@@ -505,13 +438,12 @@ export default function EstimatePage() {
         requestedService: 'Wheel refinishing',
         requestedFinish: FINISHES.find(f => f.value === finish.type)?.label ?? finish.type,
         wheelCount: vehicle.wheelCount,
-        damageDescription: damageSummary(),
+        damageDescription: `${vehicle.wheelCount} wheels selected for refinishing. Photos and details saved for technician review.`,
         estimatedSubtotal: pricing.subtotal,
         estimatedGst: pricing.gst,
         estimatedTotal: pricing.total,
         pricingSnapshot: {
           vehicle,
-          damage,
           finish,
           pricing,
           selectedLocation: selectedLocation(),
@@ -546,19 +478,7 @@ export default function EstimatePage() {
 
   // ── Pricing ──
 
-  const hasHeavy       = damage.some(d => d.level === 'heavy');
-  const billableWheels = damage.filter(d => d.level !== 'heavy');
-  const sp = sizePremium(vehicle.wheelSize);
-  const fp = getFinishPremium(finish.type);
-  const rf = getRegionFee(vehicle.region);
-
-  const wheelTotal    = billableWheels.reduce((sum, d) => sum + basePrice(d.level) + sp + fp, 0);
-  const discountPct   = vehicle.wheelCount === 4 && billableWheels.length === 4 ? 0.1 : 0;
-  const afterDiscount = wheelTotal * (1 - discountPct);
-  const subtotal      = afterDiscount + rf;
-  const gst           = subtotal * 0.05;
-  const total         = subtotal + gst;
-
+  const pricing = calcFixedWheelPricing(vehicle.wheelCount);
   const years = Array.from({ length: 27 }, (_, i) => (2026 - i).toString());
 
   // ── Render ──
@@ -824,9 +744,9 @@ export default function EstimatePage() {
 
                   <NavButtons
                     onBack={() => go(1)}
-                    onNext={() => { setAnalyzed(false); go(3); }}
+                    onNext={() => go(3)}
                     nextDisabled={!vehicle.make || !vehicle.model}
-                    nextLabel="Analyse Photos"
+                    nextLabel="Continue"
                   />
                 </div>
               )}
@@ -836,182 +756,76 @@ export default function EstimatePage() {
                 <div>
                   <StepHeading
                     step={3}
-                    title="AI Damage Assessment"
-                    subtitle="Our system analyses your photos to estimate damage severity per wheel."
+                    title="How Many Wheels?"
+                    subtitle="Select the number of wheels you'd like to restore. Our team will review your photos and confirm final pricing."
                   />
 
-                  <AnimatePresence mode="wait">
-                    {analyzing ? (
-                      <motion.div
-                        key="loading"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="flex flex-col items-center gap-8 py-16"
-                      >
-                        <div className="relative flex h-32 w-32 items-center justify-center">
-                          <div className="absolute inset-0 rounded-full border-2 border-brand-red/20" />
-                          <motion.div
-                            className="absolute inset-0 rounded-full border-2 border-t-brand-red border-l-brand-red border-r-transparent border-b-transparent"
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-                          />
-                          <motion.div
-                            className="absolute inset-4 rounded-full border border-brand-red/30 border-t-brand-red/60"
-                            animate={{ rotate: -360 }}
-                            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                          />
-                          <div className="z-10 text-brand-red"><IconSpark /></div>
-                        </div>
-                        <div className="text-center">
-                          <p className="font-display text-display-sm text-brand-white">Analysing your photos…</p>
-                          <p className="mt-2 font-body text-body-sm text-brand-silver">
-                            Detecting damage severity and surface condition
+                  <div className="flex flex-col gap-6">
+                    <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-6">
+                      <p className="mb-4 font-body text-body-sm font-semibold text-brand-white">Select Number of Wheels</p>
+                      <div className="grid grid-cols-4 gap-3">
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map(count => (
+                          <button
+                            key={count}
+                            onClick={() => updateWheelCount(count)}
+                            className={cn(
+                              'rounded-xl border-2 py-4 font-display text-body-md font-bold transition-all duration-200',
+                              vehicle.wheelCount === count
+                                ? 'border-brand-red bg-brand-red/20 text-brand-red'
+                                : 'border-brand-ash bg-transparent text-brand-silver hover:border-brand-red/50'
+                            )}
+                          >
+                            {count}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-6">
+                      <div className="mb-4 flex items-start gap-3">
+                        <div className="mt-0.5 text-brand-red"><IconSpark /></div>
+                        <div>
+                          <p className="font-display text-body-md text-brand-white">Fixed Pricing</p>
+                          <p className="mt-1 font-body text-body-sm text-brand-smoke">
+                            <strong className="text-brand-white">$250 per wheel</strong> · 4+ wheels get <strong className="text-success">$100 off</strong> · Plus 5% GST
                           </p>
                         </div>
-                        <div className="w-full max-w-sm space-y-2">
-                          {['Scanning wheel surfaces…', 'Measuring damage depth…', 'Calculating repair scope…'].map((msg, i) => (
-                            <motion.div
-                              key={msg}
-                              initial={{ opacity: 0, x: -12 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: i * 0.5 }}
-                              className="flex items-center gap-3"
-                            >
-                              <motion.div
-                                className="h-1.5 w-1.5 rounded-full bg-brand-red"
-                                animate={{ opacity: [0.4, 1, 0.4] }}
-                                transition={{ duration: 1, repeat: Infinity, delay: i * 0.5 }}
-                              />
-                              <span className="font-body text-body-sm text-brand-silver">{msg}</span>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    ) : analyzed ? (
-                      <motion.div
-                        key="results"
-                        initial={{ opacity: 0, y: 16 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={transition}
-                      >
-                        <div className="mb-6 rounded-2xl border border-brand-red/20 bg-brand-graphite px-5 py-4">
-                          <div className="flex items-start gap-3">
-                            <div className="mt-0.5 text-brand-red"><IconSpark /></div>
-                            <div>
-                              <p className="font-display text-body-md text-brand-white">Analysis complete</p>
-                              <p className="mt-0.5 font-body text-body-sm text-brand-smoke">
-                                Detected{' '}
-                                {damage.filter(d => d.level === 'light').length > 0 && (
-                                  <span>light damage on <strong className="text-success">{damage.filter(d => d.level === 'light').length}</strong> wheel{damage.filter(d => d.level === 'light').length !== 1 ? 's' : ''}</span>
-                                )}
-                                {damage.filter(d => d.level === 'light').length > 0 && damage.filter(d => d.level !== 'light').length > 0 && ', '}
-                                {damage.filter(d => d.level === 'medium').length > 0 && (
-                                  <span>medium damage on <strong className="text-warning">{damage.filter(d => d.level === 'medium').length}</strong> wheel{damage.filter(d => d.level === 'medium').length !== 1 ? 's' : ''}</span>
-                                )}
-                                {damage.filter(d => d.level === 'medium').length > 0 && damage.filter(d => d.level === 'heavy').length > 0 && ', '}
-                                {damage.filter(d => d.level === 'heavy').length > 0 && (
-                                  <span>heavy damage on <strong className="text-brand-red">{damage.filter(d => d.level === 'heavy').length}</strong> wheel{damage.filter(d => d.level === 'heavy').length !== 1 ? 's' : ''}</span>
-                                )}
-                                .
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col gap-4">
-                          {damage.map((w, i) => (
-                            <motion.div
-                              key={i}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: i * 0.08 }}
-                              className="rounded-2xl border border-brand-graphite bg-brand-graphite p-5"
-                            >
-                              <div className="mb-4 flex items-center justify-between">
-                                <div>
-                                  <p className="font-display text-body-md text-brand-white">Wheel {i + 1}</p>
-                                  <p className="font-body text-caption text-brand-silver">{DAMAGE_DESCRIPTIONS[w.level]}</p>
-                                </div>
-                                <span className={cn(
-                                  'rounded-full px-3 py-1 font-body text-caption font-bold text-white',
-                                  w.level === 'light' ? 'bg-success' : w.level === 'medium' ? 'bg-warning' : 'bg-brand-red'
-                                )}>
-                                  {DAMAGE_LABELS[w.level]}
-                                </span>
+                      </div>
+                      <div className="space-y-2 border-t border-brand-ash pt-4">
+                        {(() => {
+                          const pricing = calcFixedWheelPricing(vehicle.wheelCount);
+                          return (
+                            <>
+                              <div className="flex justify-between font-body text-body-sm text-brand-smoke">
+                                <span>{vehicle.wheelCount} wheels × $250</span>
+                                <span className="text-brand-white">${(vehicle.wheelCount * 250).toFixed(2)}</span>
                               </div>
-
-                              <div className="mb-4">
-                                <div className="mb-1 flex justify-between font-body text-caption text-brand-silver">
-                                  <span>Damage severity</span>
-                                  <span className="text-brand-white">{w.pct}%</span>
+                              {vehicle.wheelCount >= 4 && (
+                                <div className="flex justify-between font-body text-body-sm text-success">
+                                  <span>Bulk discount (4+ wheels)</span>
+                                  <span>-$100.00</span>
                                 </div>
-                                <div className="h-2 w-full overflow-hidden rounded-full bg-brand-graphite-light">
-                                  <motion.div
-                                    className={cn('h-full rounded-full', DAMAGE_COLORS[w.level])}
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${w.pct}%` }}
-                                    transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                                  />
-                                </div>
+                              )}
+                              <div className="flex justify-between font-body text-body-sm text-brand-smoke">
+                                <span>GST (5%)</span>
+                                <span className="text-brand-white">${pricing.gst.toFixed(2)}</span>
                               </div>
-
-                              <div>
-                                <p className="mb-2 font-body text-caption text-brand-silver">AI incorrect? Adjust below:</p>
-                                <div className="flex gap-2">
-                                  {(['light', 'medium', 'heavy'] as DamageLevel[]).map(lvl => (
-                                    <button
-                                      key={lvl}
-                                      onClick={() => {
-                                        const midPct = lvl === 'light' ? 15 : lvl === 'medium' ? 50 : 80;
-                                        setDamage(prev => prev.map((d, idx) =>
-                                          idx === i ? { level: lvl, pct: midPct } : d
-                                        ));
-                                      }}
-                                      className={cn(
-                                        'rounded-lg px-3 py-1.5 font-body text-caption font-semibold transition-all duration-200',
-                                        w.level === lvl
-                                          ? lvl === 'light'  ? 'bg-success text-white'
-                                            : lvl === 'medium' ? 'bg-warning text-white'
-                                            :                    'bg-brand-red text-white'
-                                          : 'bg-brand-graphite-light text-brand-smoke hover:text-brand-white'
-                                      )}
-                                    >
-                                      {DAMAGE_LABELS[lvl]}
-                                    </button>
-                                  ))}
-                                </div>
+                              <div className="flex justify-between border-t border-brand-ash pt-2 font-display text-display-sm text-brand-red">
+                                <span>Total</span>
+                                <span>${pricing.total.toFixed(2)}</span>
                               </div>
-                            </motion.div>
-                          ))}
-                        </div>
+                            </>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  </div>
 
-                        {hasHeavy && (
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="mt-4 flex items-start gap-3 rounded-2xl border border-brand-red/30 bg-brand-red/10 p-4"
-                          >
-                            <div className="mt-0.5 text-brand-red"><IconWarning /></div>
-                            <div>
-                              <p className="font-display text-body-sm text-brand-white">Manual review required for heavy damage</p>
-                              <p className="mt-0.5 font-body text-caption text-brand-smoke">
-                                Heavy damage wheels require a technician assessment. We&rsquo;ll include remaining wheels in your quote, and follow up on the heavy ones.
-                              </p>
-                            </div>
-                          </motion.div>
-                        )}
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence>
-
-                  {analyzed && (
-                    <NavButtons
-                      onBack={() => go(2)}
-                      onNext={() => go(4)}
-                      nextLabel="Choose Finish"
-                    />
-                  )}
+                  <NavButtons
+                    onBack={() => go(2)}
+                    onNext={() => go(4)}
+                    nextLabel="Continue"
+                  />
                 </div>
               )}
 
@@ -1302,146 +1116,85 @@ export default function EstimatePage() {
                     title="Your Instant Quote"
                   />
 
-                  {hasHeavy && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mb-5 flex items-start gap-3 rounded-2xl border border-warning/30 bg-warning/10 p-4"
-                    >
-                      <div className="mt-0.5 text-warning"><IconWarning /></div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={transition}
+                  >
+                    {/* Personalised greeting */}
+                    <div className="mb-5 rounded-2xl border border-brand-graphite bg-brand-graphite px-5 py-4">
                       <p className="font-body text-body-sm text-brand-smoke">
-                        <strong className="text-brand-white">Note:</strong> Wheels with heavy damage require a technician review. Pricing below covers your{' '}
-                        {billableWheels.length} refinishable wheel{billableWheels.length !== 1 ? 's' : ''}.
+                        Hi <strong className="text-brand-white">{contact.fullName.split(' ')[0]}</strong> — here&rsquo;s your estimated price.
+                        Your request has been saved for team review{savedQuoteNumber ? ` as ${savedQuoteNumber}` : ''}.
                       </p>
-                    </motion.div>
-                  )}
+                    </div>
 
-                  {billableWheels.length === 0 ? (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="rounded-3xl border border-brand-red/20 bg-brand-graphite p-8 text-center"
-                    >
-                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-red/10 text-brand-red">
-                        <IconPhone />
+                    {/* Vehicle summary pills */}
+                    <div className="mb-6 flex flex-wrap items-center gap-2">
+                      {[
+                        `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+                        `${vehicle.wheelCount} wheels`,
+                        FINISHES.find(f => f.value === finish.type)?.label ?? '',
+                      ].filter(Boolean).map((tag, i) => (
+                        <span key={i} className="rounded-full border border-brand-ash bg-brand-graphite px-3 py-1 font-body text-caption text-brand-smoke">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Price breakdown */}
+                    <div className="mb-6 overflow-hidden rounded-3xl border border-brand-graphite bg-brand-graphite shadow-card">
+                      <div className="border-b border-brand-graphite-light px-6 py-4">
+                        <p className="font-display text-body-md text-brand-white">Estimated Price</p>
                       </div>
-                      <h2 className="mb-2 font-display text-display-sm text-brand-white">Manual Review Required</h2>
-                      <p className="mb-6 font-body text-body-md text-brand-smoke">
-                        All wheels have heavy damage — our technicians need to assess in person before quoting.
-                        We&rsquo;ve saved your request and will follow up using the contact details provided.
-                      </p>
-                      <Button href="tel:+16047106174" variant="primary" size="lg" leftIcon={<IconPhone />}>
-                        Call 604.710.6174
-                      </Button>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={transition}
-                    >
-                      {/* Personalised greeting */}
-                      <div className="mb-5 rounded-2xl border border-brand-graphite bg-brand-graphite px-5 py-4">
-                        <p className="font-body text-body-sm text-brand-smoke">
-                          Hi <strong className="text-brand-white">{contact.fullName.split(' ')[0]}</strong> — here&rsquo;s your personalised estimate.
-                          Your request has been saved for team review{savedQuoteNumber ? ` as ${savedQuoteNumber}` : ''}.
+
+                      <div className="px-6 py-5">
+                        {(() => {
+                          const pricing = calcFixedWheelPricing(vehicle.wheelCount);
+                          return (
+                            <>
+                              <div className="mb-4 flex flex-col gap-2">
+                                <div className="flex justify-between font-body text-body-sm text-brand-smoke">
+                                  <span>{vehicle.wheelCount} wheels × $250</span>
+                                  <span className="text-brand-white">${(vehicle.wheelCount * 250).toFixed(2)}</span>
+                                </div>
+                                {vehicle.wheelCount >= 4 && (
+                                  <div className="flex justify-between font-body text-body-sm text-success">
+                                    <span>Bulk discount (4+ wheels)</span>
+                                    <span>-$100.00</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="flex flex-col gap-2 border-t border-brand-graphite-light pt-4">
+                                <div className="flex justify-between font-body text-body-sm text-brand-smoke">
+                                  <span>Subtotal</span>
+                                  <span className="text-brand-white">${pricing.subtotal.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between font-body text-body-sm text-brand-smoke">
+                                  <span>GST (5%)</span>
+                                  <span className="text-brand-white">${pricing.gst.toFixed(2)}</span>
+                                </div>
+                              </div>
+
+                              <div className="mt-4 flex items-baseline justify-between rounded-2xl bg-brand-graphite-light px-5 py-4">
+                                <p className="font-display text-display-sm text-brand-white">Estimated Total</p>
+                                <p className="font-display text-display-md text-brand-white">
+                                  ${pricing.total.toFixed(2)}
+                                  <span className="ml-1 font-body text-body-sm text-brand-silver">CAD</span>
+                                </p>
+                              </div>
+                            </>
+                          );
+                        })()}
+                      </div>
+
+                      <div className="border-t border-brand-graphite-light px-6 py-4">
+                        <p className="font-body text-caption text-brand-silver">
+                          This is an estimate based on wheel count. Final price confirmed by our team before work begins.
                         </p>
                       </div>
-
-                      {/* Vehicle summary pills */}
-                      <div className="mb-6 flex flex-wrap items-center gap-2">
-                        {[
-                          `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
-                          vehicle.wheelSize,
-                          FINISHES.find(f => f.value === finish.type)?.label ?? '',
-                          REGIONS.find(r => r.value === vehicle.region)?.label ?? '',
-                        ].filter(Boolean).map((tag, i) => (
-                          <span key={i} className="rounded-full border border-brand-ash bg-brand-graphite px-3 py-1 font-body text-caption text-brand-smoke">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Price breakdown */}
-                      <div className="mb-6 overflow-hidden rounded-3xl border border-brand-graphite bg-brand-graphite shadow-card">
-                        <div className="border-b border-brand-graphite-light px-6 py-4">
-                          <p className="font-display text-body-md text-brand-white">Price Breakdown</p>
-                        </div>
-
-                        <div className="px-6 py-5">
-                          <div className="mb-4 flex flex-col gap-3">
-                            {billableWheels.map((w, i) => (
-                              <div key={i} className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                  <span className={cn(
-                                    'h-2 w-2 rounded-full',
-                                    w.level === 'light' ? 'bg-success' : 'bg-warning'
-                                  )} />
-                                  <span className="font-body text-body-sm text-brand-smoke">
-                                    Wheel {damage.indexOf(w) + 1} · {DAMAGE_LABELS[w.level]} damage
-                                  </span>
-                                </div>
-                                <span className="font-body text-body-sm text-brand-white">
-                                  ${basePrice(w.level).toLocaleString()}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-
-                          <div className="flex flex-col gap-2 border-t border-brand-graphite-light pt-4">
-                            {sp > 0 && (
-                              <div className="flex justify-between font-body text-body-sm text-brand-smoke">
-                                <span>Size premium ({vehicle.wheelSize}) × {billableWheels.length}</span>
-                                <span>+${(sp * billableWheels.length).toLocaleString()}</span>
-                              </div>
-                            )}
-                            {fp > 0 && (
-                              <div className="flex justify-between font-body text-body-sm text-brand-smoke">
-                                <span>{FINISHES.find(f => f.value === finish.type)?.label} premium × {billableWheels.length}</span>
-                                <span>+${(fp * billableWheels.length).toLocaleString()}</span>
-                              </div>
-                            )}
-                            {discountPct > 0 && (
-                              <div className="flex justify-between font-body text-body-sm text-success">
-                                <span>4-wheel discount (10%)</span>
-                                <span>−${(wheelTotal * discountPct).toLocaleString()}</span>
-                              </div>
-                            )}
-                            {rf > 0 && (
-                              <div className="flex justify-between font-body text-body-sm text-brand-smoke">
-                                <span>Region surcharge</span>
-                                <span>+${rf.toLocaleString()}</span>
-                              </div>
-                            )}
-                          </div>
-
-                          <div className="mt-4 flex flex-col gap-2 border-t border-brand-graphite-light pt-4">
-                            <div className="flex justify-between font-body text-body-sm text-brand-smoke">
-                              <span>Subtotal</span>
-                              <span className="text-brand-white">${subtotal.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                            </div>
-                            <div className="flex justify-between font-body text-body-sm text-brand-smoke">
-                              <span>GST (5%)</span>
-                              <span className="text-brand-white">${gst.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                            </div>
-                          </div>
-
-                          <div className="mt-4 flex items-baseline justify-between rounded-2xl bg-brand-graphite-light px-5 py-4">
-                            <p className="font-display text-display-sm text-brand-white">Total</p>
-                            <p className="font-display text-display-md text-brand-white">
-                              ${total.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                              <span className="ml-1 font-body text-body-sm text-brand-silver">CAD</span>
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="border-t border-brand-graphite-light px-6 py-4">
-                          <p className="font-body text-caption text-brand-silver">
-                            Estimate based on photo analysis. Final price confirmed by technician before work begins.
-                            Lifetime workmanship warranty included on all refinishing work.
-                          </p>
-                        </div>
-                      </div>
+                    </div>
 
                       {/* CTAs */}
                       <div className="flex flex-col gap-3 sm:flex-row">
@@ -1473,7 +1226,6 @@ export default function EstimatePage() {
                         </button>
                       </div>
                     </motion.div>
-                  )}
                 </div>
               )}
 
