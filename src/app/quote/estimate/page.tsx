@@ -469,9 +469,10 @@ export default function EstimatePage() {
       setSavedQuoteNumber(result.quoteNumber ?? '');
       setQuoteSubmitting(false);
       return true;
-    } catch {
+    } catch (error) {
       setQuoteSubmitting(false);
-      setQuoteError('We could not save your quote request. Please try again or call us directly.');
+      const message = error instanceof Error ? error.message : 'We could not save your quote request. Please try again or call us directly.';
+      setQuoteError(message);
       return false;
     }
   }
