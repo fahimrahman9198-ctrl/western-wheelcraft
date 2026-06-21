@@ -76,8 +76,21 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
+      const fieldLabels: Record<string, string> = {
+        customerName: "Full name",
+        customerEmail: "Email address",
+        customerPhone: "Phone number",
+        region: "City / location",
+        wheelCount: "Wheel count",
+      };
+      const summary = error.issues
+        .map((issue) => {
+          const field = fieldLabels[String(issue.path[0])] ?? String(issue.path[0] ?? "Form");
+          return `${field}: ${issue.message}`;
+        })
+        .join(" ");
       return NextResponse.json(
-        { error: "Invalid quote request.", issues: error.issues },
+        { error: summary || "Invalid quote request.", issues: error.issues },
         { status: 400 }
       );
     }

@@ -396,6 +396,7 @@ export default function EstimatePage() {
   function validateContact(): boolean {
     const errors: Partial<Record<keyof ContactInfo, string>> = {};
     if (!contact.fullName.trim()) errors.fullName = 'Full name is required';
+    else if (contact.fullName.trim().length < 2) errors.fullName = 'Please enter your full name (at least 2 characters)';
     if (!contact.email.trim()) errors.email = 'Email is required';
     else if (!isValidEmail(contact.email)) errors.email = 'Enter a valid email address';
     if (!contact.phone.trim()) errors.phone = 'Phone number is required';
