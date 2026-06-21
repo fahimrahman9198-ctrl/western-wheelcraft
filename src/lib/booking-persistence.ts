@@ -229,7 +229,8 @@ async function sendBookingEmails({
 
 export async function createBookingRequest(input: BookingRequestInput) {
   const customer = await findOrCreateCustomer(input);
-  const slot = input.serviceType === "mobile" ? "mobile_1" : "shop";
+  // Map service type to slot: mobile services use island slot
+  const slot = input.serviceType === "mobile" ? "island" : "shop";
   const startTime = toBookingTime(input.startTime);
   const service = input.serviceType === "mobile" ? "Mobile Fleet Service" : "Shop Drop-Off";
   const notes = [

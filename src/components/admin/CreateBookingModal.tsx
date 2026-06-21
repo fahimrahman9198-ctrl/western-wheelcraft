@@ -13,7 +13,7 @@ import { findConflicts, SERVICE_DURATIONS, generateTimeSlots } from '@/lib/booki
 const CreateBookingSchema = z.object({
   customerId: z.string().min(1, 'Customer is required'),
   serviceType: z.string().min(1, 'Service type is required'),
-  slot: z.enum(['shop', 'mobile_1', 'mobile_2']),
+  slot: z.enum(['shop', 'island', 'kamloops']),
   region: z.string().min(1, 'Region is required'),
   scheduledDate: z.string().min(1, 'Date is required'),
   startTime: z.string().min(1, 'Start time is required'),
@@ -32,6 +32,7 @@ interface CreateBookingModalProps {
   existingBookings: any[];
   prefilledDate?: Date;
   prefilledCustomerId?: string;
+  onCustomerCreated?: (customer: any) => void;
 }
 
 const SERVICES = [
@@ -41,7 +42,20 @@ const SERVICES = [
   'Mobile service',
 ];
 
-const REGIONS = ['Vancouver', 'Surrey', 'Burnaby', 'Richmond', 'Coquitlam', 'Other'];
+const REGIONS = [
+  'Vancouver',
+  'Victoria',
+  'Nanaimo',
+  'Duncan',
+  'Okanagan',
+  'Kamloops',
+  'Kelowna',
+  'Surrey',
+  'Burnaby',
+  'Richmond',
+  'Coquitlam',
+  'Other',
+];
 
 export function CreateBookingModal({
   isOpen,
@@ -51,9 +65,13 @@ export function CreateBookingModal({
   existingBookings,
   prefilledDate,
   prefilledCustomerId,
+  onCustomerCreated,
 }: CreateBookingModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [conflict, setConflict] = useState<Booking | null>(null);
+  const [showNewCustomerForm, setShowNewCustomerForm] = useState(false);
+  const [newCustomerForm, setNewCustomerForm] = useState({ name: '', email: '', phone: '' });
+  const [localCustomers, setLocalCustomers] = useState(customers);
 
   const {
     register,
@@ -104,6 +122,44 @@ export function CreateBookingModal({
     setConflict(conflicts[0] || null);
   }
 
+  const handleCreateQuickCustomer = async () => {
+    if (!newCustomerForm.name.trim() || !newCustomerForm.email.trim()) {
+      toast.error('Name and email are required');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/admin/customers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: newCustomerForm.name,
+          email: newCustomerForm.email,
+          phone: newCustomerForm.phone || null,
+          type: 'individual',
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create customer');
+      }
+
+      const newCustomer = await response.json();
+      setLocalCustomers([newCustomer, ...localCustomers]);
+      setValue('customerId', newCustomer.id);
+      setNewCustomerForm({ name: '', email: '', phone: '' });
+      setShowNewCustomerForm(false);
+      toast.success('Customer created successfully');
+
+      if (onCustomerCreated) {
+        onCustomerCreated(newCustomer);
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to create customer');
+    }
+  };
+
   const handleFormSubmit = async (data: CreateBookingInput) => {
     if (conflict) {
       toast.error('Cannot book: Time slot already occupied');
@@ -136,22 +192,76 @@ export function CreateBookingModal({
         <form onSubmit={handleSubmit(handleFormSubmit)} className="p-4 space-y-4">
           {/* Customer */}
           <div>
-            <label className="block text-sm font-medium text-brand-white mb-1">
-              Customer
-            </label>
-            <select
-              {...register('customerId')}
-              className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white"
-            >
-              <option value="">Select customer...</option>
-              {customers.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name} ({customer.email})
-                </option>
-              ))}
-            </select>
-            {errors.customerId && (
-              <p className="text-red-400 text-xs mt-1">{errors.customerId.message}</p>
+            <div className="flex justify-between items-center mb-1">
+              <label className="block text-sm font-medium text-brand-white">
+                Customer
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowNewCustomerForm(!showNewCustomerForm)}
+                className="text-xs text-brand-red hover:text-brand-red-hover underline"
+              >
+                + New Customer
+              </button>
+            </div>
+
+            {!showNewCustomerForm ? (
+              <>
+                <select
+                  {...register('customerId')}
+                  className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white"
+                >
+                  <option value="">Select customer...</option>
+                  {localCustomers.map((customer) => (
+                    <option key={customer.id} value={customer.id}>
+                      {customer.name} ({customer.email})
+                    </option>
+                  ))}
+                </select>
+                {errors.customerId && (
+                  <p className="text-red-400 text-xs mt-1">{errors.customerId.message}</p>
+                )}
+              </>
+            ) : (
+              <div className="space-y-2 p-3 bg-brand-graphite/30 rounded border border-brand-graphite">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={newCustomerForm.name}
+                  onChange={(e) => setNewCustomerForm({ ...newCustomerForm, name: e.target.value })}
+                  className="w-full px-2 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white text-sm placeholder:text-brand-ash"
+                />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={newCustomerForm.email}
+                  onChange={(e) => setNewCustomerForm({ ...newCustomerForm, email: e.target.value })}
+                  className="w-full px-2 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white text-sm placeholder:text-brand-ash"
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone (optional)"
+                  value={newCustomerForm.phone}
+                  onChange={(e) => setNewCustomerForm({ ...newCustomerForm, phone: e.target.value })}
+                  className="w-full px-2 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white text-sm placeholder:text-brand-ash"
+                />
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCreateQuickCustomer}
+                    className="flex-1 px-2 py-1 bg-brand-red hover:bg-brand-red-hover rounded text-white text-sm font-medium"
+                  >
+                    Create
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowNewCustomerForm(false)}
+                    className="flex-1 px-2 py-1 bg-brand-graphite hover:bg-brand-graphite/80 rounded text-brand-smoke text-sm"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
             )}
           </div>
 
@@ -187,8 +297,8 @@ export function CreateBookingModal({
             >
               <option value="">Select slot...</option>
               <option value="shop">Shop</option>
-              <option value="mobile_1">Mobile 1</option>
-              <option value="mobile_2">Mobile 2</option>
+              <option value="island">Island</option>
+              <option value="kamloops">Kamloops</option>
             </select>
             {errors.slot && (
               <p className="text-red-400 text-xs mt-1">{errors.slot.message}</p>

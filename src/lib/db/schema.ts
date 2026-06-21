@@ -16,7 +16,7 @@ import {
 import { relations, sql } from "drizzle-orm";
 
 export const customerTypeEnum = pgEnum("customer_type", ["individual", "trade"]);
-export const bookingSlotEnum = pgEnum("booking_slot", ["shop", "mobile_1", "mobile_2"]);
+export const bookingSlotEnum = pgEnum("booking_slot", ["shop", "island", "kamloops"]);
 export const bookingStatusEnum = pgEnum("booking_status", [
   "pending",
   "confirmed",

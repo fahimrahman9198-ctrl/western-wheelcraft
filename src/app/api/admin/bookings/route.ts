@@ -8,7 +8,7 @@ import { sql } from 'drizzle-orm';
 const CreateBookingSchema = z.object({
   customerId: z.string().uuid(),
   serviceType: z.string().min(1),
-  slot: z.enum(['shop', 'mobile_1', 'mobile_2']),
+  slot: z.enum(['shop', 'island', 'kamloops']),
   region: z.string().min(1),
   scheduledDate: z.string().date(),
   startTime: z.string().regex(/^\d{2}:\d{2}$/),
