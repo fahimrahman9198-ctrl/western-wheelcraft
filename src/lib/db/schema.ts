@@ -446,6 +446,13 @@ export const invoicesRelations = relations(invoices, ({ one, many }) => ({
   payments: many(payments),
 }));
 
+export const communicationsRelations = relations(communications, ({ one }) => ({
+  customer: one(customers, {
+    fields: [communications.customerId],
+    references: [customers.id],
+  }),
+}));
+
 export type CustomerType = (typeof customerTypeEnum.enumValues)[number];
 export type BookingSlot = (typeof bookingSlotEnum.enumValues)[number];
 export type BookingStatus = (typeof bookingStatusEnum.enumValues)[number];
