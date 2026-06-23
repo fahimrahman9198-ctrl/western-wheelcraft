@@ -7,7 +7,6 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   CalendarDays,
-  FileQuestion,
   FileText,
   Users,
   BarChart3,
@@ -21,7 +20,6 @@ import type { AdminUser } from '@/lib/admin-auth';
 
 const navItems = [
   { label: 'Overview', href: '/admin', icon: LayoutDashboard, exact: true },
-  { label: 'Leads', href: '/admin/leads', icon: FileQuestion },
   { label: 'Bookings', href: '/admin/bookings', icon: CalendarDays },
   { label: 'Invoices', href: '/admin/invoices', icon: FileText },
   { label: 'Customers', href: '/admin/customers', icon: Users },
