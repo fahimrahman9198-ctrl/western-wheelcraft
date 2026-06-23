@@ -58,12 +58,6 @@ export const communicationDirectionEnum = pgEnum("communication_direction", [
 ]);
 export const userRoleEnum = pgEnum("user_role", ["owner", "manager", "accountant", "it"]);
 export const quotePhotoKindEnum = pgEnum("quote_photo_kind", ["damage", "full_wheel", "vehicle", "other"]);
-export const aiAssessmentStatusEnum = pgEnum("ai_assessment_status", [
-  "pending",
-  "completed",
-  "failed",
-  "manual_review",
-]);
 
 const timestamps = {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
@@ -169,26 +163,6 @@ export const quotePhotos = pgTable(
   })
 );
 
-export const aiAssessments = pgTable(
-  "ai_assessments",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    quoteId: uuid("quote_id")
-      .notNull()
-      .references(() => quotes.id, { onDelete: "cascade" }),
-    status: aiAssessmentStatusEnum("status").default("pending").notNull(),
-    model: varchar("model", { length: 120 }),
-    result: jsonb("result"),
-    manualOverride: jsonb("manual_override"),
-    technicianReviewRequired: boolean("technician_review_required").default(false).notNull(),
-    errorMessage: text("error_message"),
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-    completedAt: timestamp("completed_at", { withTimezone: true }),
-  },
-  (table) => ({
-    quoteIdx: index("ai_assessments_quote_id_idx").on(table.quoteId),
-  })
-);
 
 export const bookings = pgTable(
   "bookings",
@@ -409,7 +383,6 @@ export const quotesRelations = relations(quotes, ({ one, many }) => ({
     references: [vehicles.id],
   }),
   photos: many(quotePhotos),
-  aiAssessments: many(aiAssessments),
   bookings: many(bookings),
   invoices: many(invoices),
   payments: many(payments),

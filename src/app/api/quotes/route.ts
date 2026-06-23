@@ -5,6 +5,7 @@ import {
   QuotePhotoValidationError,
   type QuotePhotoUpload,
 } from "@/lib/quote-persistence";
+import { enforceRateLimit, getRateLimitHeaders } from "@/lib/rate-limit";
 
 const baseLeadSchema = z.object({
   customerName: z.string().trim().min(2).max(160),
@@ -56,6 +57,12 @@ function parseMultipartPayload(formData: FormData) {
 }
 
 export async function POST(request: Request) {
+  // Rate limit check
+  const rateLimitCheck = enforceRateLimit(request);
+  if (!rateLimitCheck.allowed) {
+    return rateLimitCheck.response!;
+  }
+
   try {
     const contentType = request.headers.get("content-type") ?? "";
     const isMultipart = contentType.includes("multipart/form-data");

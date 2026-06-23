@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { put, del } from '@vercel/blob';
 import { db } from '@/lib/db';
 import { adminSettings, adminActivities } from '@/lib/db/schema';
 import { requireAdminUser } from '@/lib/admin-auth';
@@ -67,11 +68,19 @@ export async function POST(request: Request) {
     const logoFile = formData.get('logo') as File | null;
 
     if (logoFile && logoFile.size > 0) {
-      // Store as base64 data URL
-      const buffer = await logoFile.arrayBuffer();
-      const base64 = Buffer.from(buffer).toString('base64');
-      const mimeType = logoFile.type || 'image/png';
-      validated.logoBlobUrl = `data:${mimeType};base64,${base64}`;
+      try {
+        // Upload to Vercel Blob
+        const blob = await put(`company-logo/${Date.now()}-${logoFile.name}`, logoFile, {
+          access: 'public',
+        });
+        validated.logoBlobUrl = blob.url;
+      } catch (uploadError) {
+        console.error('Logo upload failed:', uploadError);
+        return NextResponse.json(
+          { error: 'Failed to upload logo' },
+          { status: 500 }
+        );
+      }
     }
 
     // Check if settings exist

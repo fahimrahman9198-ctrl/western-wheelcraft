@@ -40,8 +40,8 @@ export async function getCurrentAdminUser(): Promise<AdminUser | null> {
   const user = await currentUser();
   if (!user?.username) return null;
 
-  const metadataRole = user.publicMetadata.role ?? user.privateMetadata.role;
-  const role = roleFromUsername(user.username) ?? (isAdminRole(metadataRole) ? metadataRole : null);
+  // Check env-based role lists (source of truth); do NOT fall back to metadata
+  const role = roleFromUsername(user.username);
   if (!role) return null;
 
   return {

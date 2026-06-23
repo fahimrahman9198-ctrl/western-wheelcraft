@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createBookingRequest } from "@/lib/booking-persistence";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 const bookingRequestSchema = z.object({
   customerName: z.string().trim().min(2).max(160),
@@ -16,6 +17,12 @@ const bookingRequestSchema = z.object({
 });
 
 export async function POST(request: Request) {
+  // Rate limit check
+  const rateLimitCheck = enforceRateLimit(request);
+  if (!rateLimitCheck.allowed) {
+    return rateLimitCheck.response!;
+  }
+
   try {
     const payload = bookingRequestSchema.parse(await request.json());
     const result = await createBookingRequest(payload);

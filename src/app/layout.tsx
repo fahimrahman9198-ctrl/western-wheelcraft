@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { LocalBusinessSchema, OrganizationSchema } from "@/lib/structured-data";
+import { getAggregateRatingSchema } from "@/lib/reviews";
 
 const archivoBlack = Archivo_Black({
   weight: "400",
@@ -128,6 +129,11 @@ export default function RootLayout({
             id="local-business-schema"
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(LocalBusinessSchema) }}
+          />
+          <Script
+            id="aggregate-rating-schema"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(getAggregateRatingSchema()) }}
           />
         </head>
         <body className="min-h-screen bg-brand-jet text-brand-white antialiased flex flex-col">
