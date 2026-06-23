@@ -37,7 +37,7 @@ export function InvoiceTemplate({ invoice }: { invoice: InvoiceData }) {
   // Company info
   const companyData = {
     name: 'Western Wheelcraft',
-    logo: '🎯', // Placeholder for logo - can be replaced with actual image
+    logo: '/images/logo.PNG',
     address: '123 Business Street, Vancouver, BC V6B 1A1',
     phone: '(604) 555-0001',
     email: 'info@westernwheelcraft.ca',
@@ -53,8 +53,16 @@ export function InvoiceTemplate({ invoice }: { invoice: InvoiceData }) {
       <div className="flex justify-between items-start mb-12 pb-8 border-b-2 border-gray-300">
         {/* Company Info */}
         <div>
-          <div className="text-4xl font-bold text-gray-900 mb-1">
-            {companyData.logo} {companyData.name}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+            <img
+              src={companyData.logo}
+              alt={companyData.name}
+              crossOrigin="anonymous"
+              style={{ width: '64px', height: '64px', objectFit: 'contain' }}
+            />
+            <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#111827' }}>
+              {companyData.name}
+            </div>
           </div>
           <div className="text-sm text-gray-600 mt-4 space-y-1">
             <p>{companyData.address}</p>

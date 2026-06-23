@@ -6,8 +6,20 @@ export async function generatePDFFromElement(
   filename: string = 'document.pdf'
 ): Promise<void> {
   try {
-    // Wait a tick to ensure all styles are applied
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    // Wait for all images to load before capturing
+    const images = element.querySelectorAll('img');
+    await Promise.all(
+      Array.from(images).map((img) => {
+        if (img.complete && img.naturalHeight !== 0) return Promise.resolve();
+        return new Promise<void>((resolve) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+        });
+      })
+    );
+
+    // Extra delay to ensure styles are fully applied
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     // Calculate dimensions
     const canvas = await html2canvas(element, {
