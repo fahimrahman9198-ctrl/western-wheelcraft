@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardTitle, CardDescription } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { FadeIn } from '@/components/ui/FadeIn';
+import { ServiceSchema } from '@/lib/structured-data';
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -134,6 +136,11 @@ const services = [
 export default function ServicesPage() {
   return (
     <>
+      <Script
+        id="service-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ServiceSchema) }}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden bg-brand-jet py-24">
         <Image

@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Manrope, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
+import { LocalBusinessSchema, OrganizationSchema } from "@/lib/structured-data";
 
 const archivoBlack = Archivo_Black({
   weight: "400",
@@ -59,7 +61,7 @@ export const metadata: Metadata = {
       "BC's trusted wheel refinishing experts. Mobile fleet service across Lower Mainland, Vancouver Island & Interior BC.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/og-image.svg",
         width: 1200,
         height: 630,
         alt: "Western Wheelcraft — Premium Wheel Refinishing",
@@ -71,7 +73,7 @@ export const metadata: Metadata = {
     title: "Western Wheelcraft | Premium Wheel Refinishing",
     description:
       "BC's trusted wheel refinishing experts. Mobile fleet service across Lower Mainland, Vancouver Island & Interior BC.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.svg"],
   },
   robots: {
     index: true,
@@ -116,6 +118,18 @@ export default function RootLayout({
         className={`${archivoBlack.variable} ${manrope.variable} ${jetbrainsMono.variable} dark`}
         suppressHydrationWarning
       >
+        <head>
+          <Script
+            id="organization-schema"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(OrganizationSchema) }}
+          />
+          <Script
+            id="local-business-schema"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(LocalBusinessSchema) }}
+          />
+        </head>
         <body className="min-h-screen bg-brand-jet text-brand-white antialiased flex flex-col">
           <Header />
           <main className="flex-1">{children}</main>

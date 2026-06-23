@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
+import { FAQSchema } from '@/lib/structured-data';
 
 export const metadata: Metadata = {
   title: 'Wheel Refinishing Estimate',
@@ -6,5 +8,14 @@ export const metadata: Metadata = {
 };
 
 export default function EstimateLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <Script
+        id="faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQSchema) }}
+      />
+      {children}
+    </>
+  );
 }
