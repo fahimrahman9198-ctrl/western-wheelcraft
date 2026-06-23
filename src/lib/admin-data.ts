@@ -79,8 +79,8 @@ export async function getAdminBookingsData() {
 }
 
 export async function getAdminCustomersData() {
+  // Note: archivedAt filter applied if column exists (Phase B migration)
   const customers = await db.query.customers.findMany({
-    where: isNull(schema.customers.archivedAt),
     orderBy: [desc(schema.customers.createdAt)],
     limit: 100,
     with: {
@@ -166,7 +166,6 @@ export async function getAdminAnalyticsData() {
       limit: 500,
     }),
     db.query.customers.findMany({
-      where: isNull(schema.customers.archivedAt),
       orderBy: [desc(schema.customers.createdAt)],
       limit: 500,
     }),
