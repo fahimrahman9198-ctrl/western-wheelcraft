@@ -173,7 +173,7 @@ export default function HomePage() {
           className="object-cover object-center"
           preload
         />
-        <div className="absolute inset-0 bg-brand-jet/80" aria-hidden="true" />
+        <div className="absolute inset-0 bg-brand-jet/60" aria-hidden="true" />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -349,7 +349,7 @@ export default function HomePage() {
               <FadeIn key={region.name} delay={i * 80}>
                 <Link
                   href={region.href}
-                  className="group relative flex flex-col rounded-2xl border border-brand-graphite bg-brand-graphite p-8 shadow-card transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:border-brand-red/50 hover:shadow-red-glow/20 no-underline h-full"
+                  className="group relative flex flex-col rounded-2xl border border-brand-ash bg-brand-graphite p-8 shadow-card transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:border-brand-red/50 hover:shadow-red-glow/20 no-underline h-full"
                 >
                   <div className="mb-3 flex items-center justify-between">
                     <span className="inline-flex items-center rounded-full bg-brand-red/10 px-3 py-1 font-body text-caption font-semibold text-brand-red">

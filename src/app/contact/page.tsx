@@ -86,7 +86,7 @@ export default function ContactPage() {
             {/* Form */}
             <div className="lg:col-span-3">
               <FadeIn>
-                <div className="rounded-3xl border border-brand-graphite bg-brand-graphite p-8 md:p-10">
+                <div className="rounded-3xl border border-brand-ash bg-brand-graphite p-8 md:p-10">
                   <h2 className="mb-2 font-display text-display-sm text-brand-white">Send Us a Message</h2>
                   <p className="mb-8 font-body text-body-sm text-brand-silver">
                     Select your region so we can direct your request to the right team.
@@ -99,7 +99,7 @@ export default function ContactPage() {
             {/* Business info */}
             <div className="lg:col-span-2 flex flex-col gap-6">
               <FadeIn delay={80}>
-                <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-7">
+                <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-7">
                   <h3 className="mb-5 font-display text-body-lg text-brand-white">Burnaby Shop</h3>
                   <div className="flex flex-col gap-4">
                     <a
@@ -150,7 +150,7 @@ export default function ContactPage() {
 
               <FadeIn delay={140}>
                 {/* Map placeholder */}
-                <div className="overflow-hidden rounded-2xl border border-brand-graphite bg-brand-graphite">
+                <div className="overflow-hidden rounded-2xl border border-brand-ash bg-brand-graphite">
                   <div className="relative flex aspect-video items-center justify-center bg-gradient-to-br from-brand-graphite to-brand-graphite-light">
                     <div className="absolute inset-0 opacity-20">
                       {/* Grid lines simulating map */}

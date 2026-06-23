@@ -241,7 +241,7 @@ export default function AboutPage() {
           </FadeIn>
           <div className="grid gap-6 md:grid-cols-2">
             <FadeIn delay={80}>
-              <div className="rounded-3xl border border-brand-graphite bg-brand-graphite p-8">
+              <div className="rounded-3xl border border-brand-ash bg-brand-graphite p-8">
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-red/10 text-brand-red">
                   <IconBuilding />
                 </div>
@@ -317,7 +317,7 @@ export default function AboutPage() {
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {team.map((member, i) => (
               <FadeIn key={member.name} delay={i * 70}>
-                <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-5">
+                <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-5">
                   <h3 className="font-display text-body-md text-brand-white">{member.name}</h3>
                   <p className="font-body text-body-sm text-brand-red">{member.role}</p>
                   <p className="mt-1 font-body text-caption text-brand-silver">{member.years}</p>

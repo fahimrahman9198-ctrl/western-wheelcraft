@@ -165,7 +165,7 @@ export default async function PostPage(props: PageProps) {
             </article>
 
             {/* CTA */}
-            <div className="mt-12 rounded-xl border border-brand-graphite bg-brand-graphite p-8 text-center">
+            <div className="mt-12 rounded-xl border border-brand-ash bg-brand-graphite p-8 text-center">
               <p className="mb-4 font-body text-body-lg text-brand-white">
                 Ready to refinish your wheels?
               </p>

@@ -18,7 +18,7 @@ export function StripePaymentForm({
       <p className="mt-2 font-body text-body-sm text-amber-100/80">
         Online card payments are disabled until the production Stripe integration is complete.
       </p>
-      <div className="mt-4 rounded-xl border border-brand-graphite bg-brand-graphite/60 px-4 py-3">
+      <div className="mt-4 rounded-xl border border-brand-ash bg-brand-graphite/60 px-4 py-3">
         <p className="font-body text-caption text-brand-silver">Amount shown for reference</p>
         <p className="font-display text-display-sm text-brand-white">{fmtCAD(total)}</p>
       </div>

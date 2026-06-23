@@ -45,7 +45,7 @@ export default async function BookingSuccessPage({ searchParams }: BookingSucces
             </p>
           </div>
 
-          <div className="mb-6 overflow-hidden rounded-3xl border border-brand-graphite bg-brand-graphite shadow-card">
+          <div className="mb-6 overflow-hidden rounded-3xl border border-brand-ash bg-brand-graphite shadow-card">
             <div className="border-b border-brand-graphite-light bg-brand-graphite-light px-6 py-4">
               <div className="flex items-center justify-between">
                 <p className="font-body text-caption uppercase tracking-widest text-brand-red font-semibold">Request Number</p>

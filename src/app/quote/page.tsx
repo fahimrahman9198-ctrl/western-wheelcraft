@@ -166,7 +166,7 @@ export default function QuotePage() {
 
             {steps.map((step, i) => (
               <FadeIn key={step.number} delay={i * 100}>
-                <div className="relative flex flex-col items-center rounded-3xl border border-brand-graphite bg-brand-graphite p-8 text-center">
+                <div className="relative flex flex-col items-center rounded-3xl border border-brand-ash bg-brand-graphite p-8 text-center">
                   <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-red/10 text-brand-red">
                     {step.icon}
                   </div>
@@ -201,7 +201,7 @@ export default function QuotePage() {
                 { q: 'What if I need multiple wheels?', a: 'Volume pricing applies for 3+ wheels. Let us know in your quote request and we\'ll include a bundle price.' },
               ].map((item, i) => (
                 <FadeIn key={item.q} delay={i * 60}>
-                  <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-5">
+                  <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-5">
                     <h3 className="mb-2 font-display text-body-md text-brand-white">{item.q}</h3>
                     <p className="font-body text-body-sm text-brand-silver leading-relaxed">{item.a}</p>
                   </div>

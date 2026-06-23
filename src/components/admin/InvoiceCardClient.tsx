@@ -100,7 +100,7 @@ export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) 
                 {statusLabel(invoice.status)}
               </span>
               {invoice.quote?.quoteNumber && (
-                <span className="rounded-full border border-brand-graphite bg-brand-graphite px-2.5 py-0.5 text-caption text-brand-silver">
+                <span className="rounded-full border border-brand-ash bg-brand-graphite px-2.5 py-0.5 text-caption text-brand-silver">
                   Quote {invoice.quote.quoteNumber}
                 </span>
               )}
@@ -146,7 +146,7 @@ export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) 
           <button
             type="button"
             onClick={() => setIsPreviewOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-brand-graphite bg-brand-graphite/40 hover:bg-brand-graphite px-3 py-2 text-caption text-brand-smoke hover:text-brand-white transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite/40 hover:bg-brand-graphite px-3 py-2 text-caption text-brand-smoke hover:text-brand-white transition-colors"
           >
             <Eye size={13} />
             Preview & Download
@@ -156,7 +156,7 @@ export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) 
             type="button"
             onClick={handleResend}
             disabled={isResending}
-            className="flex items-center gap-1.5 rounded-lg border border-brand-graphite bg-brand-graphite/40 hover:bg-brand-graphite px-3 py-2 text-caption text-brand-smoke hover:text-brand-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite/40 hover:bg-brand-graphite px-3 py-2 text-caption text-brand-smoke hover:text-brand-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isResending ? (
               <>
@@ -176,7 +176,7 @@ export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) 
               type="button"
               onClick={handleMarkAsPaid}
               disabled={isMarkingPaid}
-              className="flex items-center gap-1.5 rounded-lg border border-brand-graphite bg-brand-graphite/40 hover:bg-green-500/20 hover:border-green-500/30 px-3 py-2 text-caption text-brand-smoke hover:text-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite/40 hover:bg-green-500/20 hover:border-green-500/30 px-3 py-2 text-caption text-brand-smoke hover:text-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isMarkingPaid ? (
                 <>

@@ -33,7 +33,7 @@ function MetricCard({
   icon: typeof TrendingUp;
 }) {
   return (
-    <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-6 shadow-card">
+    <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 shadow-card">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="font-display text-body-sm uppercase tracking-widest text-brand-silver">{label}</p>
@@ -61,7 +61,7 @@ function HorizontalBar({ pct }: { pct: number }) {
 
 function EmptyPanel({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-6 text-center shadow-card">
+    <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 text-center shadow-card">
       <BarChart3 className="mx-auto text-brand-ash" size={30} />
       <h2 className="mt-4 font-display text-body-md text-brand-white">{title}</h2>
       <p className="mx-auto mt-2 max-w-lg text-body-sm text-brand-silver">{body}</p>
@@ -87,7 +87,7 @@ export default async function AnalyticsPage() {
           <button
             type="button"
             disabled
-            className="flex items-center gap-1.5 rounded-lg border border-brand-graphite bg-brand-graphite px-3 py-1.5 text-caption text-brand-ash opacity-75"
+            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite px-3 py-1.5 text-caption text-brand-ash opacity-75"
           >
             <Download size={13} />
             CSV Pending
@@ -95,7 +95,7 @@ export default async function AnalyticsPage() {
           <button
             type="button"
             disabled
-            className="flex items-center gap-1.5 rounded-lg border border-brand-graphite bg-brand-graphite px-3 py-1.5 text-caption text-brand-ash opacity-75"
+            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite px-3 py-1.5 text-caption text-brand-ash opacity-75"
           >
             <FileText size={13} />
             PDF Pending
@@ -131,7 +131,7 @@ export default async function AnalyticsPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-6 shadow-card">
+        <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 shadow-card">
           <h2 className="mb-1 font-display text-body-md text-brand-white">Lead Sources</h2>
           <p className="mb-5 text-caption text-brand-silver">Source counts from quote records.</p>
           {data.sourceCounts.length === 0 ? (
@@ -161,7 +161,7 @@ export default async function AnalyticsPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-6 shadow-card">
+        <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 shadow-card">
           <h2 className="mb-1 font-display text-body-md text-brand-white">Quote Funnel</h2>
           <p className="mb-5 text-caption text-brand-silver">Live operational counts. Visitor analytics are not connected yet.</p>
           <div className="space-y-3">
@@ -190,7 +190,7 @@ export default async function AnalyticsPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-6 shadow-card">
+        <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 shadow-card">
           <h2 className="mb-1 font-display text-body-md text-brand-white">Quoted Revenue by Service</h2>
           <p className="mb-5 text-caption text-brand-silver">Calculated from `quotes.estimatedTotal`.</p>
           {data.serviceBreakdown.length === 0 ? (
@@ -215,7 +215,7 @@ export default async function AnalyticsPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-6 shadow-card">
+        <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 shadow-card">
           <h2 className="mb-1 font-display text-body-md text-brand-white">Quoted Revenue by Region</h2>
           <p className="mb-5 text-caption text-brand-silver">Calculated from quote request region fields.</p>
           {data.regionBreakdown.length === 0 ? (
@@ -242,7 +242,7 @@ export default async function AnalyticsPage() {
       </div>
 
       {data.recentInvoices.length > 0 ? (
-        <div className="overflow-hidden rounded-2xl border border-brand-graphite bg-brand-graphite shadow-card">
+        <div className="overflow-hidden rounded-2xl border border-brand-ash bg-brand-graphite shadow-card">
           <div className="border-b border-brand-ash px-6 py-5">
             <h2 className="font-display text-body-md text-brand-white">Recent Invoices</h2>
             <p className="mt-0.5 text-caption text-brand-silver">Real Neon invoice records only.</p>

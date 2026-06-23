@@ -107,7 +107,7 @@ export function CompanySettingsForm({
         </label>
         <div className="flex flex-col gap-4">
           {logoPreview ? (
-            <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-brand-graphite bg-brand-graphite/30">
+            <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-brand-ash bg-brand-graphite/30">
               <img
                 src={logoPreview}
                 alt="Logo preview"
@@ -122,7 +122,7 @@ export function CompanySettingsForm({
               </button>
             </div>
           ) : (
-            <div className="w-32 h-32 rounded-lg border-2 border-dashed border-brand-graphite bg-brand-graphite/10 flex items-center justify-center">
+            <div className="w-32 h-32 rounded-lg border-2 border-dashed border-brand-ash bg-brand-graphite/10 flex items-center justify-center">
               <span className="text-brand-ash text-sm text-center">No logo</span>
             </div>
           )}

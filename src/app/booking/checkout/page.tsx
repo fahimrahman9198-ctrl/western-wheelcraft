@@ -24,7 +24,7 @@ export default function BookingCheckoutPage() {
       </div>
 
       <div className="section-container pt-10">
-        <div className="max-w-2xl rounded-2xl border border-brand-graphite bg-brand-graphite/50 p-6">
+        <div className="max-w-2xl rounded-2xl border border-brand-ash bg-brand-graphite/50 p-6">
           <p className="font-display text-body-md text-brand-white">What happens next?</p>
           <p className="mt-3 font-body text-body-sm text-brand-silver">
             You should receive a confirmation email shortly. Our team will contact you to confirm your appointment date and time.

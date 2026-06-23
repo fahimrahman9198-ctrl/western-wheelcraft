@@ -130,7 +130,7 @@ export default function DealershipsPage() {
           className="object-cover object-center"
           preload
         />
-        <div className="absolute inset-0 bg-brand-jet/80" aria-hidden="true" />
+        <div className="absolute inset-0 bg-brand-jet/60" aria-hidden="true" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-brand-red/5 blur-3xl" />
           <div className="absolute -left-20 bottom-0 h-[400px] w-[400px] rounded-full bg-brand-red/4 blur-3xl" />
@@ -209,7 +209,7 @@ export default function DealershipsPage() {
               {logos.map((logo) => (
                 <div
                   key={logo}
-                  className="flex items-center justify-center rounded-xl border border-brand-graphite bg-brand-graphite px-4 py-5 text-center"
+                  className="flex items-center justify-center rounded-xl border border-brand-ash bg-brand-graphite px-4 py-5 text-center"
                 >
                   <span className="font-display text-caption leading-tight text-brand-silver">
                     {logo}
@@ -270,7 +270,7 @@ export default function DealershipsPage() {
           <div className="grid gap-5 md:grid-cols-3">
             {testimonials.map((t, i) => (
               <FadeIn key={t.dealership} delay={i * 80}>
-                <div className="flex flex-col rounded-2xl border border-brand-graphite bg-brand-graphite p-7 shadow-card h-full">
+                <div className="flex flex-col rounded-2xl border border-brand-ash bg-brand-graphite p-7 shadow-card h-full">
                   <div className="mb-4 text-brand-red">
                     <IconQuote />
                   </div>

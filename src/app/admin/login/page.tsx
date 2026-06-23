@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
               card: 'border border-brand-graphite bg-brand-jet-light shadow-card',
               headerTitle: 'font-display text-brand-white',
               headerSubtitle: 'text-brand-silver',
-              socialButtonsBlockButton: 'border-brand-graphite bg-brand-graphite text-brand-white',
+              socialButtonsBlockButton: 'border-brand-ash bg-brand-graphite text-brand-white',
               formButtonPrimary: 'bg-brand-red hover:bg-brand-red-hover',
               footerAction: 'hidden',
             },

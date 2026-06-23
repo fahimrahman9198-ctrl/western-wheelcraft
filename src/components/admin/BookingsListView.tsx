@@ -50,7 +50,7 @@ export function BookingsListView({
       <div className="overflow-x-auto rounded-xl border border-brand-graphite">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-brand-graphite bg-brand-graphite/50">
+            <tr className="border-b border-brand-ash bg-brand-graphite/50">
               <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-brand-white">
                 Booking #
               </th>

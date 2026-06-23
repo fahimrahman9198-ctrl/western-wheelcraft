@@ -106,7 +106,7 @@ export default function DealershipInvoicesPage() {
               { label: 'Overdue',     value: fmtCAD(outstanding.filter(i => i.status === 'overdue').reduce((s, i) => s + i.amount, 0)), color: 'text-brand-red' },
               { label: 'Paid YTD',   value: fmtCAD(paidInvoices.reduce((s, i) => s + i.amount, 0)), color: 'text-success' },
             ].map(stat => (
-              <div key={stat.label} className="rounded-2xl border border-brand-graphite bg-brand-graphite px-4 py-3 text-center">
+              <div key={stat.label} className="rounded-2xl border border-brand-ash bg-brand-graphite px-4 py-3 text-center">
                 <p className={`font-display text-display-sm ${stat.color}`}>{stat.value}</p>
                 <p className="font-body text-caption text-brand-silver">{stat.label}</p>
               </div>
@@ -155,7 +155,7 @@ export default function DealershipInvoicesPage() {
                         'cursor-pointer rounded-2xl border p-5 transition-all duration-200',
                         selected.has(invoice.id)
                           ? 'border-brand-red bg-brand-red/8'
-                          : 'border-brand-graphite bg-brand-graphite hover:border-brand-ash'
+                          : 'border-brand-ash bg-brand-graphite hover:border-brand-ash'
                       )}
                     >
                       <div className="flex items-start gap-4">
@@ -198,7 +198,7 @@ export default function DealershipInvoicesPage() {
             )}
 
             {outstanding.length === 0 && (
-              <div className="flex flex-col items-center gap-4 rounded-3xl border border-brand-graphite bg-brand-graphite py-16 text-center">
+              <div className="flex flex-col items-center gap-4 rounded-3xl border border-brand-ash bg-brand-graphite py-16 text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success/20 text-success">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -219,7 +219,7 @@ export default function DealershipInvoicesPage() {
                   {paidInvoices.map(invoice => (
                     <div
                       key={invoice.id}
-                      className="flex items-center justify-between rounded-2xl border border-brand-graphite bg-brand-graphite/50 px-5 py-4 opacity-70"
+                      className="flex items-center justify-between rounded-2xl border border-brand-ash bg-brand-graphite/50 px-5 py-4 opacity-70"
                     >
                       <div>
                         <div className="flex items-center gap-2">
@@ -246,7 +246,7 @@ export default function DealershipInvoicesPage() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
-                    className="rounded-3xl border border-brand-graphite bg-brand-graphite p-6 shadow-card"
+                    className="rounded-3xl border border-brand-ash bg-brand-graphite p-6 shadow-card"
                   >
                     <div className="mb-5 flex items-center justify-between">
                       <p className="font-display text-body-md text-brand-white">Payment</p>
@@ -274,7 +274,7 @@ export default function DealershipInvoicesPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="rounded-3xl border border-brand-graphite bg-brand-graphite p-6 shadow-card"
+                    className="rounded-3xl border border-brand-ash bg-brand-graphite p-6 shadow-card"
                   >
                     <p className="mb-4 font-display text-body-md text-brand-white">Account Info</p>
                     <div className="flex flex-col gap-3 font-body text-body-sm text-brand-smoke">

@@ -150,7 +150,7 @@ export default function ServicesPage() {
           className="object-cover object-center"
           preload
         />
-        <div className="absolute inset-0 bg-brand-jet/85" aria-hidden="true" />
+        <div className="absolute inset-0 bg-brand-jet/60" aria-hidden="true" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-brand-red/5 blur-3xl" />
         </div>
@@ -264,7 +264,7 @@ export default function ServicesPage() {
 
           <div className="grid gap-6 md:grid-cols-2">
             <FadeIn delay={80}>
-              <div className="flex flex-col rounded-3xl border border-brand-graphite bg-brand-graphite p-8 shadow-card h-full">
+              <div className="flex flex-col rounded-3xl border border-brand-ash bg-brand-graphite p-8 shadow-card h-full">
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-red/15 text-brand-red">
                   <IconBuilding />
                 </div>

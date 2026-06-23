@@ -110,7 +110,7 @@ export default async function RegionPage(props: PageProps) {
           className="object-cover object-center"
           priority
         />
-        <div className="absolute inset-0 bg-brand-jet/80" aria-hidden="true" />
+        <div className="absolute inset-0 bg-brand-jet/60" aria-hidden="true" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-brand-red/5 blur-3xl" />
           <div className="absolute -left-20 bottom-0 h-[400px] w-[400px] rounded-full bg-brand-red/4 blur-3xl" />
@@ -150,7 +150,7 @@ export default async function RegionPage(props: PageProps) {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {region.serviceAreas.map((area, i) => (
               <FadeIn key={area} delay={i * 60}>
-                <div className="rounded-xl border border-brand-graphite bg-brand-graphite p-4 text-center">
+                <div className="rounded-xl border border-brand-ash bg-brand-graphite p-4 text-center">
                   <p className="font-body text-body-md text-brand-white">{area}</p>
                 </div>
               </FadeIn>
@@ -169,7 +169,7 @@ export default async function RegionPage(props: PageProps) {
             </div>
           </FadeIn>
           <FadeIn delay={60}>
-            <div className="mx-auto max-w-2xl rounded-2xl border border-brand-graphite bg-brand-graphite p-8 shadow-card">
+            <div className="mx-auto max-w-2xl rounded-2xl border border-brand-ash bg-brand-graphite p-8 shadow-card">
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <IconMapPin />
@@ -208,7 +208,7 @@ export default async function RegionPage(props: PageProps) {
           <div className="grid gap-5 md:grid-cols-2">
             {region.testimonials.map((testimonial, i) => (
               <FadeIn key={i} delay={i * 80}>
-                <div className="flex flex-col rounded-2xl border border-brand-graphite bg-brand-graphite p-7 shadow-card h-full">
+                <div className="flex flex-col rounded-2xl border border-brand-ash bg-brand-graphite p-7 shadow-card h-full">
                   <div className="mb-4 text-brand-red">
                     <IconQuote />
                   </div>

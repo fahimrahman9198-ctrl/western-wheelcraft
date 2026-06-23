@@ -271,7 +271,7 @@ export default function RegionsPage() {
           <div className="grid gap-5 sm:grid-cols-2">
             {mobileRegions.map((region, i) => (
               <FadeIn key={region.name} delay={i * 80}>
-                <div className="group flex flex-col rounded-2xl border border-brand-graphite bg-brand-graphite p-7 shadow-card transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:border-brand-red/40 hover:shadow-red-glow/10 h-full">
+                <div className="group flex flex-col rounded-2xl border border-brand-ash bg-brand-graphite p-7 shadow-card transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:border-brand-red/40 hover:shadow-red-glow/10 h-full">
                   <div className="mb-4 flex items-center justify-between">
                     <h3 className="font-display text-display-sm text-brand-white group-hover:text-brand-red transition-colors duration-200">
                       {region.name}

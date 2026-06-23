@@ -77,7 +77,7 @@ export function InvoicesPageClient({
                 name="q"
                 defaultValue={query}
                 placeholder="Search customer or invoice #"
-                className="w-full rounded-lg border border-brand-graphite bg-brand-graphite py-2 pl-8 pr-3 text-body-sm text-brand-white placeholder:text-brand-ash focus:border-brand-red/50 focus:outline-none sm:w-72"
+                className="w-full rounded-lg border border-brand-ash bg-brand-graphite py-2 pl-8 pr-3 text-body-sm text-brand-white placeholder:text-brand-ash focus:border-brand-red/50 focus:outline-none sm:w-72"
               />
             </form>
           </div>

@@ -90,7 +90,7 @@ export function LeadsClientPage({ leads, company }: LeadsClientPageProps) {
                     >
                       {statusLabel(lead.status)}
                     </span>
-                    <span className="rounded-full border border-brand-graphite bg-brand-graphite px-2.5 py-0.5 text-caption text-brand-silver">
+                    <span className="rounded-full border border-brand-ash bg-brand-graphite px-2.5 py-0.5 text-caption text-brand-silver">
                       Quote {lead.quoteNumber}
                     </span>
                   </div>
@@ -128,7 +128,7 @@ export function LeadsClientPage({ leads, company }: LeadsClientPageProps) {
 
               {/* Vehicle & Service */}
               <div className="mt-4 grid gap-3 md:grid-cols-2">
-                <div className="rounded-lg border border-brand-graphite bg-brand-graphite/40 p-4">
+                <div className="rounded-lg border border-brand-ash bg-brand-graphite/40 p-4">
                   <div className="text-caption font-semibold uppercase tracking-wider text-brand-ash mb-1">
                     Vehicle
                   </div>
@@ -139,7 +139,7 @@ export function LeadsClientPage({ leads, company }: LeadsClientPageProps) {
                   </p>
                 </div>
 
-                <div className="rounded-lg border border-brand-graphite bg-brand-graphite/40 p-4">
+                <div className="rounded-lg border border-brand-ash bg-brand-graphite/40 p-4">
                   <div className="text-caption font-semibold uppercase tracking-wider text-brand-ash mb-1">
                     Service
                   </div>
@@ -158,7 +158,7 @@ export function LeadsClientPage({ leads, company }: LeadsClientPageProps) {
               )}
 
               {/* Pricing Breakdown */}
-              <div className="mt-4 rounded-lg border border-brand-graphite bg-brand-graphite/30 p-4">
+              <div className="mt-4 rounded-lg border border-brand-ash bg-brand-graphite/30 p-4">
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
                     <p className="text-caption text-brand-ash">Subtotal</p>
@@ -185,7 +185,7 @@ export function LeadsClientPage({ leads, company }: LeadsClientPageProps) {
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => handleViewQuote(lead)}
-                  className="flex items-center gap-1.5 rounded-lg border border-brand-graphite bg-brand-graphite/40 hover:bg-brand-graphite px-3 py-2 text-caption text-brand-smoke hover:text-brand-white transition-colors"
+                  className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite/40 hover:bg-brand-graphite px-3 py-2 text-caption text-brand-smoke hover:text-brand-white transition-colors"
                 >
                   <Eye size={13} />
                   View Quote

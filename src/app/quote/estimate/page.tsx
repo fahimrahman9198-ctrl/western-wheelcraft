@@ -763,7 +763,7 @@ export default function EstimatePage() {
                   />
 
                   <div className="flex flex-col gap-6">
-                    <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-6">
+                    <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6">
                       <p className="mb-4 font-body text-body-sm font-semibold text-brand-white">Select Number of Wheels</p>
                       <div className="grid grid-cols-4 gap-3">
                         {[1, 2, 3, 4, 5, 6, 7, 8].map(count => (
@@ -783,7 +783,7 @@ export default function EstimatePage() {
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-6">
+                    <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6">
                       <div className="mb-4 flex items-start gap-3">
                         <div className="mt-0.5 text-brand-red"><IconSpark /></div>
                         <div>
@@ -855,7 +855,7 @@ export default function EstimatePage() {
                           'flex w-full items-center gap-4 rounded-2xl border p-5 text-left transition-all duration-200',
                           finish.type === f.value
                             ? 'border-brand-red bg-brand-red/10 shadow-red-glow/20'
-                            : 'border-brand-graphite bg-brand-graphite hover:border-brand-ash'
+                            : 'border-brand-ash bg-brand-graphite hover:border-brand-ash'
                         )}
                       >
                         <div className={cn(
@@ -897,7 +897,7 @@ export default function EstimatePage() {
                         exit={{ opacity: 0, height: 0 }}
                         className="mt-4 overflow-hidden"
                       >
-                        <div className="rounded-2xl border border-brand-graphite bg-brand-graphite p-5">
+                        <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-5">
                           <p className="mb-3 font-body text-body-sm font-semibold text-brand-white">Pick Your Color</p>
                           <div className="flex items-center gap-4">
                             <input
@@ -1039,7 +1039,7 @@ export default function EstimatePage() {
                     </AnimatePresence>
 
                     {/* Consent checkboxes */}
-                    <div className="mt-2 flex flex-col gap-3 rounded-2xl border border-brand-graphite bg-brand-graphite p-5">
+                    <div className="mt-2 flex flex-col gap-3 rounded-2xl border border-brand-ash bg-brand-graphite p-5">
                       {/* Marketing consent — optional */}
                       <label className="flex cursor-pointer items-start gap-3">
                         <div
@@ -1128,7 +1128,7 @@ export default function EstimatePage() {
                     transition={transition}
                   >
                     {/* Personalised greeting */}
-                    <div className="mb-5 rounded-2xl border border-brand-graphite bg-brand-graphite px-5 py-4">
+                    <div className="mb-5 rounded-2xl border border-brand-ash bg-brand-graphite px-5 py-4">
                       <p className="font-body text-body-sm text-brand-smoke">
                         Hi <strong className="text-brand-white">{contact.fullName.split(' ')[0]}</strong> — here&rsquo;s your estimated price.
                         Your request has been saved for team review{savedQuoteNumber ? ` as ${savedQuoteNumber}` : ''}.
@@ -1149,7 +1149,7 @@ export default function EstimatePage() {
                     </div>
 
                     {/* Price breakdown */}
-                    <div className="mb-6 overflow-hidden rounded-3xl border border-brand-graphite bg-brand-graphite shadow-card">
+                    <div className="mb-6 overflow-hidden rounded-3xl border border-brand-ash bg-brand-graphite shadow-card">
                       <div className="border-b border-brand-graphite-light px-6 py-4">
                         <p className="font-display text-body-md text-brand-white">Estimated Price</p>
                       </div>
