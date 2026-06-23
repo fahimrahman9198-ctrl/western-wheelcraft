@@ -15,6 +15,13 @@
       "when": 1781918764755,
       "tag": "0001_aspiring_firebird",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782192085181,
+      "tag": "0002_uneven_malice",
+      "breakpoints": true
     }
   ]
 }
