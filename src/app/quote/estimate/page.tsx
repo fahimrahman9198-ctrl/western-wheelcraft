@@ -789,7 +789,7 @@ export default function EstimatePage() {
                         <div>
                           <p className="font-display text-body-md text-brand-white">Fixed Pricing</p>
                           <p className="mt-1 font-body text-body-sm text-brand-smoke">
-                            <strong className="text-brand-white">$250 per wheel</strong> · 4+ wheels get <strong className="text-success">$100 off</strong> · Plus 5% GST
+                            <strong className="text-brand-white">$250 per wheel</strong> · 4+ wheels get <strong className="text-success">$200 off</strong> · Plus 5% GST + 7% PST
                           </p>
                         </div>
                       </div>
@@ -805,12 +805,16 @@ export default function EstimatePage() {
                               {vehicle.wheelCount >= 4 && (
                                 <div className="flex justify-between font-body text-body-sm text-success">
                                   <span>Bulk discount (4+ wheels)</span>
-                                  <span>-$100.00</span>
+                                  <span>-$200.00</span>
                                 </div>
                               )}
                               <div className="flex justify-between font-body text-body-sm text-brand-smoke">
                                 <span>GST (5%)</span>
                                 <span className="text-brand-white">${pricing.gst.toFixed(2)}</span>
+                              </div>
+                              <div className="flex justify-between font-body text-body-sm text-brand-smoke">
+                                <span>PST (7%)</span>
+                                <span className="text-brand-white">${(pricing.total - pricing.gst - (pricing.subtotal || 0)).toFixed(2)}</span>
                               </div>
                               <div className="flex justify-between border-t border-brand-ash pt-2 font-display text-display-sm text-brand-red">
                                 <span>Total</span>
@@ -1163,7 +1167,7 @@ export default function EstimatePage() {
                                 {vehicle.wheelCount >= 4 && (
                                   <div className="flex justify-between font-body text-body-sm text-success">
                                     <span>Bulk discount (4+ wheels)</span>
-                                    <span>-$100.00</span>
+                                    <span>-$200.00</span>
                                   </div>
                                 )}
                               </div>
@@ -1176,6 +1180,10 @@ export default function EstimatePage() {
                                 <div className="flex justify-between font-body text-body-sm text-brand-smoke">
                                   <span>GST (5%)</span>
                                   <span className="text-brand-white">${pricing.gst.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between font-body text-body-sm text-brand-smoke">
+                                  <span>PST (7%)</span>
+                                  <span className="text-brand-white">${(pricing.total - pricing.gst - pricing.subtotal).toFixed(2)}</span>
                                 </div>
                               </div>
 

@@ -135,11 +135,12 @@ export function calcPricing(
 export function calcFixedWheelPricing(wheelCount: number): PricingBreakdown {
   const basePerWheel = 250;
   let subtotal = wheelCount * basePerWheel;
-  const bulkDiscount = wheelCount >= 4 ? 100 : 0;
+  const bulkDiscount = wheelCount >= 4 ? 200 : 0;
   subtotal -= bulkDiscount;
 
   const gst = subtotal * 0.05;
-  const total = subtotal + gst;
+  const pst = subtotal * 0.07;
+  const total = subtotal + gst + pst;
 
   return {
     wheels: Array.from({ length: wheelCount }, (_, i) => ({

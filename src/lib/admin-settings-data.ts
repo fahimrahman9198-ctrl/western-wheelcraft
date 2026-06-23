@@ -38,10 +38,10 @@ export type AdminSettingsSection = keyof AdminSettingsPayload;
 
 export const DEFAULT_BUSINESS_SETTINGS: BusinessSettings = {
   companyName: 'Western Wheelcraft Ltd.',
-  address: '3756 Napier St, Burnaby BC V5C 3E5',
-  phone: '604.710.6174',
+  address: '3756 Napier St, Burnaby, BC V5C 3E5',
+  phone: '(604) 710-6174',
   email: 'info@westernwheelcraft.ca',
-  gst: '12345 6789 BC0001',
+  gst: '843250168RT001',
   website: 'westernwheelcraft.ca',
 };
 

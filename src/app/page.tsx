@@ -90,10 +90,10 @@ function IconPhone() {
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const trustBadges = [
-  { value: "35+", label: "Years in Business", sublabel: "Est. 1989" },
   { value: "50k+", label: "Wheels Refinished", sublabel: "And counting" },
   { value: "3", label: "Regions Served", sublabel: "Across BC" },
   { value: "100%", label: "Satisfaction Guarantee", sublabel: "Or we re-do it" },
+  { value: "24/7", label: "Fleet Service Available", sublabel: "Emergency repairs" },
 ];
 
 const whyUsCards = [
@@ -187,7 +187,7 @@ export default function HomePage() {
           <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-brand-red/30 bg-brand-red/10 px-4 py-2">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-red animate-pulse" />
             <span className="font-body text-caption font-semibold uppercase tracking-widest text-brand-red">
-              BC&rsquo;s Premier Wheel Refinishers Since 1989
+              BC&rsquo;s Premier Wheel Refinishers
             </span>
           </div>
 

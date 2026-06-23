@@ -38,10 +38,10 @@ export function InvoiceTemplate({ invoice }: { invoice: InvoiceData }) {
   const companyData = {
     name: 'Western Wheelcraft',
     logo: '/images/logo.PNG',
-    address: '123 Business Street, Vancouver, BC V6B 1A1',
-    phone: '(604) 555-0001',
+    address: '3756 Napier St, Burnaby, BC V5C 3E5',
+    phone: '(604) 710-6174',
     email: 'info@westernwheelcraft.ca',
-    taxId: 'GST# 123456789',
+    taxId: 'GST# 843250168RT001 | PST# PST-1016-1322',
   };
 
   const discountAmount = invoice.discount || 0;

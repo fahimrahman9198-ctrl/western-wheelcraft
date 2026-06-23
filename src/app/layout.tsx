@@ -29,11 +29,11 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Western Wheelcraft | Premium Wheel Refinishing Since 1989",
+    default: "Western Wheelcraft | Premium Wheel Refinishing",
     template: "%s | Western Wheelcraft",
   },
   description:
-    "Western Wheelcraft Ltd. — BC's trusted wheel refinishing experts since 1989. Curb-rash repair, scratch & gouge refinishing, custom finishes, and OEM color matching. Mobile fleet service across Lower Mainland, Vancouver Island & Interior BC.",
+    "Western Wheelcraft Ltd. — BC's trusted wheel refinishing experts. Curb-rash repair, scratch & gouge refinishing, custom finishes, and OEM color matching. Mobile fleet service across Lower Mainland, Vancouver Island & Interior BC.",
   keywords: [
     "wheel refinishing",
     "curb rash repair",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     locale: "en_CA",
     url: "https://westernwheelcraft.ca",
     siteName: "Western Wheelcraft",
-    title: "Western Wheelcraft | Premium Wheel Refinishing Since 1989",
+    title: "Western Wheelcraft | Premium Wheel Refinishing",
     description:
       "BC's trusted wheel refinishing experts. Mobile fleet service across Lower Mainland, Vancouver Island & Interior BC.",
     images: [
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Western Wheelcraft | Premium Wheel Refinishing Since 1989",
+    title: "Western Wheelcraft | Premium Wheel Refinishing",
     description:
       "BC's trusted wheel refinishing experts. Mobile fleet service across Lower Mainland, Vancouver Island & Interior BC.",
     images: ["/og-image.jpg"],

@@ -34,8 +34,8 @@ function countsByStatus(invoices: Invoice[]) {
 
 const defaultCompany = {
   name: 'Western Wheelcraft',
-  address: '123 Business St, Vancouver, BC V6B 1A1',
-  phone: '(604) 555-0001',
+  address: '3756 Napier St, Burnaby, BC V5C 3E5',
+  phone: '(604) 710-6174',
   email: 'info@westernwheelcraft.ca',
 };
 

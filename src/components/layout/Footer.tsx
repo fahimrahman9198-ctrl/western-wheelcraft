@@ -89,7 +89,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-3 max-w-xs font-body text-body-sm text-brand-silver leading-relaxed">
-              BC&rsquo;s trusted wheel refinishing experts since 1989. Shop service in the Lower Mainland, mobile fleet service across Vancouver Island and Interior BC.
+              BC&rsquo;s trusted wheel refinishing experts. Shop service in the Lower Mainland, mobile fleet service across Vancouver Island and Interior BC.
             </p>
             <div className="mt-5 flex flex-col gap-2.5">
               <a
