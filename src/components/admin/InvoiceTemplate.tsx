@@ -75,21 +75,11 @@ export function InvoiceTemplate({ invoice }: { invoice: InvoiceData }) {
         {/* Invoice Info */}
         <div className="text-right">
           <div className="text-4xl font-bold text-gray-900 mb-4">INVOICE</div>
-          <div
-            style={{
-              backgroundColor: '#111827',
-              color: '#ffffff',
-              padding: '12px 20px',
-              borderRadius: '6px',
-              display: 'inline-block',
-              marginBottom: '16px',
-              minWidth: '180px',
-            }}
-          >
-            <div style={{ fontSize: '11px', color: '#ffffff', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
               Invoice Number
             </div>
-            <div style={{ fontSize: '24px', color: '#ffffff', fontFamily: 'monospace', fontWeight: 'bold', lineHeight: '1.2' }}>
+            <div style={{ fontSize: '28px', color: '#111827', fontFamily: 'monospace', fontWeight: 'bold', lineHeight: '1.2' }}>
               #{invoice.invoiceNumber}
             </div>
           </div>
@@ -212,16 +202,17 @@ export function InvoiceTemplate({ invoice }: { invoice: InvoiceData }) {
               display: 'flex',
               justifyContent: 'space-between',
               padding: '16px 20px',
-              fontSize: '18px',
+              fontSize: '20px',
               fontWeight: 'bold',
-              backgroundColor: '#111827',
-              color: '#ffffff',
-              borderRadius: '0 0 6px 6px',
+              backgroundColor: '#f3f4f6',
+              color: '#111827',
+              borderTop: '3px solid #111827',
+              borderBottom: '3px solid #111827',
               marginTop: '4px',
             }}
           >
-            <span style={{ color: '#ffffff' }}>TOTAL DUE:</span>
-            <span style={{ color: '#ffffff', fontFamily: 'monospace' }}>${invoice.total.toFixed(2)}</span>
+            <span style={{ color: '#111827' }}>TOTAL DUE:</span>
+            <span style={{ color: '#111827', fontFamily: 'monospace' }}>${invoice.total.toFixed(2)}</span>
           </div>
         </div>
       </div>
