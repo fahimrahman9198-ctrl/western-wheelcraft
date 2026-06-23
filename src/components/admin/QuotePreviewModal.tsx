@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { X, Download, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { QuotePDFPreview } from './QuotePDFPreview';
-import { generateInvoicePDF, downloadPDF } from '@/lib/invoice-pdf';
+import { generatePDFFromElement } from '@/lib/pdf-generator';
 
 interface QuotePreviewModalProps {
   isOpen: boolean;
@@ -32,8 +32,7 @@ export function QuotePreviewModal({
 
     setIsDownloading(true);
     try {
-      const blob = await generateInvoicePDF(previewRef.current, quote);
-      downloadPDF(blob, `quote_${quote.quoteNumber}.pdf`);
+      await generatePDFFromElement(previewRef.current, `quote_${quote.quoteNumber}.pdf`);
       toast.success('Quote downloaded successfully');
     } catch (error) {
       console.error('Download failed:', error);

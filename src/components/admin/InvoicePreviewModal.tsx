@@ -113,7 +113,9 @@ export function InvoicePreviewModal({
                 subtotal: Number(invoice.subtotal) || 0,
                 discount: 0,
                 gst: Number(invoice.gst) || 0,
-                pst: 0,
+                // PST isn't a stored column yet (Phase B); derive it from the
+                // subtotal at the BC rate so the PDF shows the correct value.
+                pst: Number(invoice.pst) || (Number(invoice.subtotal) || 0) * 0.07,
                 total: Number(invoice.total) || 0,
                 notes: invoice.notes || '',
               }}

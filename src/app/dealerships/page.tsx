@@ -125,7 +125,7 @@ export default function DealershipsPage() {
       <section className="relative overflow-hidden bg-brand-jet py-28">
         <Image
           src="/images/ferrari-vans.jpg"
-          alt=""
+          alt="Western Wheelcraft mobile fleet vans servicing dealership vehicles"
           fill
           className="object-cover object-center"
           preload

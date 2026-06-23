@@ -138,7 +138,7 @@ export default function ServicesPage() {
       <section className="relative overflow-hidden bg-brand-jet py-24">
         <Image
           src="/images/wheel-detail.jpg"
-          alt=""
+          alt="Close-up of a freshly refinished alloy wheel at Western Wheelcraft"
           fill
           className="object-cover object-center"
           preload
@@ -159,7 +159,7 @@ export default function ServicesPage() {
           </h1>
           <p className="mx-auto mb-8 max-w-xl font-body text-body-lg text-brand-smoke">
             Professional refinishing for every make, model, and finish type — backed by our
-            lifetime workmanship warranty and 35+ years of expertise.
+            lifetime workmanship warranty and decades of hands-on expertise.
           </p>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Button href="/quote/estimate" variant="primary" size="lg" rightIcon={<IconArrowRight />}>

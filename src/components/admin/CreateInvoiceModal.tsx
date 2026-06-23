@@ -63,15 +63,13 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
   const handleFormSubmit = async (data: CreateInvoiceInput) => {
     setIsSubmitting(true);
     try {
+      // Server is the source of truth for gst/pst/total — only send inputs.
       const response = await fetch('/api/admin/invoices/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...data,
           wheelsWorked: parseInt(data.wheelsWorked),
-          gst,
-          pst,
-          total: priceAfterDiscount,
         }),
       });
 

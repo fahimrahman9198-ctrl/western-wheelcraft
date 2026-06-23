@@ -88,10 +88,30 @@ export interface PricingBreakdown {
   afterDiscount: number;
   subtotal: number;
   gst: number;
+  pst: number;
   total: number;
   hasHeavy: boolean;
   billableCount: number;
   wheelCount?: number;
+}
+
+// ── Tax rates (BC) ──────────────────────────────────────────────────────────
+export const GST_RATE = 0.05;
+export const PST_RATE = 0.07;
+
+/**
+ * Single source of truth for invoice tax math. Given a pre-tax subtotal,
+ * returns GST (5%), PST (7%) and the tax-inclusive total. Used by all
+ * invoice-creation paths so totals never diverge.
+ */
+export function calcInvoiceTotals(subtotal: number): {
+  gst: number;
+  pst: number;
+  total: number;
+} {
+  const gst = subtotal * GST_RATE;
+  const pst = subtotal * PST_RATE;
+  return { gst, pst, total: subtotal + gst + pst };
 }
 
 // ── Calculations ──────────────────────────────────────────────────────────────
@@ -121,13 +141,14 @@ export function calcPricing(
   const afterDiscount = wheelTotal - discountAmount;
   const subtotal = afterDiscount + rf;
   const gst = subtotal * 0.05;
-  const total = subtotal + gst;
+  const pst = subtotal * 0.07;
+  const total = subtotal + gst + pst;
 
   return {
     wheels, sizePremium: sp * billable.length,
     finishPremium: fp * billable.length,
     regionFee: rf, wheelTotal, discountPct, discountAmount,
-    afterDiscount, subtotal, gst, total, hasHeavy, billableCount: billable.length,
+    afterDiscount, subtotal, gst, pst, total, hasHeavy, billableCount: billable.length,
     wheelCount,
   };
 }
@@ -157,6 +178,7 @@ export function calcFixedWheelPricing(wheelCount: number): PricingBreakdown {
     afterDiscount: subtotal,
     subtotal,
     gst,
+    pst,
     total,
     hasHeavy: false,
     billableCount: wheelCount,

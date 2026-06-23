@@ -168,7 +168,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-brand-jet">
         <Image
           src="/images/hero-brand.jpg"
-          alt=""
+          alt="Western Wheelcraft workshop refinishing alloy wheels in Burnaby, BC"
           fill
           className="object-cover object-center"
           preload
@@ -258,7 +258,7 @@ export default function HomePage() {
                 Why Western Wheelcraft?
               </h2>
               <p className="max-w-xl font-body text-body-lg text-brand-smoke">
-                Three decades of refinishing excellence — paired with the tools,
+                Refinishing excellence — paired with the tools,
                 training, and guarantees that set us apart.
               </p>
             </div>

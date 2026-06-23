@@ -814,7 +814,7 @@ export default function EstimatePage() {
                               </div>
                               <div className="flex justify-between font-body text-body-sm text-brand-smoke">
                                 <span>PST (7%)</span>
-                                <span className="text-brand-white">${(pricing.total - pricing.gst - (pricing.subtotal || 0)).toFixed(2)}</span>
+                                <span className="text-brand-white">${pricing.pst.toFixed(2)}</span>
                               </div>
                               <div className="flex justify-between border-t border-brand-ash pt-2 font-display text-display-sm text-brand-red">
                                 <span>Total</span>
@@ -1183,7 +1183,7 @@ export default function EstimatePage() {
                                 </div>
                                 <div className="flex justify-between font-body text-body-sm text-brand-smoke">
                                   <span>PST (7%)</span>
-                                  <span className="text-brand-white">${(pricing.total - pricing.gst - pricing.subtotal).toFixed(2)}</span>
+                                  <span className="text-brand-white">${pricing.pst.toFixed(2)}</span>
                                 </div>
                               </div>
 

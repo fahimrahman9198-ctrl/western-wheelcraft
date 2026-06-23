@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { invoices, invoiceLineItems, adminActivities } from '@/lib/db/schema';
 import { requireAdminUser } from '@/lib/admin-auth';
+import { calcInvoiceTotals } from '@/lib/payment-utils';
 import { sql } from 'drizzle-orm';
 
 const CreateInvoiceSchema = z.object({
@@ -40,10 +41,9 @@ export async function POST(request: Request) {
 
     const nextNumber = lastInvoice.length > 0 ? String(parseInt(lastInvoice[0].invoiceNumber) + 1) : '1001';
 
-    // Calculate totals
+    // Calculate totals — shared helper applies GST (5%) + PST (7%)
     const subtotal = data.lineItems.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-    const gst = subtotal * 0.05;
-    const total = subtotal + gst;
+    const { gst, total } = calcInvoiceTotals(subtotal);
 
     // Create invoice
     const [invoice] = await db

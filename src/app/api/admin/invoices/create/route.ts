@@ -3,8 +3,11 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { invoices, invoiceLineItems, customers, adminActivities } from '@/lib/db/schema';
 import { requireAdminUser } from '@/lib/admin-auth';
+import { calcInvoiceTotals } from '@/lib/payment-utils';
 import { sql, eq } from 'drizzle-orm';
 
+// gst/pst/total are intentionally NOT accepted from the client — the server
+// is the single source of truth and recomputes them from price + discount.
 const CreateInvoiceFormSchema = z.object({
   customerName: z.string().min(2),
   customerEmail: z.string().email(),
@@ -15,9 +18,6 @@ const CreateInvoiceFormSchema = z.object({
   description: z.string().optional().or(z.literal('')),
   price: z.number().positive(),
   discount: z.number().min(0).default(0),
-  gst: z.number(),
-  pst: z.number(),
-  total: z.number(),
 });
 
 type CreateInvoiceFormInput = z.infer<typeof CreateInvoiceFormSchema>;
@@ -60,16 +60,17 @@ export async function POST(request: Request) {
 
     const nextNumber = lastInvoice.length > 0 ? String(parseInt(lastInvoice[0].invoiceNumber) + 1) : '1001';
 
-    // Create invoice
+    // Create invoice — server recomputes all tax from subtotal (source of truth)
     const subtotal = data.price - data.discount;
+    const { gst, total } = calcInvoiceTotals(subtotal);
     const [invoice] = await db
       .insert(invoices)
       .values({
         invoiceNumber: nextNumber,
         customerId,
         subtotal: subtotal.toString(),
-        gst: data.gst.toString(),
-        total: (subtotal + data.gst + data.pst).toString(),
+        gst: gst.toString(),
+        total: total.toString(),
         status: 'unpaid',
         issuedAt: new Date(),
         dueAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
@@ -112,7 +113,7 @@ export async function POST(request: Request) {
       action: 'create',
       entityType: 'invoice',
       entityId: invoice.id,
-      summary: `Created invoice #${invoice.invoiceNumber} for ${data.customerName} - $${(subtotal + data.gst + data.pst).toFixed(2)}`,
+      summary: `Created invoice #${invoice.invoiceNumber} for ${data.customerName} - $${total.toFixed(2)}`,
     });
 
     return NextResponse.json(

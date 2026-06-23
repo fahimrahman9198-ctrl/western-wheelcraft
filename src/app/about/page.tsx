@@ -7,7 +7,7 @@ import { FadeIn } from '@/components/ui/FadeIn';
 export const metadata: Metadata = {
   title: 'About Us',
   description:
-    'Western Wheelcraft Ltd. — a family-owned BC wheel refinishing company since 1989. Red Seal certified, ICBC accredited, I-CAR trained.',
+    'Western Wheelcraft Ltd. — a family-owned BC wheel refinishing company. Red Seal certified, ICBC accredited, I-CAR trained.',
 };
 
 function IconAward() {
@@ -110,11 +110,11 @@ export default function AboutPage() {
             <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-brand-red/30 bg-brand-red/10 px-4 py-2">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-red" />
               <span className="font-body text-caption font-semibold uppercase tracking-widest text-brand-red">
-                Est. 1989 · Burnaby, BC
+                Family-Owned · Burnaby, BC
               </span>
             </div>
             <h1 className="mb-5 font-display text-display-lg md:text-display-xl text-brand-white">
-              35+ years setting the standard
+              Setting the standard for BC wheels
             </h1>
             <p className="mb-8 font-body text-body-lg text-brand-smoke max-w-lg">
               Family-owned and BC-based. We started refinishing wheels when most shops
@@ -137,9 +137,9 @@ export default function AboutPage() {
         <div className="section-container py-10">
           <dl className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {[
-              { value: '1989', label: 'Founded' },
-              { value: '35+', label: 'Years in Business' },
               { value: '50,000+', label: 'Wheels Refinished' },
+              { value: '100%', label: 'Workmanship Guarantee' },
+              { value: 'OEM', label: 'Factory-Match Finishes' },
               { value: '3', label: 'Service Regions' },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
@@ -161,7 +161,7 @@ export default function AboutPage() {
                 <h2 className="mb-5 font-display text-display-md text-brand-white">Our Story</h2>
                 <div className="flex flex-col gap-4 font-body text-body-md text-brand-smoke">
                   <p>
-                    Western Wheelcraft was founded in 1989 in Burnaby, BC. What started as a
+                    Western Wheelcraft was founded in Burnaby, BC. What started as a
                     single-bay operation has grown into BC&rsquo;s most trusted wheel refinishing
                     company — with a shop at 3756 Napier St and mobile fleet units serving
                     Vancouver Island and Interior BC.
@@ -172,7 +172,7 @@ export default function AboutPage() {
                     on our own car. No shortcuts, no compromises.
                   </p>
                   <p>
-                    Over three decades, we&rsquo;ve become the preferred refinishing partner
+                    Over the years, we&rsquo;ve become the preferred refinishing partner
                     for BC&rsquo;s leading dealerships, fleet operators, and discerning private
                     owners — from daily drivers to rare exotics.
                   </p>
