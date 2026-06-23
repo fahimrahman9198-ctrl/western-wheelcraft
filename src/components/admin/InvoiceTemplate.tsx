@@ -48,7 +48,7 @@ export function InvoiceTemplate({ invoice }: { invoice: InvoiceData }) {
   const afterDiscount = invoice.subtotal - discountAmount;
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white p-12 print:p-0" style={{ fontFamily: 'Arial, sans-serif' }}>
+    <div data-invoice-template className="w-full max-w-4xl mx-auto bg-white p-12 print:p-0" style={{ fontFamily: 'Arial, sans-serif', color: '#111827' }}>
       {/* Header Section */}
       <div className="flex justify-between items-start mb-12 pb-8 border-b-2 border-gray-300">
         {/* Company Info */}
@@ -67,9 +67,23 @@ export function InvoiceTemplate({ invoice }: { invoice: InvoiceData }) {
         {/* Invoice Info */}
         <div className="text-right">
           <div className="text-4xl font-bold text-gray-900 mb-4">INVOICE</div>
-          <div className="bg-gray-900 text-white px-4 py-2 rounded inline-block mb-4">
-            <p className="text-sm">Invoice #</p>
-            <p className="text-2xl font-mono font-bold">{invoice.invoiceNumber}</p>
+          <div
+            style={{
+              backgroundColor: '#111827',
+              color: '#ffffff',
+              padding: '12px 20px',
+              borderRadius: '6px',
+              display: 'inline-block',
+              marginBottom: '16px',
+              minWidth: '180px',
+            }}
+          >
+            <div style={{ fontSize: '11px', color: '#ffffff', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
+              Invoice Number
+            </div>
+            <div style={{ fontSize: '24px', color: '#ffffff', fontFamily: 'monospace', fontWeight: 'bold', lineHeight: '1.2' }}>
+              #{invoice.invoiceNumber}
+            </div>
           </div>
           <div className="mt-4 text-sm text-gray-700 space-y-1">
             <p>
@@ -185,9 +199,21 @@ export function InvoiceTemplate({ invoice }: { invoice: InvoiceData }) {
           </div>
 
           {/* Total */}
-          <div className="flex justify-between py-4 px-4 text-lg font-bold bg-gray-900 text-white rounded-b">
-            <span>TOTAL DUE:</span>
-            <span className="font-mono">${invoice.total.toFixed(2)}</span>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              padding: '16px 20px',
+              fontSize: '18px',
+              fontWeight: 'bold',
+              backgroundColor: '#111827',
+              color: '#ffffff',
+              borderRadius: '0 0 6px 6px',
+              marginTop: '4px',
+            }}
+          >
+            <span style={{ color: '#ffffff' }}>TOTAL DUE:</span>
+            <span style={{ color: '#ffffff', fontFamily: 'monospace' }}>${invoice.total.toFixed(2)}</span>
           </div>
         </div>
       </div>

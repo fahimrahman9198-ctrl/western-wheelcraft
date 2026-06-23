@@ -6,12 +6,26 @@ export async function generatePDFFromElement(
   filename: string = 'document.pdf'
 ): Promise<void> {
   try {
+    // Wait a tick to ensure all styles are applied
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     // Calculate dimensions
     const canvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
+      allowTaint: true,
+      foreignObjectRendering: false,
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight,
+      onclone: (clonedDoc) => {
+        // Ensure all text colors are explicit for proper rendering
+        const clonedElement = clonedDoc.body.querySelector('[data-invoice-template]') || clonedDoc.body;
+        if (clonedElement) {
+          (clonedElement as HTMLElement).style.fontFamily = 'Arial, sans-serif';
+        }
+      },
     });
 
     const imgData = canvas.toDataURL('image/png');
