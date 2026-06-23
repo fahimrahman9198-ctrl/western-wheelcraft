@@ -46,9 +46,9 @@ export function QuotePreviewModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-brand-graphite">
+      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-brand-ash">
         {/* Header */}
-        <div className="flex justify-between items-center p-4 border-b border-brand-graphite bg-brand-jet-light sticky top-0">
+        <div className="flex justify-between items-center p-4 border-b border-brand-ash bg-brand-graphite sticky top-0">
           <h2 className="text-lg font-bold text-brand-white">Quote Preview</h2>
           <div className="flex items-center gap-2">
             <button
@@ -70,7 +70,7 @@ export function QuotePreviewModal({
             </button>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-brand-graphite rounded transition-colors"
+              className="p-2 hover:bg-brand-graphite-light rounded transition-colors"
             >
               <X className="w-5 h-5 text-brand-smoke" />
             </button>

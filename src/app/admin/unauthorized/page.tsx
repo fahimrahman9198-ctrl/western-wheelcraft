@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function AdminUnauthorizedPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-brand-jet px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#16161B] px-4">
       <div className="w-full max-w-sm text-center">
         <div className="mb-8 flex flex-col items-center gap-3">
           <Image
@@ -14,14 +14,14 @@ export default function AdminUnauthorizedPage() {
             style={{ height: '52px', width: 'auto' }}
             className="object-contain brightness-0 invert"
           />
-          <p className="font-mono text-caption uppercase tracking-widest text-brand-silver">
+          <p className="font-mono text-caption uppercase tracking-widest text-brand-smoke">
             Admin Portal
           </p>
         </div>
 
-        <div className="rounded-lg border border-brand-graphite bg-brand-jet-light p-8 shadow-card">
+        <div className="rounded-lg border border-brand-ash bg-brand-graphite p-8 shadow-card">
           <h1 className="font-display text-display-sm text-brand-white">Access denied</h1>
-          <p className="mt-3 text-body-sm text-brand-silver">
+          <p className="mt-3 text-body-sm text-brand-smoke">
             This Clerk account is signed in, but it has not been granted a Western Wheelcraft
             admin role.
           </p>

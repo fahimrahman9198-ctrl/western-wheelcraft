@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export default function AdminLoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-brand-jet px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#16161B] px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-3">
           <Image
@@ -16,7 +16,7 @@ export default function AdminLoginPage() {
             style={{ height: '52px', width: 'auto' }}
             className="object-contain brightness-0 invert"
           />
-          <p className="font-mono text-caption text-brand-silver uppercase tracking-widest">
+          <p className="font-mono text-caption text-brand-smoke uppercase tracking-widest">
             Admin Portal
           </p>
         </div>
@@ -37,10 +37,10 @@ export default function AdminLoginPage() {
             },
             elements: {
               cardBox: 'shadow-none',
-              card: 'border border-brand-graphite bg-brand-jet-light shadow-card',
+              card: 'border border-brand-ash bg-brand-graphite shadow-card',
               headerTitle: 'font-display text-brand-white',
-              headerSubtitle: 'text-brand-silver',
-              socialButtonsBlockButton: 'border-brand-ash bg-brand-graphite text-brand-white',
+              headerSubtitle: 'text-brand-smoke',
+              socialButtonsBlockButton: 'border-brand-ash bg-brand-graphite-light text-brand-white',
               formButtonPrimary: 'bg-brand-red hover:bg-brand-red-hover',
               footerAction: 'hidden',
             },

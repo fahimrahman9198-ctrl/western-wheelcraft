@@ -14,9 +14,9 @@ export interface AdminActivityView {
 }
 
 const fieldClass =
-  'h-10 w-full rounded-md border border-brand-ash bg-brand-jet px-3 text-body-sm text-brand-white outline-none transition-colors focus:border-brand-red disabled:opacity-50';
+  'h-10 w-full rounded-md border border-brand-ash bg-[#16161B] px-3 text-body-sm text-brand-white outline-none transition-colors focus:border-brand-red disabled:opacity-50';
 const textareaClass =
-  'min-h-24 w-full resize-y rounded-md border border-brand-ash bg-brand-jet px-3 py-2 text-body-sm text-brand-white outline-none transition-colors placeholder:text-brand-ash focus:border-brand-red disabled:opacity-50';
+  'min-h-24 w-full resize-y rounded-md border border-brand-ash bg-[#16161B] px-3 py-2 text-body-sm text-brand-white outline-none transition-colors placeholder:text-brand-silver focus:border-brand-red disabled:opacity-50';
 
 async function requestJson(url: string, method: 'PATCH' | 'POST', body: object) {
   const response = await fetch(url, {
@@ -32,11 +32,11 @@ async function requestJson(url: string, method: 'PATCH' | 'POST', body: object) 
 function ActivityHistory({ activities }: { activities: AdminActivityView[] }) {
   if (activities.length === 0) return null;
   return (
-    <div className="mt-4 border-t border-brand-graphite pt-3">
-      <p className="text-caption font-semibold uppercase text-brand-ash">Recent admin activity</p>
+    <div className="mt-4 border-t border-brand-ash pt-3">
+      <p className="text-caption font-semibold uppercase text-brand-silver">Recent admin activity</p>
       <div className="mt-2 space-y-2">
         {activities.slice(0, 3).map((activity) => (
-          <div key={activity.id} className="text-caption text-brand-silver">
+          <div key={activity.id} className="text-caption text-brand-smoke">
             <p className="text-brand-smoke">{activity.summary}</p>
             <p className="mt-0.5">
               {activity.adminUsername} · {activity.adminRole} ·{' '}
@@ -90,10 +90,10 @@ export function LeadWorkflowControls({
   }
 
   return (
-    <section className="mt-4 rounded-lg border border-brand-graphite bg-brand-jet p-4">
+    <section className="mt-4 rounded-lg border border-brand-ash bg-[#16161B] p-4">
       <h3 className="font-display text-body-md text-brand-white">Lead workflow</h3>
       <div className="mt-3 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2fr_auto] lg:items-end">
-        <label className="text-caption text-brand-silver">
+        <label className="text-caption text-brand-smoke">
           Status
           <select className={`${fieldClass} mt-1`} value={status} onChange={(event) => setStatus(event.target.value)}>
             <option value="new">New</option>
@@ -106,7 +106,7 @@ export function LeadWorkflowControls({
             <option value="cancelled">Cancelled</option>
           </select>
         </label>
-        <label className="text-caption text-brand-silver">
+        <label className="text-caption text-brand-smoke">
           Subtotal (CAD)
           <input
             className={`${fieldClass} mt-1`}
@@ -118,7 +118,7 @@ export function LeadWorkflowControls({
             onChange={(event) => setSubtotal(event.target.value)}
           />
         </label>
-        <label className="text-caption text-brand-silver">
+        <label className="text-caption text-brand-smoke">
           Internal note
           <input
             className={`${fieldClass} mt-1`}
@@ -191,10 +191,10 @@ export function BookingWorkflowControls({
   }
 
   return (
-    <section className="mt-4 rounded-lg border border-brand-graphite bg-brand-jet p-4">
+    <section className="mt-4 rounded-lg border border-brand-ash bg-[#16161B] p-4">
       <h3 className="font-display text-body-md text-brand-white">Booking workflow</h3>
       <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-        <label className="text-caption text-brand-silver">
+        <label className="text-caption text-brand-smoke">
           Status
           <select className={`${fieldClass} mt-1`} value={status} onChange={(event) => setStatus(event.target.value)}>
             <option value="pending">Pending</option>
@@ -203,15 +203,15 @@ export function BookingWorkflowControls({
             <option value="cancelled">Cancelled</option>
           </select>
         </label>
-        <label className="text-caption text-brand-silver">
+        <label className="text-caption text-brand-smoke">
           Amount (CAD)
           <input className={`${fieldClass} mt-1`} type="number" min="0" max="1000000" step="0.01" value={amount} onChange={(event) => setAmount(event.target.value)} />
         </label>
-        <label className="text-caption text-brand-silver">
+        <label className="text-caption text-brand-smoke">
           Date
           <input className={`${fieldClass} mt-1`} type="date" value={scheduledDate} onChange={(event) => setScheduledDate(event.target.value)} />
         </label>
-        <label className="text-caption text-brand-silver">
+        <label className="text-caption text-brand-smoke">
           Time
           <input className={`${fieldClass} mt-1`} type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} />
         </label>
@@ -219,7 +219,7 @@ export function BookingWorkflowControls({
           <Save size={15} /> {saving ? 'Saving' : 'Save'}
         </button>
       </div>
-      <label className="mt-3 block text-caption text-brand-silver">
+      <label className="mt-3 block text-caption text-brand-smoke">
         Internal note
         <textarea className={`${textareaClass} mt-1`} value={note} maxLength={5000} placeholder="Add booking context for the team" onChange={(event) => setNote(event.target.value)} />
       </label>
@@ -249,8 +249,8 @@ export function CustomerNoteForm({ customerId }: { customerId: string }) {
   }
 
   return (
-    <div className="mt-4 border-t border-brand-graphite pt-4">
-      <label className="text-caption font-semibold uppercase text-brand-ash">
+    <div className="mt-4 border-t border-brand-ash pt-4">
+      <label className="text-caption font-semibold uppercase text-brand-silver">
         Internal note
         <textarea className={`${textareaClass} mt-2`} value={body} maxLength={5000} placeholder="Visible only to admin users" onChange={(event) => setBody(event.target.value)} />
       </label>

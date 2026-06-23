@@ -97,7 +97,7 @@ export function CustomerForm({
         <input
           type="text"
           {...register('name')}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
           placeholder="John Smith"
         />
         {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>}
@@ -111,7 +111,7 @@ export function CustomerForm({
         <input
           type="email"
           {...register('email')}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
           placeholder="john@example.com"
         />
         {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
@@ -125,7 +125,7 @@ export function CustomerForm({
         <input
           type="tel"
           {...register('phone')}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
           placeholder="(604) 555-0001"
         />
         {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
@@ -139,7 +139,7 @@ export function CustomerForm({
         <input
           type="text"
           {...register('address')}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
           placeholder="123 Main St"
         />
       </div>
@@ -152,7 +152,7 @@ export function CustomerForm({
         <input
           type="text"
           {...register('city')}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
           placeholder="Vancouver"
         />
       </div>
@@ -164,7 +164,7 @@ export function CustomerForm({
         </label>
         <select
           {...register('province')}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white"
         >
           <option value="">Select province...</option>
           {PROVINCES.map((prov) => (
@@ -183,7 +183,7 @@ export function CustomerForm({
         <input
           type="text"
           {...register('postalCode')}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
           placeholder="V6B 1A1"
         />
       </div>
@@ -224,7 +224,7 @@ export function CustomerForm({
           <input
             type="text"
             {...register('companyName')}
-            className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+            className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
             placeholder="ABC Auto Repair"
           />
           {errors.companyName && (
@@ -255,17 +255,17 @@ export function CustomerForm({
         <textarea
           {...register('notes')}
           rows={3}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash resize-none"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver resize-none"
           placeholder="Add any internal notes about this customer..."
         />
       </div>
 
       {/* Actions */}
-      <div className="flex gap-3 pt-4 border-t border-brand-graphite">
+      <div className="flex gap-3 pt-4 border-t border-brand-ash">
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 px-4 py-2 border border-brand-graphite rounded text-brand-smoke hover:text-brand-white transition-colors"
+          className="flex-1 px-4 py-2 border border-brand-ash rounded text-brand-smoke hover:text-brand-white transition-colors"
         >
           Cancel
         </button>

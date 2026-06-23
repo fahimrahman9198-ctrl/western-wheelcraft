@@ -74,7 +74,7 @@ export function BookingsTabsClient({
       <div className="flex justify-between items-center">
         <div>
           <h1 className="font-display text-display-sm text-brand-white">Bookings</h1>
-          <p className="mt-1 text-body-sm text-brand-silver">
+          <p className="mt-1 text-body-sm text-brand-smoke">
             Manage wheel repair appointments and service bookings
           </p>
         </div>

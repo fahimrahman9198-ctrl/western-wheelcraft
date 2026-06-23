@@ -15,7 +15,7 @@ export function AdminShell({ children, adminUser }: AdminShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-brand-jet">
+    <div className="flex min-h-screen bg-[#16161B]">
       <Sidebar
         adminUser={adminUser}
         mobileOpen={mobileOpen}
@@ -24,10 +24,10 @@ export function AdminShell({ children, adminUser }: AdminShellProps) {
 
       <div className="flex flex-1 flex-col min-w-0">
         {/* Mobile topbar */}
-        <div className="flex h-14 items-center gap-3 border-b border-brand-graphite bg-brand-jet-light px-4 lg:hidden">
+        <div className="flex h-14 items-center gap-3 border-b border-brand-ash bg-brand-graphite px-4 lg:hidden">
           <button
             onClick={() => setMobileOpen(true)}
-            className="rounded-lg p-2 text-brand-silver hover:bg-brand-graphite hover:text-brand-white transition-colors"
+            className="rounded-lg p-2 text-brand-smoke hover:bg-brand-graphite-light hover:text-brand-white transition-colors"
           >
             <Menu size={20} />
           </button>

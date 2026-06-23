@@ -15,7 +15,7 @@ export default async function LeadsPage() {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="font-display text-display-sm text-brand-white">Leads</h1>
-        <p className="mt-1 text-body-sm text-brand-silver">
+        <p className="mt-1 text-body-sm text-brand-smoke">
           Quote requests and estimator submissions with photos, pricing, and booking creation.
         </p>
       </div>

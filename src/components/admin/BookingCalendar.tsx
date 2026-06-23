@@ -84,7 +84,7 @@ export function BookingCalendar({
   };
 
   return (
-    <div className="h-full bg-white rounded-lg border border-brand-graphite overflow-hidden">
+    <div className="h-full bg-white rounded-lg border border-brand-ash overflow-hidden">
       <Calendar
         localizer={localizer}
         events={events}

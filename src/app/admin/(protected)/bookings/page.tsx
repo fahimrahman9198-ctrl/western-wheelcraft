@@ -16,7 +16,7 @@ import { BookingsTabsClient } from '@/components/admin/BookingsTabsClient';
 const STATUS_COLORS: Record<string, string> = {
   pending: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
   confirmed: 'bg-green-500/15 text-green-400 border-green-500/30',
-  completed: 'bg-brand-ash/40 text-brand-silver border-brand-ash/50',
+  completed: 'bg-brand-ash/40 text-brand-smoke border-brand-ash/50',
   cancelled: 'bg-red-500/15 text-red-400 border-red-500/30',
 };
 
@@ -64,7 +64,7 @@ export default async function AdminBookingsPage() {
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <h1 className="font-display text-display-sm text-brand-white">Bookings</h1>
-          <p className="mt-1 text-body-sm text-brand-silver">
+          <p className="mt-1 text-body-sm text-brand-smoke">
             Confirm, reschedule, price, and track real booking requests saved in Neon.
           </p>
         </div>
@@ -74,19 +74,19 @@ export default async function AdminBookingsPage() {
             ['Confirmed', confirmedCount],
             ['Mobile', mobileCount],
           ].map(([label, value]) => (
-            <div key={label} className="rounded-lg border border-brand-graphite bg-brand-jet-light px-4 py-3">
+            <div key={label} className="rounded-lg border border-brand-ash bg-brand-graphite px-4 py-3">
               <p className="font-mono text-body-md text-brand-white">{value}</p>
-              <p className="text-caption text-brand-silver">{label}</p>
+              <p className="text-caption text-brand-smoke">{label}</p>
             </div>
           ))}
         </div>
       </div>
 
       {bookings.length === 0 ? (
-        <div className="rounded-xl border border-brand-graphite bg-brand-jet-light px-6 py-16 text-center">
-          <CalendarDays className="mx-auto text-brand-ash" size={36} />
+        <div className="rounded-xl border border-brand-ash bg-brand-graphite px-6 py-16 text-center">
+          <CalendarDays className="mx-auto text-brand-silver" size={36} />
           <h2 className="mt-4 font-display text-body-lg text-brand-white">No booking requests yet</h2>
-          <p className="mx-auto mt-2 max-w-md text-body-sm text-brand-silver">
+          <p className="mx-auto mt-2 max-w-md text-body-sm text-brand-smoke">
             Public booking requests will appear here after the booking form is submitted.
           </p>
         </div>

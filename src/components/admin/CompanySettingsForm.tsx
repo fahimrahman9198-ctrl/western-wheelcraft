@@ -107,7 +107,7 @@ export function CompanySettingsForm({
         </label>
         <div className="flex flex-col gap-4">
           {logoPreview ? (
-            <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-brand-ash bg-brand-graphite/30">
+            <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-brand-ash bg-brand-graphite-light/30">
               <img
                 src={logoPreview}
                 alt="Logo preview"
@@ -122,8 +122,8 @@ export function CompanySettingsForm({
               </button>
             </div>
           ) : (
-            <div className="w-32 h-32 rounded-lg border-2 border-dashed border-brand-ash bg-brand-graphite/10 flex items-center justify-center">
-              <span className="text-brand-ash text-sm text-center">No logo</span>
+            <div className="w-32 h-32 rounded-lg border-2 border-dashed border-brand-ash bg-brand-graphite-light/10 flex items-center justify-center">
+              <span className="text-brand-silver text-sm text-center">No logo</span>
             </div>
           )}
           <input
@@ -136,12 +136,12 @@ export function CompanySettingsForm({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-2 px-4 py-2 bg-brand-graphite hover:bg-brand-graphite/80 rounded text-brand-white transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-brand-graphite-light hover:bg-brand-graphite-light/80 rounded text-brand-white transition-colors"
           >
             <Upload className="w-4 h-4" />
             {logoPreview ? 'Change Logo' : 'Upload Logo'}
           </button>
-          <p className="text-xs text-brand-silver">
+          <p className="text-xs text-brand-smoke">
             PNG or JPG, max 5MB. Used on invoices and email templates.
           </p>
         </div>
@@ -155,7 +155,7 @@ export function CompanySettingsForm({
         <input
           type="text"
           {...register('name')}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
           placeholder="Western Wheelcraft"
         />
         {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>}
@@ -169,7 +169,7 @@ export function CompanySettingsForm({
         <input
           type="email"
           {...register('email')}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
           placeholder="info@company.ca"
         />
         {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
@@ -183,7 +183,7 @@ export function CompanySettingsForm({
         <input
           type="tel"
           {...register('phone')}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
           placeholder="(604) 555-0001"
         />
         {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
@@ -197,7 +197,7 @@ export function CompanySettingsForm({
         <textarea
           {...register('address')}
           rows={3}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash resize-none"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver resize-none"
           placeholder="123 Business St, Vancouver, BC V6B 1A1"
         />
         {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address.message}</p>}
@@ -211,10 +211,10 @@ export function CompanySettingsForm({
         <input
           type="text"
           {...register('taxId')}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
           placeholder="GST123456789"
         />
-        <p className="text-xs text-brand-silver mt-1">
+        <p className="text-xs text-brand-smoke mt-1">
           Displayed on invoices (optional)
         </p>
       </div>
@@ -227,10 +227,10 @@ export function CompanySettingsForm({
         <textarea
           {...register('invoiceTerms')}
           rows={4}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash resize-none"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver resize-none"
           placeholder="Payment is due within 30 days of invoice date..."
         />
-        <p className="text-xs text-brand-silver mt-1">
+        <p className="text-xs text-brand-smoke mt-1">
           Displayed on invoices (optional)
         </p>
       </div>
@@ -243,16 +243,16 @@ export function CompanySettingsForm({
         <textarea
           {...register('bankDetails')}
           rows={3}
-          className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash resize-none"
+          className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver resize-none"
           placeholder="Account Name: Western Wheelcraft Inc.&#10;Account Number: XXXX XXXX XXXX XXXX&#10;Routing Number: XXXXX"
         />
-        <p className="text-xs text-brand-silver mt-1">
+        <p className="text-xs text-brand-smoke mt-1">
           For invoice footer and payment instructions (optional)
         </p>
       </div>
 
       {/* Submit Button */}
-      <div className="pt-4 border-t border-brand-graphite">
+      <div className="pt-4 border-t border-brand-ash">
         <button
           type="submit"
           disabled={isSubmitting || isLoading}

@@ -21,8 +21,8 @@ export function PhotoGallery({ photos, maxPreview = 4 }: PhotoGalleryProps) {
 
   if (photos.length === 0) {
     return (
-      <div className="rounded-lg border border-brand-graphite/50 bg-brand-graphite/20 p-4 text-center">
-        <p className="text-body-sm text-brand-silver">No photos uploaded</p>
+      <div className="rounded-lg border border-brand-ash/50 bg-brand-graphite-light/20 p-4 text-center">
+        <p className="text-body-sm text-brand-smoke">No photos uploaded</p>
       </div>
     );
   }
@@ -57,7 +57,7 @@ export function PhotoGallery({ photos, maxPreview = 4 }: PhotoGalleryProps) {
               setIndex(maxPreview);
               setOpen(true);
             }}
-            className="relative aspect-square rounded-lg overflow-hidden bg-brand-graphite flex items-center justify-center hover:bg-brand-graphite/80 transition-colors"
+            className="relative aspect-square rounded-lg overflow-hidden bg-brand-graphite-light flex items-center justify-center hover:bg-brand-graphite-light/80 transition-colors"
           >
             <img
               src={photos[maxPreview]?.blobUrl}

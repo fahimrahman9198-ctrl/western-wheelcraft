@@ -84,12 +84,12 @@ export function SettingsClientPage({ initialData }: SettingsClientPageProps) {
     <div className="max-w-2xl">
       <div className="mb-6">
         <h1 className="font-display text-display-sm text-brand-white">Company Settings</h1>
-        <p className="mt-1 text-body-sm text-brand-silver">
+        <p className="mt-1 text-body-sm text-brand-smoke">
           Configure company information, logo, and invoice details. Used across invoices, quotes, and email templates.
         </p>
       </div>
 
-      <div className="rounded-xl border border-brand-graphite bg-brand-jet-light p-6">
+      <div className="rounded-xl border border-brand-ash bg-brand-graphite p-6">
         <CompanySettingsForm
           initialData={settings}
           onSubmit={handleSubmit}

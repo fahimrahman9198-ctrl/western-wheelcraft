@@ -29,10 +29,10 @@ export function InvoicesPageClient({
   return (
     <>
       <div className="flex min-h-0 flex-col">
-        <div className="flex flex-col gap-4 border-b border-brand-graphite bg-brand-jet-light px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-4 border-b border-brand-ash bg-brand-graphite px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h1 className="font-display text-display-sm text-brand-white">Invoices</h1>
-            <p className="mt-0.5 text-body-sm text-brand-silver">
+            <p className="mt-0.5 text-body-sm text-brand-smoke">
               Create, generate, and track invoice payments with PDF export.
             </p>
           </div>
@@ -45,7 +45,7 @@ export function InvoicesPageClient({
           </button>
         </div>
 
-        <div className="border-b border-brand-graphite bg-brand-jet-light px-6 py-3">
+        <div className="border-b border-brand-ash bg-brand-graphite px-6 py-3">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-1 overflow-x-auto">
               {tabs.map(({ key, label }) => (
@@ -54,8 +54,8 @@ export function InvoicesPageClient({
                   href={key === 'all' ? '/admin/invoices' : `/admin/invoices?status=${key}`}
                   className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-body-sm transition-colors ${
                     activeStatus === key
-                      ? 'bg-brand-graphite text-brand-white'
-                      : 'text-brand-silver hover:bg-brand-graphite/50 hover:text-brand-white'
+                      ? 'bg-brand-graphite-light text-brand-white'
+                      : 'text-brand-smoke hover:bg-brand-graphite-light/50 hover:text-brand-white'
                   }`}
                 >
                   {label}
@@ -70,14 +70,14 @@ export function InvoicesPageClient({
               {activeStatus !== 'all' && <input type="hidden" name="status" value={activeStatus} />}
               <Search
                 size={14}
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-brand-ash"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-brand-silver"
               />
               <input
                 type="text"
                 name="q"
                 defaultValue={query}
                 placeholder="Search customer or invoice #"
-                className="w-full rounded-lg border border-brand-ash bg-brand-graphite py-2 pl-8 pr-3 text-body-sm text-brand-white placeholder:text-brand-ash focus:border-brand-red/50 focus:outline-none sm:w-72"
+                className="w-full rounded-lg border border-brand-ash bg-brand-graphite-light py-2 pl-8 pr-3 text-body-sm text-brand-white placeholder:text-brand-silver focus:border-brand-red/50 focus:outline-none sm:w-72"
               />
             </form>
           </div>
@@ -85,18 +85,18 @@ export function InvoicesPageClient({
 
         <div className="p-6">
           {allInvoices.length === 0 ? (
-            <div className="rounded-xl border border-brand-graphite bg-brand-jet-light px-6 py-16 text-center">
-              <Receipt className="mx-auto text-brand-ash" size={36} />
+            <div className="rounded-xl border border-brand-ash bg-brand-graphite px-6 py-16 text-center">
+              <Receipt className="mx-auto text-brand-silver" size={36} />
               <h2 className="mt-4 font-display text-body-lg text-brand-white">No invoices yet</h2>
-              <p className="mx-auto mt-2 max-w-xl text-body-sm text-brand-silver">
+              <p className="mx-auto mt-2 max-w-xl text-body-sm text-brand-smoke">
                 Click "Create Invoice" to generate your first invoice with custom pricing and taxes.
               </p>
             </div>
           ) : invoices.length === 0 ? (
-            <div className="rounded-xl border border-brand-graphite bg-brand-jet-light px-6 py-16 text-center">
-              <AlertCircle className="mx-auto text-brand-ash" size={36} />
+            <div className="rounded-xl border border-brand-ash bg-brand-graphite px-6 py-16 text-center">
+              <AlertCircle className="mx-auto text-brand-silver" size={36} />
               <h2 className="mt-4 font-display text-body-lg text-brand-white">No matching invoices</h2>
-              <p className="mx-auto mt-2 max-w-xl text-body-sm text-brand-silver">
+              <p className="mx-auto mt-2 max-w-xl text-body-sm text-brand-smoke">
                 Adjust the status filter or search term to find invoices.
               </p>
             </div>

@@ -44,7 +44,7 @@ export function Sidebar({ adminUser, mobileOpen, onMobileClose }: SidebarProps) 
   const content = (
     <div className="flex h-full flex-col">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-brand-graphite px-5">
+      <div className="flex h-16 items-center gap-3 border-b border-brand-ash px-5">
         <Image
           src="/images/logo.PNG"
           alt=""
@@ -57,12 +57,12 @@ export function Sidebar({ adminUser, mobileOpen, onMobileClose }: SidebarProps) 
           <span className="font-display text-[0.8rem] tracking-tight text-brand-white">
             Western <span className="text-brand-red">Wheelcraft</span>
           </span>
-          <span className="font-mono text-[0.6rem] text-brand-silver uppercase tracking-wider">Admin</span>
+          <span className="font-mono text-[0.6rem] text-brand-smoke uppercase tracking-wider">Admin</span>
         </div>
         {onMobileClose && (
           <button
             onClick={onMobileClose}
-            className="ml-auto rounded-lg p-1.5 text-brand-silver hover:bg-brand-graphite hover:text-brand-white transition-colors lg:hidden"
+            className="ml-auto rounded-lg p-1.5 text-brand-smoke hover:bg-brand-graphite-light hover:text-brand-white transition-colors lg:hidden"
           >
             <X size={16} />
           </button>
@@ -83,14 +83,14 @@ export function Sidebar({ adminUser, mobileOpen, onMobileClose }: SidebarProps) 
                 'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-body-sm font-medium transition-all duration-150',
                 active
                   ? 'bg-brand-red text-white'
-                  : 'text-brand-silver hover:bg-brand-graphite hover:text-brand-white'
+                  : 'text-brand-smoke hover:bg-brand-graphite-light hover:text-brand-white'
               )}
             >
               <Icon
                 size={17}
                 className={cn(
                   'shrink-0 transition-colors',
-                  active ? 'text-white' : 'text-brand-ash group-hover:text-brand-white'
+                  active ? 'text-white' : 'text-brand-silver group-hover:text-brand-white'
                 )}
               />
               <span>{item.label}</span>
@@ -101,7 +101,7 @@ export function Sidebar({ adminUser, mobileOpen, onMobileClose }: SidebarProps) 
       </nav>
 
       {/* User */}
-      <div className="border-t border-brand-graphite p-3">
+      <div className="border-t border-brand-ash p-3">
         <div className="flex items-center gap-3 rounded-lg px-3 py-2.5">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-red text-white font-display text-sm">
             {adminUser.displayName.charAt(0).toUpperCase()}
@@ -110,12 +110,12 @@ export function Sidebar({ adminUser, mobileOpen, onMobileClose }: SidebarProps) 
             <p className="text-body-sm font-medium text-brand-white truncate">
               {adminUser.displayName}
             </p>
-            <p className="text-caption text-brand-silver capitalize">{adminUser.role}</p>
+            <p className="text-caption text-brand-smoke capitalize">{adminUser.role}</p>
           </div>
           <SignOutButton redirectUrl="/admin/login">
             <button
               title="Sign out"
-              className="ml-auto rounded-lg p-1.5 text-brand-silver hover:bg-brand-graphite hover:text-brand-red transition-colors"
+              className="ml-auto rounded-lg p-1.5 text-brand-smoke hover:bg-brand-graphite-light hover:text-brand-red transition-colors"
             >
               <LogOut size={15} />
             </button>
@@ -128,7 +128,7 @@ export function Sidebar({ adminUser, mobileOpen, onMobileClose }: SidebarProps) 
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex w-56 shrink-0 flex-col border-r border-brand-graphite bg-brand-jet-light h-screen sticky top-0">
+      <aside className="hidden lg:flex w-56 shrink-0 flex-col border-r border-brand-ash bg-brand-graphite h-screen sticky top-0">
         {content}
       </aside>
 
@@ -139,7 +139,7 @@ export function Sidebar({ adminUser, mobileOpen, onMobileClose }: SidebarProps) 
             className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
             onClick={onMobileClose}
           />
-          <aside className="fixed inset-y-0 left-0 z-50 w-64 flex-col border-r border-brand-graphite bg-brand-jet-light lg:hidden flex">
+          <aside className="fixed inset-y-0 left-0 z-50 w-64 flex-col border-r border-brand-ash bg-brand-graphite lg:hidden flex">
             {content}
           </aside>
         </>

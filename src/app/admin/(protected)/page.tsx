@@ -16,7 +16,7 @@ const STATUS_COLORS: Record<string, string> = {
   sent: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
   accepted: 'bg-green-500/15 text-green-400 border-green-500/30',
   declined: 'bg-red-500/15 text-red-400 border-red-500/30',
-  expired: 'bg-brand-ash/40 text-brand-silver border-brand-ash/50',
+  expired: 'bg-brand-ash/40 text-brand-smoke border-brand-ash/50',
 };
 
 const sourceLabels: Record<string, string> = {
@@ -79,7 +79,7 @@ export default async function AdminOverviewPage() {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="font-display text-display-sm text-brand-white">Overview</h1>
-        <p className="mt-1 text-body-sm text-brand-silver">
+        <p className="mt-1 text-body-sm text-brand-smoke">
           Live lead and booking capture are connected. Invoices and payments remain staged for later phases.
         </p>
       </div>
@@ -91,36 +91,36 @@ export default async function AdminOverviewPage() {
             <Link
               key={stat.label}
               href={stat.href}
-              className="group rounded-xl border border-brand-graphite bg-brand-jet-light p-5 hover:border-brand-graphite-light transition-colors"
+              className="group rounded-xl border border-brand-ash bg-brand-graphite p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-red/60 hover:bg-brand-graphite-light hover:shadow-lg hover:shadow-black/30"
             >
               <div className="flex items-start justify-between">
-                <div className="rounded-lg bg-brand-graphite p-2">
+                <div className="rounded-lg bg-brand-graphite-light p-2 transition-colors group-hover:bg-brand-red/20">
                   <Icon size={18} className="text-brand-red" />
                 </div>
                 <TrendingUp size={14} className="text-green-400" />
               </div>
               <p className="mt-3 font-mono text-display-sm text-brand-white">{stat.value}</p>
-              <p className="mt-1 text-body-sm text-brand-silver">{stat.label}</p>
-              <p className="mt-1 text-caption text-brand-ash">{stat.trend}</p>
+              <p className="mt-1 text-body-sm text-brand-smoke">{stat.label}</p>
+              <p className="mt-1 text-caption text-brand-silver">{stat.trend}</p>
             </Link>
           );
         })}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 rounded-xl border border-brand-graphite bg-brand-jet-light">
-          <div className="flex items-center justify-between border-b border-brand-graphite px-5 py-4">
+        <div className="lg:col-span-2 rounded-xl border border-brand-ash bg-brand-graphite">
+          <div className="flex items-center justify-between border-b border-brand-ash px-5 py-4">
             <h2 className="font-display text-body-md text-brand-white">Recent Leads</h2>
             <Link
               href="/admin/leads"
-              className="flex items-center gap-1 text-caption text-brand-silver hover:text-brand-red transition-colors"
+              className="flex items-center gap-1 text-caption text-brand-smoke hover:text-brand-red transition-colors"
             >
               View all <ChevronRight size={12} />
             </Link>
           </div>
-          <div className="divide-y divide-brand-graphite/60">
+          <div className="divide-y divide-brand-ash/60">
             {recentQuotes.length === 0 ? (
-              <p className="px-5 py-8 text-center text-body-sm text-brand-silver">
+              <p className="px-5 py-8 text-center text-body-sm text-brand-smoke">
                 No real leads yet. Submit the contact form or quote estimator to populate this view.
               </p>
             ) : (
@@ -128,17 +128,17 @@ export default async function AdminOverviewPage() {
                 <Link
                   key={quote.id}
                   href="/admin/leads"
-                  className="flex items-center gap-4 px-5 py-3.5 hover:bg-brand-graphite/30 transition-colors"
+                  className="flex items-center gap-4 px-5 py-3.5 hover:bg-brand-graphite-light/60 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="truncate text-body-sm font-medium text-brand-white">
                       {quote.customerName}
                     </p>
-                    <p className="truncate text-caption text-brand-silver">
+                    <p className="truncate text-caption text-brand-smoke">
                       {quote.requestedService ?? sourceLabels[quote.source] ?? quote.source}
                     </p>
                   </div>
-                  <p className="hidden font-mono text-caption text-brand-silver sm:block">
+                  <p className="hidden font-mono text-caption text-brand-smoke sm:block">
                     {money(quote.estimatedTotal)}
                   </p>
                   <span
@@ -182,28 +182,28 @@ export default async function AdminOverviewPage() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-brand-graphite bg-brand-jet-light">
-        <div className="border-b border-brand-graphite px-5 py-4">
+      <div className="rounded-xl border border-brand-ash bg-brand-graphite">
+        <div className="border-b border-brand-ash px-5 py-4">
           <h2 className="font-display text-body-md text-brand-white">Recent Activity</h2>
         </div>
-        <div className="divide-y divide-brand-graphite/60">
+        <div className="divide-y divide-brand-ash/60">
           {recentQuotes.length === 0 ? (
-            <p className="px-5 py-8 text-center text-body-sm text-brand-silver">No activity yet</p>
+            <p className="px-5 py-8 text-center text-body-sm text-brand-smoke">No activity yet</p>
           ) : (
             recentQuotes.map((quote) => (
               <Link
                 key={quote.id}
                 href="/admin/leads"
-                className="flex items-center gap-4 px-5 py-3.5 hover:bg-brand-graphite/30 transition-colors"
+                className="flex items-center gap-4 px-5 py-3.5 hover:bg-brand-graphite-light/60 transition-colors"
               >
                 <span className="h-2 w-2 shrink-0 rounded-full bg-brand-red" />
-                <span className="w-28 shrink-0 font-mono text-caption text-brand-silver">
+                <span className="w-28 shrink-0 font-mono text-caption text-brand-smoke">
                   {formatDate(quote.createdAt)}
                 </span>
                 <p className="flex-1 text-body-sm text-brand-smoke">
                   New {sourceLabels[quote.source] ?? quote.source} lead: {quote.customerName}
                 </p>
-                <CheckCircle2 size={13} className="shrink-0 text-brand-ash" />
+                <CheckCircle2 size={13} className="shrink-0 text-brand-silver" />
               </Link>
             ))
           )}

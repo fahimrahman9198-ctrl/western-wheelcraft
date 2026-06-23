@@ -25,11 +25,11 @@ function customerLine(invoice: any): string {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  draft: 'bg-brand-ash/30 text-brand-silver border border-brand-ash/40',
+  draft: 'bg-brand-ash/30 text-brand-smoke border border-brand-ash/40',
   unpaid: 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/30',
   paid: 'bg-green-500/15 text-green-400 border border-green-500/30',
   overdue: 'bg-brand-red/15 text-brand-red border border-brand-red/30',
-  void: 'bg-brand-ash/20 text-brand-ash border border-brand-ash/30',
+  void: 'bg-brand-ash/20 text-brand-silver border border-brand-ash/30',
 };
 
 export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) {
@@ -91,7 +91,7 @@ export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) 
 
   return (
     <>
-      <article className="rounded-xl border border-brand-graphite bg-brand-jet-light p-5">
+      <article className="rounded-xl border border-brand-ash bg-brand-graphite p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -100,39 +100,39 @@ export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) 
                 {statusLabel(invoice.status)}
               </span>
               {invoice.quote?.quoteNumber && (
-                <span className="rounded-full border border-brand-ash bg-brand-graphite px-2.5 py-0.5 text-caption text-brand-silver">
+                <span className="rounded-full border border-brand-ash bg-brand-graphite-light px-2.5 py-0.5 text-caption text-brand-smoke">
                   Quote {invoice.quote.quoteNumber}
                 </span>
               )}
             </div>
             <p className="mt-1 text-body-sm text-brand-white">{invoice.customer?.name}</p>
-            <p className="font-mono text-caption text-brand-silver">{customerLine(invoice)}</p>
+            <p className="font-mono text-caption text-brand-smoke">{customerLine(invoice)}</p>
           </div>
 
           <div className="text-left lg:text-right">
             <p className="font-display text-display-sm text-brand-white">{money(invoice.total)}</p>
-            <p className="text-caption text-brand-silver">
+            <p className="text-caption text-brand-smoke">
               Paid {paymentTotal.toLocaleString('en-CA', { style: 'currency', currency: 'CAD' })}
             </p>
           </div>
         </div>
 
         {/* Line items preview */}
-        <div className="mt-4 max-h-40 overflow-hidden rounded-lg border border-brand-graphite">
-          <div className="bg-brand-graphite/30 px-3 py-2">
+        <div className="mt-4 max-h-40 overflow-hidden rounded-lg border border-brand-ash">
+          <div className="bg-brand-graphite-light/30 px-3 py-2">
             <table className="w-full text-body-xs">
               <thead>
-                <tr className="border-b border-brand-graphite">
-                  <th className="text-left px-2 py-1 text-brand-ash">Description</th>
-                  <th className="text-right px-2 py-1 text-brand-ash">Qty</th>
-                  <th className="text-right px-2 py-1 text-brand-ash">Total</th>
+                <tr className="border-b border-brand-ash">
+                  <th className="text-left px-2 py-1 text-brand-silver">Description</th>
+                  <th className="text-right px-2 py-1 text-brand-silver">Qty</th>
+                  <th className="text-right px-2 py-1 text-brand-silver">Total</th>
                 </tr>
               </thead>
               <tbody>
                 {invoice.lineItems?.slice(0, 4).map((item: any) => (
-                  <tr key={item.id} className="border-b border-brand-graphite/50 last:border-0">
+                  <tr key={item.id} className="border-b border-brand-ash/50 last:border-0">
                     <td className="px-3 py-2 text-brand-smoke">{item.description}</td>
-                    <td className="px-3 py-2 text-right font-mono text-brand-silver">{Number(item.quantity)}</td>
+                    <td className="px-3 py-2 text-right font-mono text-brand-smoke">{Number(item.quantity)}</td>
                     <td className="px-3 py-2 text-right font-mono text-brand-white">{money(item.total)}</td>
                   </tr>
                 ))}
@@ -146,7 +146,7 @@ export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) 
           <button
             type="button"
             onClick={() => setIsPreviewOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite/40 hover:bg-brand-graphite px-3 py-2 text-caption text-brand-smoke hover:text-brand-white transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite-light/40 hover:bg-brand-graphite-light px-3 py-2 text-caption text-brand-smoke hover:text-brand-white transition-colors"
           >
             <Eye size={13} />
             Preview & Download
@@ -156,7 +156,7 @@ export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) 
             type="button"
             onClick={handleResend}
             disabled={isResending}
-            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite/40 hover:bg-brand-graphite px-3 py-2 text-caption text-brand-smoke hover:text-brand-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite-light/40 hover:bg-brand-graphite-light px-3 py-2 text-caption text-brand-smoke hover:text-brand-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isResending ? (
               <>
@@ -176,7 +176,7 @@ export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) 
               type="button"
               onClick={handleMarkAsPaid}
               disabled={isMarkingPaid}
-              className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite/40 hover:bg-green-500/20 hover:border-green-500/30 px-3 py-2 text-caption text-brand-smoke hover:text-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite-light/40 hover:bg-green-500/20 hover:border-green-500/30 px-3 py-2 text-caption text-brand-smoke hover:text-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isMarkingPaid ? (
                 <>

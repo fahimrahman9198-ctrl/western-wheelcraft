@@ -209,8 +209,8 @@ export function CreateBookingModal({
   return (
     <>
       <div className="fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center p-4">
-        <div className="bg-brand-jet rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border border-brand-graphite">
-          <div className="sticky top-0 border-b border-brand-graphite bg-brand-jet-light p-4">
+        <div className="bg-[#16161B] rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border border-brand-ash">
+          <div className="sticky top-0 border-b border-brand-ash bg-brand-graphite p-4">
             <h2 className="text-lg font-bold text-brand-white">Create New Booking</h2>
           </div>
 
@@ -234,7 +234,7 @@ export function CreateBookingModal({
                 <>
                   <select
                     {...register('customerId')}
-                    className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white"
+                    className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white"
                   >
                     <option value="">Select customer...</option>
                     {localCustomers.map((customer) => (
@@ -248,27 +248,27 @@ export function CreateBookingModal({
                   )}
                 </>
               ) : (
-                <div className="space-y-2 p-3 bg-brand-graphite/30 rounded border border-brand-graphite">
+                <div className="space-y-2 p-3 bg-brand-graphite-light/30 rounded border border-brand-ash">
                   <input
                     type="text"
                     placeholder="Name"
                     value={newCustomerForm.name}
                     onChange={(e) => setNewCustomerForm({ ...newCustomerForm, name: e.target.value })}
-                    className="w-full px-2 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white text-sm placeholder:text-brand-ash"
+                    className="w-full px-2 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white text-sm placeholder:text-brand-silver"
                   />
                   <input
                     type="email"
                     placeholder="Email"
                     value={newCustomerForm.email}
                     onChange={(e) => setNewCustomerForm({ ...newCustomerForm, email: e.target.value })}
-                    className="w-full px-2 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white text-sm placeholder:text-brand-ash"
+                    className="w-full px-2 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white text-sm placeholder:text-brand-silver"
                   />
                   <input
                     type="tel"
                     placeholder="Phone (optional)"
                     value={newCustomerForm.phone}
                     onChange={(e) => setNewCustomerForm({ ...newCustomerForm, phone: e.target.value })}
-                    className="w-full px-2 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white text-sm placeholder:text-brand-ash"
+                    className="w-full px-2 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white text-sm placeholder:text-brand-silver"
                   />
                   <div className="flex gap-2">
                     <button
@@ -281,7 +281,7 @@ export function CreateBookingModal({
                     <button
                       type="button"
                       onClick={() => setShowNewCustomerForm(false)}
-                      className="flex-1 px-2 py-1 bg-brand-graphite hover:bg-brand-graphite/80 rounded text-brand-smoke text-sm"
+                      className="flex-1 px-2 py-1 bg-brand-graphite-light hover:bg-brand-graphite-light/80 rounded text-brand-smoke text-sm"
                     >
                       Cancel
                     </button>
@@ -299,7 +299,7 @@ export function CreateBookingModal({
                 <input
                   type="tel"
                   {...register('customerPhone')}
-                  className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+                  className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
                   placeholder="(604) 555-0001"
                 />
               </div>
@@ -310,7 +310,7 @@ export function CreateBookingModal({
                 <input
                   type="email"
                   {...register('customerEmail')}
-                  className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+                  className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
                   placeholder="customer@example.com"
                 />
               </div>
@@ -323,7 +323,7 @@ export function CreateBookingModal({
               </label>
               <select
                 {...register('serviceType')}
-                className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white"
+                className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white"
               >
                 <option value="">Select service...</option>
                 {SERVICES.map((service) => (
@@ -344,7 +344,7 @@ export function CreateBookingModal({
               </label>
               <select
                 {...register('slot')}
-                className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white"
+                className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white"
               >
                 <option value="">Select slot...</option>
                 <option value="shop">Shop</option>
@@ -363,7 +363,7 @@ export function CreateBookingModal({
               </label>
               <select
                 {...register('region')}
-                className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white"
+                className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white"
               >
                 <option value="">Select region...</option>
                 {REGIONS.map((region) => (
@@ -385,7 +385,7 @@ export function CreateBookingModal({
               <button
                 type="button"
                 onClick={() => setShowDatePicker(true)}
-                className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white hover:border-brand-red/50 transition-colors flex items-center justify-between"
+                className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white hover:border-brand-red/50 transition-colors flex items-center justify-between"
               >
                 <span>
                   {scheduledDate ? format(new Date(scheduledDate), 'MMM dd, yyyy') : 'Select Date'}
@@ -405,7 +405,7 @@ export function CreateBookingModal({
                 </label>
                 <select
                   {...register('startTime')}
-                  className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white"
+                  className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white"
                 >
                   {timeSlots.map((time) => (
                     <option key={time} value={time}>
@@ -422,7 +422,7 @@ export function CreateBookingModal({
                   type="text"
                   {...register('endTime')}
                   readOnly
-                  className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-graphite-light rounded text-brand-silver cursor-not-allowed"
+                  className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-smoke cursor-not-allowed"
                 />
               </div>
             </div>
@@ -449,7 +449,7 @@ export function CreateBookingModal({
                 type="number"
                 step="0.01"
                 {...register('amount', { valueAsNumber: true })}
-                className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white"
+                className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white"
               />
               {errors.amount && (
                 <p className="text-red-400 text-xs mt-1">{errors.amount.message}</p>
@@ -464,17 +464,17 @@ export function CreateBookingModal({
               <textarea
                 {...register('notes')}
                 rows={2}
-                className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash resize-none"
+                className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver resize-none"
                 placeholder="Add any special notes..."
               />
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-2 pt-4 border-t border-brand-graphite">
+            <div className="flex gap-2 pt-4 border-t border-brand-ash">
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-2 border border-brand-graphite rounded text-brand-smoke hover:text-brand-white transition-colors"
+                className="flex-1 px-4 py-2 border border-brand-ash rounded text-brand-smoke hover:text-brand-white transition-colors"
               >
                 Cancel
               </button>

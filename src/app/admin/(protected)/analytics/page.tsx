@@ -33,14 +33,14 @@ function MetricCard({
   icon: typeof TrendingUp;
 }) {
   return (
-    <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 shadow-card">
+    <div className="rounded-2xl border border-brand-ash bg-brand-graphite-light p-6 shadow-card">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-display text-body-sm uppercase tracking-widest text-brand-silver">{label}</p>
+          <p className="font-display text-body-sm uppercase tracking-widest text-brand-smoke">{label}</p>
           <p className="mt-3 font-mono text-display-sm text-brand-white">{value}</p>
-          <p className="mt-2 text-caption text-brand-ash">{note}</p>
+          <p className="mt-2 text-caption text-brand-silver">{note}</p>
         </div>
-        <div className="rounded-lg bg-brand-jet-light p-2 text-brand-red">
+        <div className="rounded-lg bg-brand-graphite p-2 text-brand-red">
           <Icon size={18} />
         </div>
       </div>
@@ -61,10 +61,10 @@ function HorizontalBar({ pct }: { pct: number }) {
 
 function EmptyPanel({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 text-center shadow-card">
-      <BarChart3 className="mx-auto text-brand-ash" size={30} />
+    <div className="rounded-2xl border border-brand-ash bg-brand-graphite-light p-6 text-center shadow-card">
+      <BarChart3 className="mx-auto text-brand-silver" size={30} />
       <h2 className="mt-4 font-display text-body-md text-brand-white">{title}</h2>
-      <p className="mx-auto mt-2 max-w-lg text-body-sm text-brand-silver">{body}</p>
+      <p className="mx-auto mt-2 max-w-lg text-body-sm text-brand-smoke">{body}</p>
     </div>
   );
 }
@@ -78,7 +78,7 @@ export default async function AnalyticsPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="font-display text-display-sm text-brand-white">Analytics</h1>
-          <p className="mt-1 text-body-sm text-brand-silver">
+          <p className="mt-1 text-body-sm text-brand-smoke">
             Real Neon metrics from quotes, bookings, customers, and invoices. Marketing attribution and exports are pending.
           </p>
         </div>
@@ -87,7 +87,7 @@ export default async function AnalyticsPage() {
           <button
             type="button"
             disabled
-            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite px-3 py-1.5 text-caption text-brand-ash opacity-75"
+            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite-light px-3 py-1.5 text-caption text-brand-silver opacity-75"
           >
             <Download size={13} />
             CSV Pending
@@ -95,7 +95,7 @@ export default async function AnalyticsPage() {
           <button
             type="button"
             disabled
-            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite px-3 py-1.5 text-caption text-brand-ash opacity-75"
+            className="flex items-center gap-1.5 rounded-lg border border-brand-ash bg-brand-graphite-light px-3 py-1.5 text-caption text-brand-silver opacity-75"
           >
             <FileText size={13} />
             PDF Pending
@@ -131,11 +131,11 @@ export default async function AnalyticsPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 shadow-card">
+        <div className="rounded-2xl border border-brand-ash bg-brand-graphite-light p-6 shadow-card">
           <h2 className="mb-1 font-display text-body-md text-brand-white">Lead Sources</h2>
-          <p className="mb-5 text-caption text-brand-silver">Source counts from quote records.</p>
+          <p className="mb-5 text-caption text-brand-smoke">Source counts from quote records.</p>
           {data.sourceCounts.length === 0 ? (
-            <p className="rounded-xl border border-brand-ash/40 bg-brand-jet-light px-4 py-8 text-center text-body-sm text-brand-silver">
+            <p className="rounded-xl border border-brand-ash/40 bg-brand-graphite px-4 py-8 text-center text-body-sm text-brand-smoke">
               No source data yet.
             </p>
           ) : (
@@ -148,10 +148,10 @@ export default async function AnalyticsPage() {
                       <span className="truncate text-body-sm text-brand-smoke">{source.name}</span>
                     </div>
                     <div className="flex shrink-0 items-center gap-3">
-                      <span className="font-mono text-caption text-brand-silver">
+                      <span className="font-mono text-caption text-brand-smoke">
                         {number(source.count)} leads
                       </span>
-                      <span className="w-8 text-right font-mono text-caption text-brand-ash">{source.pct}%</span>
+                      <span className="w-8 text-right font-mono text-caption text-brand-silver">{source.pct}%</span>
                     </div>
                   </div>
                   <HorizontalBar pct={source.pct} />
@@ -161,9 +161,9 @@ export default async function AnalyticsPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 shadow-card">
+        <div className="rounded-2xl border border-brand-ash bg-brand-graphite-light p-6 shadow-card">
           <h2 className="mb-1 font-display text-body-md text-brand-white">Quote Funnel</h2>
-          <p className="mb-5 text-caption text-brand-silver">Live operational counts. Visitor analytics are not connected yet.</p>
+          <p className="mb-5 text-caption text-brand-smoke">Live operational counts. Visitor analytics are not connected yet.</p>
           <div className="space-y-3">
             {[
               ['Leads', data.totals.leads],
@@ -175,7 +175,7 @@ export default async function AnalyticsPage() {
               <div key={label} className="space-y-1.5">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex min-w-0 items-center gap-3">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-ash font-mono text-caption text-brand-silver">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-ash font-mono text-caption text-brand-smoke">
                       {index + 1}
                     </span>
                     <span className="text-body-sm text-brand-smoke">{label}</span>
@@ -190,11 +190,11 @@ export default async function AnalyticsPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 shadow-card">
+        <div className="rounded-2xl border border-brand-ash bg-brand-graphite-light p-6 shadow-card">
           <h2 className="mb-1 font-display text-body-md text-brand-white">Quoted Revenue by Service</h2>
-          <p className="mb-5 text-caption text-brand-silver">Calculated from `quotes.estimatedTotal`.</p>
+          <p className="mb-5 text-caption text-brand-smoke">Calculated from `quotes.estimatedTotal`.</p>
           {data.serviceBreakdown.length === 0 ? (
-            <p className="rounded-xl border border-brand-ash/40 bg-brand-jet-light px-4 py-8 text-center text-body-sm text-brand-silver">
+            <p className="rounded-xl border border-brand-ash/40 bg-brand-graphite px-4 py-8 text-center text-body-sm text-brand-smoke">
               No service revenue data yet.
             </p>
           ) : (
@@ -204,8 +204,8 @@ export default async function AnalyticsPage() {
                   <div className="flex items-center justify-between gap-4">
                     <span className="truncate text-body-sm text-brand-smoke">{item.name}</span>
                     <div className="flex shrink-0 items-center gap-3">
-                      <span className="font-mono text-caption text-brand-silver">{money(item.amount)}</span>
-                      <span className="w-8 text-right font-mono text-caption text-brand-ash">{item.pct}%</span>
+                      <span className="font-mono text-caption text-brand-smoke">{money(item.amount)}</span>
+                      <span className="w-8 text-right font-mono text-caption text-brand-silver">{item.pct}%</span>
                     </div>
                   </div>
                   <HorizontalBar pct={item.pct} />
@@ -215,11 +215,11 @@ export default async function AnalyticsPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-brand-ash bg-brand-graphite p-6 shadow-card">
+        <div className="rounded-2xl border border-brand-ash bg-brand-graphite-light p-6 shadow-card">
           <h2 className="mb-1 font-display text-body-md text-brand-white">Quoted Revenue by Region</h2>
-          <p className="mb-5 text-caption text-brand-silver">Calculated from quote request region fields.</p>
+          <p className="mb-5 text-caption text-brand-smoke">Calculated from quote request region fields.</p>
           {data.regionBreakdown.length === 0 ? (
-            <p className="rounded-xl border border-brand-ash/40 bg-brand-jet-light px-4 py-8 text-center text-body-sm text-brand-silver">
+            <p className="rounded-xl border border-brand-ash/40 bg-brand-graphite px-4 py-8 text-center text-body-sm text-brand-smoke">
               No region revenue data yet.
             </p>
           ) : (
@@ -229,8 +229,8 @@ export default async function AnalyticsPage() {
                   <div className="flex items-center justify-between gap-4">
                     <span className="truncate text-body-sm text-brand-smoke">{item.name}</span>
                     <div className="flex shrink-0 items-center gap-3">
-                      <span className="font-mono text-caption text-brand-silver">{money(item.amount)}</span>
-                      <span className="w-8 text-right font-mono text-caption text-brand-ash">{item.pct}%</span>
+                      <span className="font-mono text-caption text-brand-smoke">{money(item.amount)}</span>
+                      <span className="w-8 text-right font-mono text-caption text-brand-silver">{item.pct}%</span>
                     </div>
                   </div>
                   <HorizontalBar pct={item.pct} />
@@ -242,19 +242,19 @@ export default async function AnalyticsPage() {
       </div>
 
       {data.recentInvoices.length > 0 ? (
-        <div className="overflow-hidden rounded-2xl border border-brand-ash bg-brand-graphite shadow-card">
+        <div className="overflow-hidden rounded-2xl border border-brand-ash bg-brand-graphite-light shadow-card">
           <div className="border-b border-brand-ash px-6 py-5">
             <h2 className="font-display text-body-md text-brand-white">Recent Invoices</h2>
-            <p className="mt-0.5 text-caption text-brand-silver">Real Neon invoice records only.</p>
+            <p className="mt-0.5 text-caption text-brand-smoke">Real Neon invoice records only.</p>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-body-sm">
               <thead>
                 <tr className="border-b border-brand-ash">
-                  <th className="px-6 py-3 text-left font-display text-caption uppercase tracking-wider text-brand-silver">Invoice</th>
-                  <th className="px-4 py-3 text-left font-display text-caption uppercase tracking-wider text-brand-silver">Customer</th>
-                  <th className="px-4 py-3 text-right font-display text-caption uppercase tracking-wider text-brand-silver">Total</th>
-                  <th className="px-4 py-3 text-right font-display text-caption uppercase tracking-wider text-brand-silver">Status</th>
+                  <th className="px-6 py-3 text-left font-display text-caption uppercase tracking-wider text-brand-smoke">Invoice</th>
+                  <th className="px-4 py-3 text-left font-display text-caption uppercase tracking-wider text-brand-smoke">Customer</th>
+                  <th className="px-4 py-3 text-right font-display text-caption uppercase tracking-wider text-brand-smoke">Total</th>
+                  <th className="px-4 py-3 text-right font-display text-caption uppercase tracking-wider text-brand-smoke">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -263,7 +263,7 @@ export default async function AnalyticsPage() {
                     <td className="px-6 py-3.5 font-mono text-caption text-brand-smoke">{invoice.invoiceNumber}</td>
                     <td className="px-4 py-3.5 text-brand-white">{invoice.customer.name}</td>
                     <td className="px-4 py-3.5 text-right font-mono text-brand-white">{money(Number(invoice.total))}</td>
-                    <td className="px-4 py-3.5 text-right font-mono text-caption text-brand-silver">{invoice.status}</td>
+                    <td className="px-4 py-3.5 text-right font-mono text-caption text-brand-smoke">{invoice.status}</td>
                   </tr>
                 ))}
               </tbody>
@@ -277,10 +277,10 @@ export default async function AnalyticsPage() {
         />
       )}
 
-      <div className="rounded-xl border border-brand-graphite bg-brand-jet-light px-4 py-3">
+      <div className="rounded-xl border border-brand-ash bg-brand-graphite px-4 py-3">
         <div className="flex items-start gap-3">
           <Lock className="mt-0.5 shrink-0 text-brand-red" size={16} />
-          <p className="text-body-sm text-brand-silver">
+          <p className="text-body-sm text-brand-smoke">
             CSV/PDF export, visitor analytics, paid conversion, and campaign attribution are disabled until those production systems are connected.
           </p>
         </div>

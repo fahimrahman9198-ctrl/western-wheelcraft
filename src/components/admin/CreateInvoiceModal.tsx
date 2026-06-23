@@ -94,13 +94,13 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-brand-jet rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-brand-graphite">
+      <div className="bg-[#16161B] rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-brand-ash">
         {/* Header */}
-        <div className="sticky top-0 border-b border-brand-graphite bg-brand-jet-light p-4 flex justify-between items-center">
+        <div className="sticky top-0 border-b border-brand-ash bg-brand-graphite p-4 flex justify-between items-center">
           <h2 className="text-lg font-bold text-brand-white">Create New Invoice</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-brand-graphite rounded transition-colors"
+            className="p-1 hover:bg-brand-graphite-light rounded transition-colors"
           >
             <X className="w-5 h-5 text-brand-smoke" />
           </button>
@@ -109,7 +109,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
         <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6 space-y-6">
           {/* Customer Information */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-white mb-4 pb-2 border-b border-brand-graphite">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-white mb-4 pb-2 border-b border-brand-ash">
               Customer Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -120,7 +120,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                 <input
                   type="text"
                   {...register('customerName')}
-                  className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+                  className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
                   placeholder="John Smith"
                 />
                 {errors.customerName && (
@@ -135,7 +135,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                 <input
                   type="email"
                   {...register('customerEmail')}
-                  className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+                  className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
                   placeholder="john@example.com"
                 />
                 {errors.customerEmail && (
@@ -150,7 +150,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                 <input
                   type="tel"
                   {...register('customerPhone')}
-                  className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+                  className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
                   placeholder="(604) 555-0001"
                 />
                 {errors.customerPhone && (
@@ -162,7 +162,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
 
           {/* Vehicle Information */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-white mb-4 pb-2 border-b border-brand-graphite">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-white mb-4 pb-2 border-b border-brand-ash">
               Vehicle Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -173,7 +173,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                 <input
                   type="text"
                   {...register('vehicleVIN')}
-                  className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash uppercase"
+                  className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver uppercase"
                   placeholder="1HGCM41JXMA109186"
                 />
               </div>
@@ -185,7 +185,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                 <input
                   type="text"
                   {...register('vehiclePlate')}
-                  className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash uppercase"
+                  className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver uppercase"
                   placeholder="ABC 123 or STOCK-456"
                 />
               </div>
@@ -196,7 +196,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                 </label>
                 <select
                   {...register('wheelsWorked')}
-                  className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white"
+                  className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white"
                 >
                   <option value="1">1 Wheel</option>
                   <option value="2">2 Wheels</option>
@@ -212,7 +212,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
 
           {/* Service Description */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-white mb-4 pb-2 border-b border-brand-graphite">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-white mb-4 pb-2 border-b border-brand-ash">
               Service Details
             </h3>
             <div>
@@ -222,7 +222,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
               <textarea
                 {...register('description')}
                 rows={3}
-                className="w-full px-3 py-2 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash resize-none"
+                className="w-full px-3 py-2 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver resize-none"
                 placeholder="Describe the service performed..."
               />
             </div>
@@ -230,7 +230,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
 
           {/* Pricing */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-white mb-4 pb-2 border-b border-brand-graphite">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-white mb-4 pb-2 border-b border-brand-ash">
               Pricing
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -244,7 +244,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                     type="number"
                     step="0.01"
                     {...register('price', { valueAsNumber: true })}
-                    className="w-full px-3 py-2 pl-7 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+                    className="w-full px-3 py-2 pl-7 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
                     placeholder="0.00"
                   />
                 </div>
@@ -263,7 +263,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                     type="number"
                     step="0.01"
                     {...register('discount', { valueAsNumber: true })}
-                    className="w-full px-3 py-2 pl-7 bg-brand-graphite border border-brand-graphite-light rounded text-brand-white placeholder:text-brand-ash"
+                    className="w-full px-3 py-2 pl-7 bg-brand-graphite-light border border-brand-ash rounded text-brand-white placeholder:text-brand-silver"
                     placeholder="0.00"
                   />
                 </div>
@@ -272,11 +272,11 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
           </div>
 
           {/* Invoice Summary */}
-          <div className="bg-brand-graphite/30 p-4 rounded-lg border border-brand-graphite">
+          <div className="bg-brand-graphite-light/30 p-4 rounded-lg border border-brand-ash">
             <h3 className="text-sm font-semibold text-brand-white mb-3">Invoice Summary</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-brand-silver">Subtotal:</span>
+                <span className="text-brand-smoke">Subtotal:</span>
                 <span className="text-brand-white font-mono">${price.toFixed(2)}</span>
               </div>
               {discount > 0 && (
@@ -285,19 +285,19 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                   <span className="font-mono">-${discount.toFixed(2)}</span>
                 </div>
               )}
-              <div className="flex justify-between border-t border-brand-graphite/50 pt-2">
-                <span className="text-brand-silver">After Discount:</span>
+              <div className="flex justify-between border-t border-brand-ash/50 pt-2">
+                <span className="text-brand-smoke">After Discount:</span>
                 <span className="text-brand-white font-mono">${priceAfterDiscount.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-brand-silver">GST (5%):</span>
+                <span className="text-brand-smoke">GST (5%):</span>
                 <span className="text-brand-white font-mono">${gst.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-brand-silver">PST (7%):</span>
+                <span className="text-brand-smoke">PST (7%):</span>
                 <span className="text-brand-white font-mono">${pst.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between border-t-2 border-brand-graphite pt-2 bg-brand-jet p-2 rounded">
+              <div className="flex justify-between border-t-2 border-brand-ash pt-2 bg-[#16161B] p-2 rounded">
                 <span className="font-semibold text-brand-white">Total:</span>
                 <span className="font-semibold text-brand-white font-mono text-lg">${total.toFixed(2)}</span>
               </div>
@@ -305,11 +305,11 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 pt-4 border-t border-brand-graphite">
+          <div className="flex gap-3 pt-4 border-t border-brand-ash">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-brand-graphite rounded text-brand-smoke hover:text-brand-white transition-colors"
+              className="flex-1 px-4 py-2 border border-brand-ash rounded text-brand-smoke hover:text-brand-white transition-colors"
             >
               Cancel
             </button>

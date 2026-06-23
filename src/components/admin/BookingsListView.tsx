@@ -14,7 +14,7 @@ interface BookingsListViewProps {
 const STATUS_COLORS: Record<string, string> = {
   pending: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
   confirmed: 'bg-green-500/15 text-green-400 border-green-500/30',
-  completed: 'bg-brand-ash/40 text-brand-silver border-brand-ash/50',
+  completed: 'bg-brand-ash/40 text-brand-smoke border-brand-ash/50',
   cancelled: 'bg-brand-red/15 text-brand-red border-brand-red/30',
 };
 
@@ -35,10 +35,10 @@ export function BookingsListView({
 
   if (bookings.length === 0) {
     return (
-      <div className="rounded-xl border border-brand-graphite bg-brand-jet-light px-6 py-16 text-center">
-        <Calendar className="mx-auto text-brand-ash" size={36} />
+      <div className="rounded-xl border border-brand-ash bg-brand-graphite px-6 py-16 text-center">
+        <Calendar className="mx-auto text-brand-silver" size={36} />
         <h2 className="mt-4 font-display text-body-lg text-brand-white">No bookings yet</h2>
-        <p className="mx-auto mt-2 max-w-md text-body-sm text-brand-silver">
+        <p className="mx-auto mt-2 max-w-md text-body-sm text-brand-smoke">
           Bookings will appear here as they are created or imported.
         </p>
       </div>
@@ -47,10 +47,10 @@ export function BookingsListView({
 
   return (
     <div className="space-y-2">
-      <div className="overflow-x-auto rounded-xl border border-brand-graphite">
+      <div className="overflow-x-auto rounded-xl border border-brand-ash">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-brand-ash bg-brand-graphite/50">
+            <tr className="border-b border-brand-ash bg-brand-graphite-light/50">
               <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-brand-white">
                 Booking #
               </th>
@@ -77,16 +77,16 @@ export function BookingsListView({
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-brand-graphite">
+          <tbody className="divide-y divide-brand-ash">
             {bookings.map((booking) => (
-              <tr key={booking.id} className="hover:bg-brand-graphite/30 transition-colors">
+              <tr key={booking.id} className="hover:bg-brand-graphite-light/60 transition-colors">
                 <td className="px-4 py-3 text-sm font-mono text-brand-white">
                   #{booking.bookingNumber}
                 </td>
                 <td className="px-4 py-3 text-sm text-brand-white">
                   <div>
                     <p className="font-medium">{booking.customer?.name}</p>
-                    <div className="flex flex-col gap-1 mt-1 text-xs text-brand-silver">
+                    <div className="flex flex-col gap-1 mt-1 text-xs text-brand-smoke">
                       {booking.customer?.phone && (
                         <a
                           href={`tel:${booking.customer.phone}`}
@@ -113,7 +113,7 @@ export function BookingsListView({
                 </td>
                 <td className="px-4 py-3 text-sm text-brand-smoke">
                   <p>{format(new Date(booking.scheduledDate), 'MMM dd, yyyy')}</p>
-                  <p className="text-xs text-brand-ash mt-1">
+                  <p className="text-xs text-brand-silver mt-1">
                     {booking.startTime} – {booking.endTime}
                   </p>
                 </td>
@@ -123,7 +123,7 @@ export function BookingsListView({
                 <td className="px-4 py-3 text-sm">
                   <span
                     className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium border ${
-                      STATUS_COLORS[booking.status] || 'bg-brand-graphite text-brand-silver'
+                      STATUS_COLORS[booking.status] || 'bg-brand-graphite-light text-brand-smoke'
                     }`}
                   >
                     {STATUS_LABELS[booking.status] || booking.status}
@@ -139,20 +139,20 @@ export function BookingsListView({
                         expandedBookingId === booking.id ? null : booking.id
                       )
                     }
-                    className="p-2 hover:bg-brand-graphite rounded transition-colors text-brand-smoke hover:text-brand-white"
+                    className="p-2 hover:bg-brand-graphite-light rounded transition-colors text-brand-smoke hover:text-brand-white"
                   >
                     <MoreVertical className="w-4 h-4" />
                   </button>
 
                   {expandedBookingId === booking.id && (
-                    <div className="absolute right-4 top-full mt-1 bg-brand-jet border border-brand-graphite rounded-lg shadow-lg z-10">
+                    <div className="absolute right-4 top-full mt-1 bg-[#16161B] border border-brand-ash rounded-lg shadow-lg z-10">
                       {booking.status !== 'confirmed' && (
                         <button
                           onClick={() => {
                             onStatusChange?.(booking, 'confirmed');
                             setExpandedBookingId(null);
                           }}
-                          className="w-full text-left px-4 py-2 text-sm text-brand-smoke hover:text-brand-white hover:bg-brand-graphite first:rounded-t-lg transition-colors border-b border-brand-graphite/50 last:border-b-0"
+                          className="w-full text-left px-4 py-2 text-sm text-brand-smoke hover:text-brand-white hover:bg-brand-graphite-light first:rounded-t-lg transition-colors border-b border-brand-ash/50 last:border-b-0"
                         >
                           Confirm
                         </button>
@@ -163,7 +163,7 @@ export function BookingsListView({
                             onStatusChange?.(booking, 'completed');
                             setExpandedBookingId(null);
                           }}
-                          className="w-full text-left px-4 py-2 text-sm text-brand-smoke hover:text-brand-white hover:bg-brand-graphite transition-colors border-b border-brand-graphite/50 last:border-b-0"
+                          className="w-full text-left px-4 py-2 text-sm text-brand-smoke hover:text-brand-white hover:bg-brand-graphite-light transition-colors border-b border-brand-ash/50 last:border-b-0"
                         >
                           Mark Complete
                         </button>

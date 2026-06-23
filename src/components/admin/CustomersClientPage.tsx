@@ -118,7 +118,7 @@ export function CustomersClientPage({ customers: initialCustomers }: CustomersCl
       <div className="flex justify-between items-center">
         <div>
           <h1 className="font-display text-display-sm text-brand-white">Customers</h1>
-          <p className="mt-1 text-body-sm text-brand-silver">
+          <p className="mt-1 text-body-sm text-brand-smoke">
             Create, edit, and manage customer records. Manual entry for trade/business accounts.
           </p>
         </div>
@@ -133,10 +133,10 @@ export function CustomersClientPage({ customers: initialCustomers }: CustomersCl
 
       {/* Customers Grid */}
       {customers.length === 0 ? (
-        <div className="rounded-xl border border-brand-graphite bg-brand-jet-light px-6 py-16 text-center">
-          <Mail className="mx-auto text-brand-ash" size={36} />
+        <div className="rounded-xl border border-brand-ash bg-brand-graphite px-6 py-16 text-center">
+          <Mail className="mx-auto text-brand-silver" size={36} />
           <h2 className="mt-4 font-display text-body-lg text-brand-white">No customers yet</h2>
-          <p className="mx-auto mt-2 max-w-md text-body-sm text-brand-silver">
+          <p className="mx-auto mt-2 max-w-md text-body-sm text-brand-smoke">
             Customers appear here after contact form submissions or manual creation.
           </p>
         </div>
@@ -145,12 +145,12 @@ export function CustomersClientPage({ customers: initialCustomers }: CustomersCl
           {customers.map((customer) => (
             <div
               key={customer.id}
-              className="rounded-xl border border-brand-graphite bg-brand-jet-light p-5 hover:border-brand-red/50 transition-colors"
+              className="rounded-xl border border-brand-ash bg-brand-graphite p-5 hover:border-brand-red/50 transition-colors"
             >
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <h3 className="font-display text-body-lg text-brand-white">{customer.name}</h3>
-                  <p className="text-caption text-brand-silver mt-1">
+                  <p className="text-caption text-brand-smoke mt-1">
                     {customer.type === 'trade' ? 'Trade/Business' : 'Individual'}
                     {customer.companyName && ` • ${customer.companyName}`}
                   </p>
@@ -158,7 +158,7 @@ export function CustomersClientPage({ customers: initialCustomers }: CustomersCl
                 <div className="flex gap-1">
                   <button
                     onClick={() => handleOpenEditModal(customer)}
-                    className="p-2 hover:bg-brand-graphite rounded transition-colors text-brand-smoke hover:text-brand-white"
+                    className="p-2 hover:bg-brand-graphite-light rounded transition-colors text-brand-smoke hover:text-brand-white"
                     title="Edit customer"
                   >
                     <Edit2 className="w-4 h-4" />
@@ -194,7 +194,7 @@ export function CustomersClientPage({ customers: initialCustomers }: CustomersCl
                   </a>
                 )}
                 {customer.city && (
-                  <div className="flex items-center gap-2 text-body-sm text-brand-silver">
+                  <div className="flex items-center gap-2 text-body-sm text-brand-smoke">
                     <MapPin size={14} className="text-brand-red" />
                     <span>
                       {customer.city}
@@ -205,24 +205,24 @@ export function CustomersClientPage({ customers: initialCustomers }: CustomersCl
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-2 p-3 bg-brand-graphite/30 rounded-lg mb-3 text-center">
+              <div className="grid grid-cols-3 gap-2 p-3 bg-brand-graphite-light/30 rounded-lg mb-3 text-center">
                 <div>
                   <p className="text-brand-white font-mono font-bold">0</p>
-                  <p className="text-caption text-brand-silver">Quotes</p>
+                  <p className="text-caption text-brand-smoke">Quotes</p>
                 </div>
                 <div>
                   <p className="text-brand-white font-mono font-bold">0</p>
-                  <p className="text-caption text-brand-silver">Bookings</p>
+                  <p className="text-caption text-brand-smoke">Bookings</p>
                 </div>
                 <div>
                   <p className="text-brand-white font-mono font-bold">0</p>
-                  <p className="text-caption text-brand-silver">Invoices</p>
+                  <p className="text-caption text-brand-smoke">Invoices</p>
                 </div>
               </div>
 
               {/* Notes */}
               {customer.notes && (
-                <p className="text-body-xs text-brand-silver line-clamp-2 border-t border-brand-graphite pt-3">
+                <p className="text-body-xs text-brand-smoke line-clamp-2 border-t border-brand-ash pt-3">
                   {customer.notes}
                 </p>
               )}
@@ -239,8 +239,8 @@ export function CustomersClientPage({ customers: initialCustomers }: CustomersCl
       {/* Modal */}
       {modalMode && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-brand-jet rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border border-brand-graphite">
-            <div className="sticky top-0 border-b border-brand-graphite bg-brand-jet-light p-4 flex justify-between items-center">
+          <div className="bg-[#16161B] rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border border-brand-ash">
+            <div className="sticky top-0 border-b border-brand-ash bg-brand-graphite p-4 flex justify-between items-center">
               <h2 className="text-lg font-bold text-brand-white">
                 {modalMode === 'create' ? 'Create Customer' : 'Edit Customer'}
               </h2>
