@@ -85,11 +85,13 @@ export const customers = pgTable(
     companyName: varchar("company_name", { length: 180 }),
     notes: text("notes"),
     marketingConsent: boolean("marketing_consent").default(false).notNull(),
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
     ...timestamps,
   },
   (table) => ({
     emailIdx: index("customers_email_idx").on(table.email),
     typeIdx: index("customers_type_idx").on(table.type),
+    archivedIdx: index("customers_archived_at_idx").on(table.archivedAt),
   })
 );
 
@@ -232,6 +234,7 @@ export const invoices = pgTable(
     quoteId: uuid("quote_id").references(() => quotes.id, { onDelete: "set null" }),
     subtotal: numeric("subtotal", { precision: 10, scale: 2 }).notNull(),
     gst: numeric("gst", { precision: 10, scale: 2 }).notNull(),
+    pst: numeric("pst", { precision: 10, scale: 2 }).notNull().default("0"),
     total: numeric("total", { precision: 10, scale: 2 }).notNull(),
     status: invoiceStatusEnum("status").default("draft").notNull(),
     notes: text("notes"),

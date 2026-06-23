@@ -189,14 +189,11 @@ export async function DELETE(request: Request) {
       );
     }
 
-    // Soft delete by setting archived flag
+    // Soft delete by setting archivedAt timestamp
     const [deleted] = await db
       .update(customers)
       .set({
-        // Note: if archived column doesn't exist, we can use a timestamp instead
-        // For now, we'll just soft delete by marking in notes or a separate flag
-        // Since the schema doesn't show archived, we'll use a comment in notes
-        notes: sql`CONCAT(COALESCE(${customers.notes}, ''), '\n[ARCHIVED]')`,
+        archivedAt: new Date(),
         updatedAt: new Date(),
       })
       .where(eq(customers.id, customerId))

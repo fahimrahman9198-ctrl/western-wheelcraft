@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, count, desc, eq, gte, inArray } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, inArray, isNull } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -80,6 +80,7 @@ export async function getAdminBookingsData() {
 
 export async function getAdminCustomersData() {
   const customers = await db.query.customers.findMany({
+    where: isNull(schema.customers.archivedAt),
     orderBy: [desc(schema.customers.createdAt)],
     limit: 100,
     with: {
@@ -165,6 +166,7 @@ export async function getAdminAnalyticsData() {
       limit: 500,
     }),
     db.query.customers.findMany({
+      where: isNull(schema.customers.archivedAt),
       orderBy: [desc(schema.customers.createdAt)],
       limit: 500,
     }),

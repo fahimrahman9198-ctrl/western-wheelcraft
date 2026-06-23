@@ -62,7 +62,7 @@ export async function POST(request: Request) {
 
     // Create invoice — server recomputes all tax from subtotal (source of truth)
     const subtotal = data.price - data.discount;
-    const { gst, total } = calcInvoiceTotals(subtotal);
+    const { gst, pst, total } = calcInvoiceTotals(subtotal);
     const [invoice] = await db
       .insert(invoices)
       .values({
@@ -70,6 +70,7 @@ export async function POST(request: Request) {
         customerId,
         subtotal: subtotal.toString(),
         gst: gst.toString(),
+        pst: pst.toString(),
         total: total.toString(),
         status: 'unpaid',
         issuedAt: new Date(),

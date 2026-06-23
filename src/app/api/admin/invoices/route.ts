@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
     // Calculate totals — shared helper applies GST (5%) + PST (7%)
     const subtotal = data.lineItems.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-    const { gst, total } = calcInvoiceTotals(subtotal);
+    const { gst, pst, total } = calcInvoiceTotals(subtotal);
 
     // Create invoice
     const [invoice] = await db
@@ -55,6 +55,7 @@ export async function POST(request: Request) {
         quoteId: data.quoteId || null,
         subtotal: subtotal.toString(),
         gst: gst.toString(),
+        pst: pst.toString(),
         total: total.toString(),
         status: 'draft',
         notes: data.notes || '',
