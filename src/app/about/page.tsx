@@ -112,7 +112,7 @@ export default function AboutPage() {
           poster="/images/hero-brand.jpg"
           aria-hidden="true"
         >
-          <source src="/videos/about-hero.mp4" type="video/mp4" />
+          <source src="/videos/about-hero-mobile.mp4" data-src-desktop="/videos/about-hero.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/35" aria-hidden="true" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">

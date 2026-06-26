@@ -153,7 +153,7 @@ export default function ServicesPage() {
           poster="/images/wheel-detail.jpg"
           aria-hidden="true"
         >
-          <source src="/videos/services-hero.mp4" type="video/mp4" />
+          <source src="/videos/services-hero-mobile.mp4" data-src-desktop="/videos/services-hero.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/45" aria-hidden="true" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">

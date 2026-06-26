@@ -135,6 +135,21 @@ export default function RootLayout({
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(getAggregateRatingSchema()) }}
           />
+          <Script id="video-upgrade" strategy="beforeInteractive">
+            {`
+              function upgradeVideoSources() {
+                if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+                  document.querySelectorAll('source[data-src-desktop]').forEach(source => {
+                    source.src = source.dataset.srcDesktop;
+                    const video = source.closest('video');
+                    if (video && video.readyState === 0) video.load();
+                  });
+                }
+              }
+              upgradeVideoSources();
+              window.addEventListener('resize', upgradeVideoSources);
+            `}
+          </Script>
         </head>
         <body className="min-h-screen bg-brand-jet text-brand-white antialiased flex flex-col">
           <Header />

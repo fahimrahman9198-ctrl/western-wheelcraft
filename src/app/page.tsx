@@ -175,7 +175,7 @@ export default function HomePage() {
           poster="/images/hero-brand.jpg"
           aria-hidden="true"
         >
-          <source src="/videos/hero.mp4" type="video/mp4" />
+          <source src="/videos/hero-mobile.mp4" data-src-desktop="/videos/hero.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/45" aria-hidden="true" />
         <div
