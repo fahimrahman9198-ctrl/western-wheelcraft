@@ -114,6 +114,24 @@ export default function AboutPage() {
         >
           <source src="/videos/about-hero-mobile.mp4" data-src-desktop="/videos/about-hero.mp4" type="video/mp4" />
         </video>
+        <button
+          type="button"
+          className="video-play-btn absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100 focus:opacity-100"
+          aria-label="Play video"
+          onClick={(e) => {
+            const video = (e.target as HTMLButtonElement).closest('section')?.querySelector('video');
+            if (video) {
+              video.play().catch(() => {});
+              (e.target as HTMLButtonElement).style.display = 'none';
+            }
+          }}
+        >
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-red shadow-lg">
+            <svg className="h-6 w-6 fill-white" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </button>
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/35" aria-hidden="true" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute right-0 top-0 h-[600px] w-[600px] rounded-full bg-brand-red/10 blur-3xl" />

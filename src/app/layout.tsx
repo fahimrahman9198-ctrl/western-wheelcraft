@@ -149,15 +149,25 @@ export default function RootLayout({
               upgradeVideoSources();
               window.addEventListener('resize', upgradeVideoSources);
 
-              // Force video autoplay on mobile
+              // Force video autoplay on mobile, show play button if blocked
               function initVideoAutoplay() {
                 const observer = new IntersectionObserver((entries) => {
                   entries.forEach(entry => {
                     if (entry.isIntersecting) {
                       const video = entry.target;
+                      const section = video.closest('section');
+                      const playBtn = section?.querySelector('.video-play-btn');
+
                       video.play().catch(() => {
-                        // Autoplay blocked, try on next interaction
-                        document.addEventListener('touchstart', () => video.play(), { once: true });
+                        // Autoplay blocked, show play button
+                        if (playBtn) {
+                          playBtn.style.opacity = '1';
+                          playBtn.style.pointerEvents = 'auto';
+                        }
+                        document.addEventListener('touchstart', () => {
+                          video.play().catch(() => {});
+                          if (playBtn) playBtn.style.display = 'none';
+                        }, { once: true });
                       });
                     }
                   });
