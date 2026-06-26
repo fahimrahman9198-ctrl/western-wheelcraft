@@ -95,6 +95,7 @@ export default function RegionsPage() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-brand-jet py-24">
         <video
+          preload="none"
           className="absolute inset-0 h-full w-full object-cover object-center"
           autoPlay
           muted
