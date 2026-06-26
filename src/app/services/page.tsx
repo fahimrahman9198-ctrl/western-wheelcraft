@@ -159,13 +159,6 @@ export default function ServicesPage() {
           type="button"
           className="video-play-btn absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100 focus:opacity-100"
           aria-label="Play video"
-          onClick={(e) => {
-            const video = (e.target as HTMLButtonElement).closest('section')?.querySelector('video');
-            if (video) {
-              video.play().catch(() => {});
-              (e.target as HTMLButtonElement).style.display = 'none';
-            }
-          }}
         >
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-red shadow-lg">
             <svg className="h-6 w-6 fill-white" viewBox="0 0 24 24" aria-hidden="true">

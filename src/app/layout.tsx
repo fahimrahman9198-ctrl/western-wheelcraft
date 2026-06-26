@@ -151,29 +151,24 @@ export default function RootLayout({
 
               // Force video autoplay on mobile, show play button if blocked
               function initVideoAutoplay() {
-                const observer = new IntersectionObserver((entries) => {
-                  entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                      const video = entry.target;
-                      const section = video.closest('section');
-                      const playBtn = section?.querySelector('.video-play-btn');
+                document.querySelectorAll('video').forEach(video => {
+                  const section = video.closest('section');
+                  const playBtn = section?.querySelector('.video-play-btn');
 
-                      video.play().catch(() => {
-                        // Autoplay blocked, show play button
-                        if (playBtn) {
-                          playBtn.style.opacity = '1';
-                          playBtn.style.pointerEvents = 'auto';
-                        }
-                        document.addEventListener('touchstart', () => {
-                          video.play().catch(() => {});
-                          if (playBtn) playBtn.style.display = 'none';
-                        }, { once: true });
+                  // Attempt autoplay
+                  video.play().catch(() => {
+                    // Autoplay blocked, show play button
+                    if (playBtn) {
+                      playBtn.style.opacity = '1';
+                      playBtn.style.pointerEvents = 'auto';
+                      // Add click listener to play button
+                      playBtn.addEventListener('click', () => {
+                        video.play().catch(() => {});
+                        playBtn.style.display = 'none';
                       });
                     }
                   });
-                }, { threshold: 0.25 });
-
-                document.querySelectorAll('video').forEach(v => observer.observe(v));
+                });
               }
               if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initVideoAutoplay);
