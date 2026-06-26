@@ -101,7 +101,7 @@ export default function RegionsPage() {
           muted
           loop
           playsInline
-          poster="/images/hero-brand.jpg"
+         
           aria-hidden="true"
         >
           <source src="/videos/regions-hero-mobile.mp4" data-src-desktop="/videos/regions-hero.mp4" type="video/mp4" />

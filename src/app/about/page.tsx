@@ -109,7 +109,7 @@ export default function AboutPage() {
           muted
           loop
           playsInline
-          poster="/images/hero-brand.jpg"
+         
           aria-hidden="true"
         >
           <source src="/videos/about-hero-mobile.mp4" data-src-desktop="/videos/about-hero.mp4" type="video/mp4" />

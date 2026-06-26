@@ -150,7 +150,7 @@ export default function ServicesPage() {
           muted
           loop
           playsInline
-          poster="/images/wheel-detail.jpg"
+         
           aria-hidden="true"
         >
           <source src="/videos/services-hero-mobile.mp4" data-src-desktop="/videos/services-hero.mp4" type="video/mp4" />
