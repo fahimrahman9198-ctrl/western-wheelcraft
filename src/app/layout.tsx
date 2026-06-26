@@ -148,6 +148,28 @@ export default function RootLayout({
               }
               upgradeVideoSources();
               window.addEventListener('resize', upgradeVideoSources);
+
+              // Force video autoplay on mobile
+              function initVideoAutoplay() {
+                const observer = new IntersectionObserver((entries) => {
+                  entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                      const video = entry.target;
+                      video.play().catch(() => {
+                        // Autoplay blocked, try on next interaction
+                        document.addEventListener('touchstart', () => video.play(), { once: true });
+                      });
+                    }
+                  });
+                }, { threshold: 0.25 });
+
+                document.querySelectorAll('video').forEach(v => observer.observe(v));
+              }
+              if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initVideoAutoplay);
+              } else {
+                initVideoAutoplay();
+              }
             `}
           </Script>
         </head>
