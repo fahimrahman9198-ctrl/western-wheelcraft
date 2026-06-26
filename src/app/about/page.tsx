@@ -103,7 +103,7 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-brand-jet py-24">
         <video
-          preload="metadata"
+          preload="auto"
           className="absolute inset-0 h-full w-full object-cover object-center"
           autoPlay
           muted
