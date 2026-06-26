@@ -1,5 +1,3 @@
-'use client';
-
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import Image from 'next/image';
