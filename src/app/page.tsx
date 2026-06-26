@@ -93,7 +93,6 @@ const trustBadges = [
   { value: "5M+", label: "Wheels Refinished", sublabel: "And counting" },
   { value: "3", label: "Regions Served", sublabel: "Across BC" },
   { value: "100%", label: "Satisfaction Guarantee", sublabel: "Or we re-do it" },
-  { value: "24/7", label: "Fleet Service Available", sublabel: "Emergency repairs" },
 ];
 
 const whyUsCards = [
