@@ -45,7 +45,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-brand-graphite/60 bg-brand-jet/90 backdrop-blur-md">
-      <div className="section-container flex h-16 items-center justify-between">
+      <div className="section-container flex h-24 items-center justify-between py-3">
         <Link
           href="/"
           className="flex items-center gap-3 hover:opacity-90 transition-opacity"
@@ -54,9 +54,9 @@ export function Header() {
           <Image
             src="/images/logo.png"
             alt="Western Wheelcraft — mobile wheel refinishing experts"
-            height={52}
-            width={155}
-            style={{ height: '52px', width: 'auto' }}
+            height={80}
+            width={240}
+            style={{ height: '80px', width: 'auto' }}
             className="object-contain"
             priority
           />
