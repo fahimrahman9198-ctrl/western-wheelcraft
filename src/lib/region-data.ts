@@ -44,7 +44,7 @@ export const REGIONS: Record<string, RegionData> = {
       name: 'Western Wheelcraft - Burnaby',
       address: '3756 Napier Street, Burnaby, BC V5C 3C6',
       phone: '(604) 710-6174',
-      hours: 'Mon–Fri 8am–5pm, Sat 9am–2pm',
+      hours: 'Mon–Sat 9am–5pm, Sun 12–4:30pm',
       lat: 49.2366,
       lng: -122.9833,
     },

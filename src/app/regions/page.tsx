@@ -94,8 +94,20 @@ export default function RegionsPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-brand-jet py-24">
+        <video
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/hero-brand.jpg"
+          aria-hidden="true"
+        >
+          <source src="/videos/regions-hero.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/45" aria-hidden="true" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-brand-red/5 blur-3xl" />
+          <div className="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-brand-red/10 blur-3xl" />
         </div>
         <div className="section-container relative text-center">
           <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-brand-red/30 bg-brand-red/10 px-4 py-2">
@@ -104,10 +116,10 @@ export default function RegionsPage() {
               Service Coverage
             </span>
           </div>
-          <h1 className="mb-5 font-display text-display-lg md:text-display-xl text-brand-white">
+          <h1 className="mb-5 font-display text-display-lg md:text-display-xl text-white">
             Serving British Columbia<br className="hidden sm:block" /> from Coast to Interior
           </h1>
-          <p className="mx-auto mb-8 max-w-xl font-body text-body-lg text-brand-smoke">
+          <p className="mx-auto mb-8 max-w-xl font-body text-body-lg text-white/85">
             Shop service at our Burnaby facility for the Lower Mainland. Mobile fleet
             service for Vancouver Island and Interior BC — we come to you.
           </p>
@@ -157,7 +169,7 @@ export default function RegionsPage() {
               <div className="grid md:grid-cols-2">
                 {/* Info */}
                 <div className="p-8 md:p-10">
-                  <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-brand-red px-3 py-1.5 font-body text-caption font-bold text-brand-white">
+                  <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-brand-red px-3 py-1.5 font-body text-caption font-bold text-white">
                     <IconBuilding />
                     Drop-Off Service
                   </div>
@@ -178,7 +190,7 @@ export default function RegionsPage() {
                     </div>
                     <div className="flex items-center gap-3 font-body text-body-sm text-brand-smoke">
                       <span className="text-brand-red"><IconClock /></span>
-                      Mon–Fri 8am–5pm &nbsp;·&nbsp; Sat 9am–2pm
+                      Mon–Sat 9am–5pm &nbsp;·&nbsp; Sun 12–4:30pm
                     </div>
                   </div>
 
@@ -240,7 +252,7 @@ export default function RegionsPage() {
               <div className="absolute inset-0 bg-gradient-to-r from-brand-jet/70 via-brand-jet/20 to-transparent" aria-hidden="true" />
               <div className="absolute inset-0 flex items-center p-8 md:p-12">
                 <div>
-                  <span className="mb-3 inline-flex items-center rounded-full bg-brand-red px-3 py-1.5 font-body text-caption font-bold text-brand-white">
+                  <span className="mb-3 inline-flex items-center rounded-full bg-brand-red px-3 py-1.5 font-body text-caption font-bold text-white">
                     Mobile Fleet Service
                   </span>
                   <p className="font-display text-display-sm md:text-display-md text-brand-white">

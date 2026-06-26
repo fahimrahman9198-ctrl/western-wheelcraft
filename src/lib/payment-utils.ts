@@ -11,7 +11,7 @@ export const SIZE_PREMIUM: Record<string, number> = {
 };
 
 export const FINISH_PREMIUM: Record<string, number> = {
-  oem: 50, custom: 0, chrome: 100, powder: 0, 'two-tone': 75,
+  oem: 50, custom: 0, chrome: 100, caliper: 0, 'two-tone': 75,
 };
 
 export const REGION_FEE: Record<string, number> = {
@@ -20,7 +20,7 @@ export const REGION_FEE: Record<string, number> = {
 
 export const FINISH_LABELS: Record<string, string> = {
   oem: 'OEM Color Match', custom: 'Custom Color', chrome: 'Chrome',
-  powder: 'Powder Coat', 'two-tone': 'Two-Tone',
+  caliper: 'Caliper Painting', 'two-tone': 'Two-Tone',
 };
 
 export const REGION_LABELS: Record<string, string> = {

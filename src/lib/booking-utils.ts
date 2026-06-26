@@ -65,10 +65,35 @@ export const SERVICE_DURATIONS: Record<string, number> = {
 };
 
 export const WORK_HOURS = {
-  start: '08:00',
+  start: '09:00',
   end: '17:00',
   interval: 30, // minutes
 };
+
+// Public booking slots by weekday. Mon–Sat 9–5 (last start 4pm), Sun 12–4:30 (last start 4pm).
+// 0 = Sunday … 6 = Saturday (matches Date.getDay()).
+export const PUBLIC_SLOTS_WEEKDAY = ['9:00 AM','10:00 AM','11:00 AM','1:00 PM','2:00 PM','3:00 PM','4:00 PM'];
+export const PUBLIC_SLOTS_SUNDAY = ['12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM'];
+
+export function publicSlotsForDate(dateStr: string): string[] {
+  if (!dateStr) return PUBLIC_SLOTS_WEEKDAY;
+  // Parse as local date (avoid UTC shift from new Date('YYYY-MM-DD'))
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const day = new Date(y, (m ?? 1) - 1, d ?? 1).getDay();
+  return day === 0 ? PUBLIC_SLOTS_SUNDAY : PUBLIC_SLOTS_WEEKDAY;
+}
+
+// Normalize a 12-hour label ('9:00 AM') to 24-hour 'HH:mm' for comparison with stored times.
+export function to24Hour(label: string): string {
+  const match = label.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/i);
+  if (!match) return label;
+  let hour = Number(match[1]);
+  const minute = match[2];
+  const meridiem = match[3].toUpperCase();
+  if (meridiem === 'PM' && hour < 12) hour += 12;
+  if (meridiem === 'AM' && hour === 12) hour = 0;
+  return `${String(hour).padStart(2, '0')}:${minute}`;
+}
 
 export function generateTimeSlots(start: string = WORK_HOURS.start, end: string = WORK_HOURS.end): string[] {
   const slots: string[] = [];

@@ -60,7 +60,7 @@ export function DatePickerModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-[#16161B] rounded-lg w-full max-w-sm border border-brand-ash">
+      <div className="bg-brand-jet rounded-lg w-full max-w-sm border border-brand-ash">
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-brand-ash">
           <h2 className="text-lg font-bold text-brand-white">

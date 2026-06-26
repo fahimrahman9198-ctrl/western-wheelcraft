@@ -145,7 +145,7 @@ export function BookingsListView({
                   </button>
 
                   {expandedBookingId === booking.id && (
-                    <div className="absolute right-4 top-full mt-1 bg-[#16161B] border border-brand-ash rounded-lg shadow-lg z-10">
+                    <div className="absolute right-4 top-full mt-1 bg-brand-jet border border-brand-ash rounded-lg shadow-lg z-10">
                       {booking.status !== 'confirmed' && (
                         <button
                           onClick={() => {

@@ -46,19 +46,14 @@ export function Sidebar({ adminUser, mobileOpen, onMobileClose }: SidebarProps) 
       {/* Logo */}
       <div className="flex h-16 items-center gap-3 border-b border-brand-ash px-5">
         <Image
-          src="/images/logo.PNG"
-          alt=""
-          height={36}
+          src="/images/logo-mark.png"
+          alt="Western Wheelcraft"
+          height={34}
           width={120}
-          style={{ height: '36px', width: 'auto' }}
-          className="object-contain brightness-0 invert"
+          style={{ height: '34px', width: 'auto' }}
+          className="object-contain"
         />
-        <div className="flex flex-col">
-          <span className="font-display text-[0.8rem] tracking-tight text-brand-white">
-            Western <span className="text-brand-red">Wheelcraft</span>
-          </span>
-          <span className="font-mono text-[0.6rem] text-brand-smoke uppercase tracking-wider">Admin</span>
-        </div>
+        <span className="font-mono text-[0.6rem] text-brand-smoke uppercase tracking-wider">Admin</span>
         {onMobileClose && (
           <button
             onClick={onMobileClose}

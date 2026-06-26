@@ -15,7 +15,7 @@ export function AdminShell({ children, adminUser }: AdminShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-[#16161B]">
+    <div className="flex min-h-screen bg-brand-jet">
       <Sidebar
         adminUser={adminUser}
         mobileOpen={mobileOpen}

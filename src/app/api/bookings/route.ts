@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createBookingRequest } from "@/lib/booking-persistence";
+import { createBookingRequest, BookingConflictError } from "@/lib/booking-persistence";
 import { enforceRateLimit } from "@/lib/rate-limit";
 
 const bookingRequestSchema = z.object({
@@ -36,6 +36,9 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
+    if (error instanceof BookingConflictError) {
+      return NextResponse.json({ error: error.message }, { status: 409 });
+    }
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Invalid booking request.", issues: error.issues },

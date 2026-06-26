@@ -7,7 +7,7 @@ import { FadeIn } from '@/components/ui/FadeIn';
 export const metadata: Metadata = {
   title: 'About Us',
   description:
-    'Western Wheelcraft Ltd. — a family-owned BC wheel refinishing company. Red Seal certified, ICBC accredited, I-CAR trained.',
+    'Western Wheelcraft Ltd. — a family-owned BC wheel refinishing company. Red Seal certified and ICBC accredited.',
 };
 
 function IconAward() {
@@ -78,9 +78,9 @@ const certifications = [
   },
   {
     icon: <IconAward />,
-    title: 'I-CAR Certified',
+    title: 'Red Seal Certified',
     description:
-      'Industry training and certification through I-CAR, the standard for collision repair and refinishing excellence.',
+      'Red Seal certified technicians — the national standard of excellence for skilled trades across Canada.',
   },
   {
     icon: <IconShield />,
@@ -102,8 +102,20 @@ export default function AboutPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-brand-jet py-24">
+        <video
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/hero-brand.jpg"
+          aria-hidden="true"
+        >
+          <source src="/videos/about-hero.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/35" aria-hidden="true" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute right-0 top-0 h-[600px] w-[600px] rounded-full bg-brand-red/4 blur-3xl" />
+          <div className="absolute right-0 top-0 h-[600px] w-[600px] rounded-full bg-brand-red/10 blur-3xl" />
         </div>
         <div className="section-container relative">
           <div className="max-w-2xl">
@@ -113,10 +125,10 @@ export default function AboutPage() {
                 Family-Owned · Burnaby, BC
               </span>
             </div>
-            <h1 className="mb-5 font-display text-display-lg md:text-display-xl text-brand-white">
+            <h1 className="mb-5 font-display text-display-lg md:text-display-xl text-white">
               Setting the standard for BC wheels
             </h1>
-            <p className="mb-8 font-body text-body-lg text-brand-smoke max-w-lg">
+            <p className="mb-8 font-body text-body-lg text-white/85 max-w-lg">
               Family-owned and BC-based. We started refinishing wheels when most shops
               didn&rsquo;t — and we&rsquo;ve been raising the bar ever since.
             </p>
@@ -137,7 +149,7 @@ export default function AboutPage() {
         <div className="section-container py-10">
           <dl className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {[
-              { value: '50,000+', label: 'Wheels Refinished' },
+              { value: '5M+', label: 'Wheels Refinished' },
               { value: '100%', label: 'Workmanship Guarantee' },
               { value: 'OEM', label: 'Factory-Match Finishes' },
               { value: '3', label: 'Service Regions' },

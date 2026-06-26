@@ -209,7 +209,7 @@ export function CreateBookingModal({
   return (
     <>
       <div className="fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center p-4">
-        <div className="bg-[#16161B] rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border border-brand-ash">
+        <div className="bg-brand-jet rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border border-brand-ash">
           <div className="sticky top-0 border-b border-brand-ash bg-brand-graphite p-4">
             <h2 className="text-lg font-bold text-brand-white">Create New Booking</h2>
           </div>

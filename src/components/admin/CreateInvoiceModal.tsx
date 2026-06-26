@@ -94,7 +94,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-[#16161B] rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-brand-ash">
+      <div className="bg-brand-jet rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-brand-ash">
         {/* Header */}
         <div className="sticky top-0 border-b border-brand-ash bg-brand-graphite p-4 flex justify-between items-center">
           <h2 className="text-lg font-bold text-brand-white">Create New Invoice</h2>
@@ -297,7 +297,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                 <span className="text-brand-smoke">PST (7%):</span>
                 <span className="text-brand-white font-mono">${pst.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between border-t-2 border-brand-ash pt-2 bg-[#16161B] p-2 rounded">
+              <div className="flex justify-between border-t-2 border-brand-ash pt-2 bg-brand-jet p-2 rounded">
                 <span className="font-semibold text-brand-white">Total:</span>
                 <span className="font-semibold text-brand-white font-mono text-lg">${total.toFixed(2)}</span>
               </div>

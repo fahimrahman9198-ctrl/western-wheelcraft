@@ -14,9 +14,9 @@ export interface AdminActivityView {
 }
 
 const fieldClass =
-  'h-10 w-full rounded-md border border-brand-ash bg-[#16161B] px-3 text-body-sm text-brand-white outline-none transition-colors focus:border-brand-red disabled:opacity-50';
+  'h-10 w-full rounded-md border border-brand-ash bg-brand-jet px-3 text-body-sm text-brand-white outline-none transition-colors focus:border-brand-red disabled:opacity-50';
 const textareaClass =
-  'min-h-24 w-full resize-y rounded-md border border-brand-ash bg-[#16161B] px-3 py-2 text-body-sm text-brand-white outline-none transition-colors placeholder:text-brand-silver focus:border-brand-red disabled:opacity-50';
+  'min-h-24 w-full resize-y rounded-md border border-brand-ash bg-brand-jet px-3 py-2 text-body-sm text-brand-white outline-none transition-colors placeholder:text-brand-silver focus:border-brand-red disabled:opacity-50';
 
 async function requestJson(url: string, method: 'PATCH' | 'POST', body: object) {
   const response = await fetch(url, {
@@ -90,7 +90,7 @@ export function LeadWorkflowControls({
   }
 
   return (
-    <section className="mt-4 rounded-lg border border-brand-ash bg-[#16161B] p-4">
+    <section className="mt-4 rounded-lg border border-brand-ash bg-brand-jet p-4">
       <h3 className="font-display text-body-md text-brand-white">Lead workflow</h3>
       <div className="mt-3 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2fr_auto] lg:items-end">
         <label className="text-caption text-brand-smoke">
@@ -191,7 +191,7 @@ export function BookingWorkflowControls({
   }
 
   return (
-    <section className="mt-4 rounded-lg border border-brand-ash bg-[#16161B] p-4">
+    <section className="mt-4 rounded-lg border border-brand-ash bg-brand-jet p-4">
       <h3 className="font-display text-body-md text-brand-white">Booking workflow</h3>
       <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
         <label className="text-caption text-brand-smoke">

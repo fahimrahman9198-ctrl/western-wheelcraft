@@ -10,7 +10,7 @@ const footerColumns = [
       { label: 'Curb Rash Repair', href: '/services' },
       { label: 'Diamond Cut', href: '/services' },
       { label: 'Custom Finishes', href: '/services' },
-      { label: 'Powder Coating', href: '/services' },
+      { label: 'Caliper Painting', href: '/services' },
     ],
   },
   {
@@ -77,16 +77,13 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="mb-4 flex items-center gap-3 hover:opacity-90 transition-opacity w-fit">
               <Image
-                src="/images/logo.PNG"
-                alt=""
-                height={40}
-                width={135}
-                style={{ height: '40px', width: 'auto' }}
-                className="object-contain brightness-0 invert"
+                src="/images/logo.png"
+                alt="Western Wheelcraft — mobile wheel refinishing experts"
+                height={48}
+                width={160}
+                style={{ height: '48px', width: 'auto' }}
+                className="object-contain"
               />
-              <span className="font-display text-body-md tracking-tight text-brand-white">
-                Western <span className="text-brand-red">Wheelcraft</span>
-              </span>
             </Link>
             <p className="mt-3 max-w-xs font-body text-body-sm text-brand-silver leading-relaxed">
               BC&rsquo;s trusted wheel refinishing experts. Shop service in the Lower Mainland, mobile fleet service across Vancouver Island and Interior BC.
@@ -132,7 +129,24 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-brand-graphite/60 pt-8 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 rounded-2xl border border-brand-ash bg-brand-graphite px-6 py-5 text-center sm:flex-row sm:text-left">
+          <div>
+            <p className="font-display text-body-md text-brand-white">
+              We&rsquo;re hiring — wanna join our team?
+            </p>
+            <p className="mt-1 font-body text-body-sm text-brand-silver">
+              Send us your resume and let&rsquo;s talk.
+            </p>
+          </div>
+          <a
+            href="mailto:info@westernwheelcraft.ca?subject=Join%20the%20Western%20Wheelcraft%20team"
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-brand-red px-5 py-2.5 font-body text-body-sm font-semibold text-white transition-colors hover:bg-brand-red-hover"
+          >
+            Send your resume
+          </a>
+        </div>
+
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-brand-graphite/60 pt-8 sm:flex-row">
           <p className="font-body text-caption text-brand-silver">
             &copy; {new Date().getFullYear()} Western Wheelcraft Ltd. All rights reserved.
           </p>

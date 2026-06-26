@@ -3,16 +3,16 @@ import Link from 'next/link';
 
 export default function AdminUnauthorizedPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#16161B] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-brand-jet px-4">
       <div className="w-full max-w-sm text-center">
         <div className="mb-8 flex flex-col items-center gap-3">
           <Image
-            src="/images/logo.PNG"
+            src="/images/logo.png"
             alt="Western Wheelcraft"
             height={52}
             width={175}
             style={{ height: '52px', width: 'auto' }}
-            className="object-contain brightness-0 invert"
+            className="object-contain"
           />
           <p className="font-mono text-caption uppercase tracking-widest text-brand-smoke">
             Admin Portal

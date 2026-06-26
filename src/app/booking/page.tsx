@@ -125,7 +125,7 @@ export default function BookingPage() {
                   {[
                     'Same-day turnaround on most repairs',
                     'Full wheel balancing & TPMS service',
-                    'Mon–Fri 8am–5pm · Sat 9am–2pm',
+                    'Mon–Sat 9am–5pm · Sun 12–4:30pm',
                     '3756 Napier St, Burnaby BC',
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-2.5 font-body text-body-sm text-brand-silver">

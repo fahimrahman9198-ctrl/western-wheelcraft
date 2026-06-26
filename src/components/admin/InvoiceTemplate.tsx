@@ -37,7 +37,7 @@ export function InvoiceTemplate({ invoice }: { invoice: InvoiceData }) {
   // Company info
   const companyData = {
     name: 'Western Wheelcraft',
-    logo: '/images/logo.PNG',
+    logo: '/images/logo.png',
     address: '3756 Napier St, Burnaby, BC V5C 3E5',
     phone: '(604) 710-6174',
     email: 'info@westernwheelcraft.ca',

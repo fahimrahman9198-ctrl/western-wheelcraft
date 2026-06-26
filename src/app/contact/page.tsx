@@ -140,8 +140,8 @@ export default function ContactPage() {
                         <IconClock />
                       </span>
                       <div>
-                        <span className="block font-semibold text-brand-white">Mon–Fri 8am–5pm</span>
-                        <span className="text-brand-silver">Sat 9am–2pm · Sun closed</span>
+                        <span className="block font-semibold text-brand-white">Mon–Sat 9am–5pm</span>
+                        <span className="text-brand-silver">Sun 12pm–4:30pm</span>
                       </div>
                     </div>
                   </div>
@@ -164,7 +164,7 @@ export default function ContactPage() {
                       </svg>
                     </div>
                     <div className="relative text-center px-6">
-                      <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-brand-red text-brand-white shadow-red-glow">
+                      <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-brand-red text-white shadow-red-glow">
                         <IconMapPin />
                       </div>
                       <p className="font-display text-body-sm text-brand-white">3756 Napier St</p>

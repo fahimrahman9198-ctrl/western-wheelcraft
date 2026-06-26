@@ -53,7 +53,7 @@ export const DEFAULT_PRICING_SETTINGS: PricingSettings = {
     { label: 'Curb Rash Repair', value: 200, unit: '$' },
     { label: 'Diamond Cut', value: 400, unit: '$/wheel' },
     { label: 'Two-Tone Custom', value: 475, unit: '$/wheel' },
-    { label: 'Powder Coat', value: 350, unit: '$/wheel' },
+    { label: 'Caliper Painting', value: 120, unit: '$/pair' },
     { label: 'Custom Color Match', value: 50, unit: '+$/wheel' },
     { label: 'Chrome Finish', value: 100, unit: '+$/wheel' },
   ],

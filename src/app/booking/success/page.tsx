@@ -64,7 +64,7 @@ export default async function BookingSuccessPage({ searchParams }: BookingSucces
               <div className="mt-5 rounded-2xl border border-brand-graphite-light bg-brand-graphite-light px-5 py-4">
                 <p className="font-display text-body-sm text-brand-white">Shop Drop-Off Address</p>
                 <p className="mt-1 font-body text-body-sm text-brand-smoke">3756 Napier St, Burnaby BC V5C 3E5</p>
-                <p className="font-body text-caption text-brand-silver">Mon-Fri 8am-5pm · Sat 9am-2pm</p>
+                <p className="font-body text-caption text-brand-silver">Mon–Sat 9am–5pm · Sun 12–4:30pm</p>
               </div>
             </div>
           </div>

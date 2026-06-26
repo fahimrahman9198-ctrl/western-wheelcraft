@@ -52,16 +52,14 @@ export function Header() {
           onClick={() => setMobileOpen(false)}
         >
           <Image
-            src="/images/logo.PNG"
-            alt=""
-            height={45}
-            width={150}
-            style={{ height: '45px', width: 'auto' }}
-            className="object-contain brightness-0 invert"
+            src="/images/logo.png"
+            alt="Western Wheelcraft — mobile wheel refinishing experts"
+            height={52}
+            width={155}
+            style={{ height: '52px', width: 'auto' }}
+            className="object-contain"
+            priority
           />
-          <span className="font-display text-body-md tracking-tight text-brand-white">
-            Western <span className="text-brand-red">Wheelcraft</span>
-          </span>
         </Link>
 
         <nav className="hidden items-center gap-0.5 md:flex" aria-label="Main navigation">

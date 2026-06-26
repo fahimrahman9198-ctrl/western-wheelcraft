@@ -1,11 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-const TIMES = ['8:00 AM','9:00 AM','10:00 AM','11:00 AM','1:00 PM','2:00 PM','3:00 PM','4:00 PM'];
+// Hours: Mon–Sat 9am–5pm (last start 4pm), Sun 12pm–4:30pm (last start 4pm).
+const SLOTS_WEEKDAY = ['9:00 AM','10:00 AM','11:00 AM','1:00 PM','2:00 PM','3:00 PM','4:00 PM'];
+const SLOTS_SUNDAY = ['12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM'];
+
+function slotsForDate(dateStr: string): string[] {
+  if (!dateStr) return SLOTS_WEEKDAY;
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, (m ?? 1) - 1, d ?? 1).getDay() === 0 ? SLOTS_SUNDAY : SLOTS_WEEKDAY;
+}
+
+function to24(label: string): string {
+  const m = label.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/i);
+  if (!m) return label;
+  let h = Number(m[1]);
+  if (m[3].toUpperCase() === 'PM' && h < 12) h += 12;
+  if (m[3].toUpperCase() === 'AM' && h === 12) h = 0;
+  return `${String(h).padStart(2, '0')}:${m[2]}`;
+}
 
 const MOBILE_REGIONS = [
   { value: 'vi',       label: 'Vancouver Island', fee: 60 },
@@ -39,6 +56,20 @@ export default function BookingWizardPage() {
   const [errors, setErrors]             = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [takenSlots, setTakenSlots] = useState<Set<string>>(new Set());
+
+  // Load already-booked times whenever the date changes, to prevent double-booking.
+  useEffect(() => {
+    if (!date) { setTakenSlots(new Set()); return; }
+    let active = true;
+    fetch(`/api/bookings/availability?date=${date}`)
+      .then((r) => (r.ok ? r.json() : { taken: [] }))
+      .then((d: { taken?: string[] }) => { if (active) setTakenSlots(new Set(d.taken ?? [])); })
+      .catch(() => { if (active) setTakenSlots(new Set()); });
+    return () => { active = false; };
+  }, [date]);
+
+  const slots = slotsForDate(date);
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -80,6 +111,15 @@ export default function BookingWizardPage() {
           estimatedTotal: 350 + fee,
         }),
       });
+
+      if (response.status === 409) {
+        const data = await response.json().catch(() => ({}));
+        setTakenSlots((prev) => new Set(prev).add(to24(time)));
+        setTime('');
+        setSubmitting(false);
+        setSubmitError(data?.error || 'That time slot was just booked. Please pick another time.');
+        return;
+      }
 
       if (!response.ok) {
         throw new Error('Unable to save booking request.');
@@ -214,7 +254,7 @@ export default function BookingWizardPage() {
                 value={date}
                 min={tomorrow()}
                 max={maxDate()}
-                onChange={e => { setDate(e.target.value); setErrors(s => ({ ...s, date: '' })); }}
+                onChange={e => { setDate(e.target.value); setTime(''); setErrors(s => ({ ...s, date: '' })); }}
                 className="w-full rounded-xl border border-brand-ash bg-brand-graphite px-4 py-3 font-body text-body-sm text-brand-white focus:border-brand-red focus:outline-none [color-scheme:dark]"
               />
               {errors.date && <p className="font-body text-caption text-brand-red">{errors.date}</p>}
@@ -224,22 +264,29 @@ export default function BookingWizardPage() {
             <div className="flex flex-col gap-1.5">
               <label className="font-body text-body-sm font-semibold text-brand-white">Preferred Time</label>
               <div className="grid grid-cols-4 gap-2">
-                {TIMES.map(t => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => { setTime(t); setErrors(s => ({ ...s, time: '' })); }}
-                    className={cn(
-                      'rounded-xl border py-2.5 font-body text-caption transition-all duration-200',
-                      time === t
-                        ? 'border-brand-red bg-brand-red/10 text-brand-white'
-                        : 'border-brand-ash bg-brand-graphite text-brand-smoke hover:border-brand-ash/80 hover:text-brand-white'
-                    )}
-                  >
-                    {t}
-                  </button>
-                ))}
+                {slots.map(t => {
+                  const booked = takenSlots.has(to24(t));
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      disabled={booked}
+                      onClick={() => { if (booked) return; setTime(t); setErrors(s => ({ ...s, time: '' })); }}
+                      className={cn(
+                        'rounded-xl border py-2.5 font-body text-caption transition-all duration-200',
+                        booked
+                          ? 'cursor-not-allowed border-brand-ash/40 bg-brand-graphite/40 text-brand-silver/50 line-through'
+                          : time === t
+                            ? 'border-brand-red bg-brand-red/10 text-white'
+                            : 'border-brand-ash bg-brand-graphite text-brand-smoke hover:border-brand-ash/80 hover:text-brand-white'
+                      )}
+                    >
+                      {t}
+                    </button>
+                  );
+                })}
               </div>
+              {!date && <p className="font-body text-caption text-brand-silver">Pick a date to see available times.</p>}
               {errors.time && <p className="font-body text-caption text-brand-red">{errors.time}</p>}
             </div>
 

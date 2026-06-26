@@ -47,7 +47,7 @@ const MAKES = [
 const WHEEL_SIZES = ['16"', '17"', '18"', '19"', '20"', '21"', '22"+'];
 
 const CURRENT_FINISHES = [
-  'Factory Paint', 'Chrome', 'Powder Coat', 'Two-Tone', 'Diamond Cut',
+  'Factory Paint', 'Chrome', 'Two-Tone', 'Diamond Cut',
 ];
 
 const REGIONS = [
@@ -62,7 +62,7 @@ const FINISHES = [
   { value: 'oem',      label: 'OEM Color Match', description: 'Factory-accurate spectrophotometer match', premium: 50  },
   { value: 'custom',   label: 'Custom Color',    description: 'Any colour of your choosing',              premium: 0   },
   { value: 'chrome',   label: 'Chrome',          description: 'High-gloss mirror chrome finish',          premium: 100 },
-  { value: 'powder',   label: 'Powder Coat',     description: 'Durable electrostatically applied coat',  premium: 0   },
+  { value: 'caliper',  label: 'Caliper Painting', description: 'Custom brake caliper colour, any shade',  premium: 0   },
   { value: 'two-tone', label: 'Two-Tone',        description: 'Dual-colour accent design',               premium: 75  },
 ];
 
@@ -598,7 +598,7 @@ export default function EstimatePage() {
                           <img src={url} alt={`Wheel photo ${i + 1}`} className="h-full w-full object-cover" />
                           <button
                             onClick={e => { e.stopPropagation(); removePhoto(i); }}
-                            className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-brand-jet/80 text-brand-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-brand-red"
+                            className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-brand-jet/80 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-brand-red"
                             aria-label="Remove photo"
                           >
                             <IconX />
@@ -730,7 +730,7 @@ export default function EstimatePage() {
                             className={cn(
                               'flex h-12 w-12 items-center justify-center rounded-xl border font-display text-display-sm transition-all duration-200',
                               vehicle.wheelCount === n
-                                ? 'border-brand-red bg-brand-red text-brand-white shadow-red-glow'
+                                ? 'border-brand-red bg-brand-red text-white shadow-red-glow'
                                 : 'border-brand-ash bg-brand-graphite text-brand-smoke hover:border-brand-red/60 hover:text-brand-white'
                             )}
                           >
@@ -869,7 +869,7 @@ export default function EstimatePage() {
                           f.value === 'oem'      ? 'bg-gradient-to-br from-brand-silver to-brand-ash'
                           : f.value === 'custom' ? ''
                           : f.value === 'chrome' ? 'bg-gradient-to-br from-white via-brand-silver to-brand-ash'
-                          : f.value === 'powder' ? 'bg-gradient-to-br from-brand-graphite-light to-brand-ash'
+                          : f.value === 'caliper' ? 'bg-gradient-to-br from-brand-graphite-light to-brand-ash'
                           :                        'bg-gradient-to-r from-brand-graphite-light to-brand-silver'
                         )}
                           style={f.value === 'custom' ? { backgroundColor: finish.customColor } : {}}

@@ -25,7 +25,7 @@ const services = [
   { value: 'oem-colour', label: 'OEM Color Matching' },
   { value: 'diamond-cut', label: 'Diamond Cut Refinishing' },
   { value: 'custom-finish', label: 'Custom Finish' },
-  { value: 'powder-coat', label: 'Powder Coating' },
+  { value: 'caliper-painting', label: 'Caliper Painting' },
   { value: 'full-restore', label: 'Full Restoration' },
   { value: 'other', label: 'Other / Not Sure' },
 ];

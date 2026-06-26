@@ -8,32 +8,37 @@
     --font-manrope: "Manrope", sans-serif;
     --font-jetbrains: "JetBrains Mono", monospace;
 
-    /* Core brand primitives */
-    --brand-red: #D81E2A;
-    --brand-red-hover: #B51822;
-    --brand-red-glow: rgba(216, 30, 42, 0.4);
-    --brand-jet: #0C0C0E;
-    --brand-jet-light: #17171B;
-    --brand-graphite: #242429;
-    --brand-graphite-light: #32323A;
-    --brand-ash: #47474F;
-    --brand-silver: #9A9AA6;
-    --brand-smoke: #C9C9D1;
-    --brand-white: #F5F5F7;
-    --brand-cream: #E8E8EC;
+    /* Core brand primitives — values are space-separated RGB channels
+       (consumed via rgb(var(--x) / <alpha>) in tailwind.config.ts).
+       THEME: Crisp White (light) — cool near-white background, slate charcoals, logo red + amber. */
+    --brand-red: 192 33 43;          /* #C0212B  logo red */
+    --brand-red-hover: 161 29 38;    /* #A11D26 */
+    --brand-red-glow: rgba(192, 33, 43, 0.25);
+    --brand-jet: 248 249 251;        /* #F8F9FB  page background (cool near-white) */
+    --brand-jet-light: 255 255 255;  /* #FFFFFF  elevated surfaces / nav / white cards */
+    --brand-graphite: 241 243 245;   /* #F1F3F5  cool tint surface / chips / secondary cards */
+    --brand-graphite-light: 231 234 238; /* #E7EAEE  hover / elevated tint */
+    --brand-ash: 221 225 230;        /* #DDE1E6  borders + faint badge fills */
+    --brand-silver: 113 119 132;     /* #717784  muted / tertiary text (slate) */
+    --brand-smoke: 71 78 92;         /* #474E5C  secondary body text (slate) */
+    --brand-white: 15 18 23;         /* #0F1217  primary text / headings (cool ink) */
+    --brand-cream: 255 255 255;      /* #FFFFFF */
+
+    /* Accent — amber (secondary pop) */
+    --brand-amber: 232 163 23;       /* #E8A317 */
 
     /* Semantic surface tokens */
-    --surface-base: var(--brand-jet);
-    --surface-elevated: var(--brand-jet-light);
-    --surface-card: var(--brand-graphite);
-    --surface-card-hover: var(--brand-graphite-light);
-    --surface-border: var(--brand-ash);
+    --surface-base: rgb(var(--brand-jet));
+    --surface-elevated: rgb(var(--brand-jet-light));
+    --surface-card: rgb(var(--brand-graphite));
+    --surface-card-hover: rgb(var(--brand-graphite-light));
+    --surface-border: rgb(var(--brand-ash));
 
     /* Semantic text tokens */
-    --text-primary: var(--brand-white);
-    --text-secondary: var(--brand-smoke);
-    --text-tertiary: var(--brand-silver);
-    --text-muted: var(--brand-ash);
+    --text-primary: rgb(var(--brand-white));
+    --text-secondary: rgb(var(--brand-smoke));
+    --text-tertiary: rgb(var(--brand-silver));
+    --text-muted: rgb(var(--brand-silver));
 
     /* Motion tokens */
     --duration-fast: 150ms;
@@ -131,9 +136,9 @@
   .gradient-overlay {
     background: linear-gradient(
       180deg,
-      rgba(10, 10, 11, 0) 0%,
-      rgba(10, 10, 11, 0.6) 60%,
-      rgba(10, 10, 11, 1) 100%
+      rgba(248, 249, 251, 0) 0%,
+      rgba(248, 249, 251, 0.65) 55%,
+      rgba(248, 249, 251, 1) 100%
     );
   }
 

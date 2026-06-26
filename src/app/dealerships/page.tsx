@@ -130,7 +130,7 @@ export default function DealershipsPage() {
           className="object-cover object-center"
           preload
         />
-        <div className="absolute inset-0 bg-brand-jet/60" aria-hidden="true" />
+        <div className="absolute inset-0 bg-brand-jet/85" aria-hidden="true" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-brand-red/5 blur-3xl" />
           <div className="absolute -left-20 bottom-0 h-[400px] w-[400px] rounded-full bg-brand-red/4 blur-3xl" />

@@ -10,7 +10,7 @@ import { ServiceSchema } from '@/lib/structured-data';
 export const metadata: Metadata = {
   title: 'Services',
   description:
-    'Premium wheel refinishing services: OEM color matching, curb rash repair, diamond cut refinishing, custom finishes, powder coating, and more.',
+    'Premium wheel refinishing services: OEM color matching, curb rash repair, diamond cut refinishing, custom finishes, caliper painting, and more.',
 };
 
 function IconSparkle() {
@@ -121,9 +121,9 @@ const services = [
   },
   {
     icon: <IconShield />,
-    title: 'Powder Coating',
+    title: 'Caliper Painting',
     description:
-      'Electrostatically applied and oven-cured at high temperature. More durable than paint — resistant to chips, UV, and corrosion.',
+      'High-temp caliper coatings in any colour to match or contrast your wheels. Heat-resistant, durable, and finished to a clean factory standard.',
   },
   {
     icon: <IconStar />,
@@ -143,14 +143,18 @@ export default function ServicesPage() {
       />
       {/* Hero */}
       <section className="relative overflow-hidden bg-brand-jet py-24">
-        <Image
-          src="/images/wheel-detail.jpg"
-          alt="Close-up of a freshly refinished alloy wheel at Western Wheelcraft"
-          fill
-          className="object-cover object-center"
-          preload
-        />
-        <div className="absolute inset-0 bg-brand-jet/60" aria-hidden="true" />
+        <video
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/wheel-detail.jpg"
+          aria-hidden="true"
+        >
+          <source src="/videos/services-hero.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/45" aria-hidden="true" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-brand-red/5 blur-3xl" />
         </div>
@@ -161,10 +165,10 @@ export default function ServicesPage() {
               Full-Service Wheel Refinishing
             </span>
           </div>
-          <h1 className="mb-5 font-display text-display-lg md:text-display-xl text-brand-white">
+          <h1 className="mb-5 font-display text-display-lg md:text-display-xl text-white">
             Premium Wheel Refinishing Services
           </h1>
-          <p className="mx-auto mb-8 max-w-xl font-body text-body-lg text-brand-smoke">
+          <p className="mx-auto mb-8 max-w-xl font-body text-body-lg text-white/85">
             Professional refinishing for every make, model, and finish type — backed by our
             lifetime workmanship warranty and decades of hands-on expertise.
           </p>

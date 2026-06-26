@@ -90,7 +90,7 @@ function IconPhone() {
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const trustBadges = [
-  { value: "50k+", label: "Wheels Refinished", sublabel: "And counting" },
+  { value: "5M+", label: "Wheels Refinished", sublabel: "And counting" },
   { value: "3", label: "Regions Served", sublabel: "Across BC" },
   { value: "100%", label: "Satisfaction Guarantee", sublabel: "Or we re-do it" },
   { value: "24/7", label: "Fleet Service Available", sublabel: "Emergency repairs" },
@@ -119,7 +119,7 @@ const whyUsCards = [
     icon: <IconPalette />,
     title: "Custom Finishes",
     description:
-      "Matte, gloss, satin, powder coat, two-tone, or full custom colour. Express your build without compromising quality.",
+      "Matte, gloss, satin, two-tone, or full custom colour. Express your build without compromising quality.",
   },
   {
     icon: <IconShield />,
@@ -131,7 +131,7 @@ const whyUsCards = [
     icon: <IconStar />,
     title: "Certified Technicians",
     description:
-      "Red Seal certified, I-CAR trained, and ICBC accredited. Decades of combined experience across passenger, performance, and commercial wheels.",
+      "Red Seal certified and ICBC accredited. Decades of combined experience across passenger, performance, and commercial wheels.",
   },
 ];
 
@@ -166,14 +166,18 @@ export default function HomePage() {
     <>
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-brand-jet">
-        <Image
-          src="/images/hero-brand.jpg"
-          alt="Western Wheelcraft workshop refinishing alloy wheels in Burnaby, BC"
-          fill
-          className="object-cover object-center"
-          preload
-        />
-        <div className="absolute inset-0 bg-brand-jet/60" aria-hidden="true" />
+        <video
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/hero-brand.jpg"
+          aria-hidden="true"
+        >
+          <source src="/videos/hero.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/45" aria-hidden="true" />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -191,14 +195,14 @@ export default function HomePage() {
             </span>
           </div>
 
-          <h1 className="mb-6 max-w-4xl font-display text-display-lg md:text-display-xl leading-[1.05] tracking-tight text-brand-white">
+          <h1 className="mb-6 max-w-4xl font-display text-display-lg md:text-display-xl leading-[1.05] tracking-tight text-white">
             Setting the standard{" "}
             <br className="hidden sm:block" />
             for{" "}
             <span className="text-gradient-red">OTHERS</span> to follow.
           </h1>
 
-          <p className="mb-10 max-w-xl font-body text-body-lg text-brand-smoke">
+          <p className="mb-10 max-w-xl font-body text-body-lg text-white/85">
             Precision wheel refinishing for dealerships, fleets, and discerning
             owners across the Lower Mainland, Vancouver Island, and Interior BC.
           </p>
@@ -217,9 +221,9 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
-            <span className="font-body text-caption text-brand-silver">Scroll</span>
-            <div className="h-8 w-px bg-gradient-to-b from-brand-silver to-transparent" />
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-60">
+            <span className="font-body text-caption text-white/70">Scroll</span>
+            <div className="h-8 w-px bg-gradient-to-b from-white/70 to-transparent" />
           </div>
         </div>
       </section>

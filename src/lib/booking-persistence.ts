@@ -1,7 +1,14 @@
 import "server-only";
 
-import { eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
+
+export class BookingConflictError extends Error {
+  constructor(message = "That time slot is already booked. Please choose another.") {
+    super(message);
+    this.name = "BookingConflictError";
+  }
+}
 import {
   getAdminNotificationEmail,
   sendTransactionalEmail,
@@ -232,6 +239,18 @@ export async function createBookingRequest(input: BookingRequestInput) {
   // Map service type to slot: mobile services use island slot
   const slot = input.serviceType === "mobile" ? "island" : "shop";
   const startTime = toBookingTime(input.startTime);
+
+  // Prevent double-booking: reject if the same date + time is already taken.
+  const existing = await db.query.bookings.findFirst({
+    where: and(
+      eq(schema.bookings.scheduledDate, input.scheduledDate),
+      eq(schema.bookings.startTime, startTime),
+      ne(schema.bookings.status, "cancelled")
+    ),
+  });
+  if (existing) {
+    throw new BookingConflictError();
+  }
   const service = input.serviceType === "mobile" ? "Mobile Fleet Service" : "Shop Drop-Off";
   const notes = [
     `Vehicle: ${input.vehicleDescription}`,

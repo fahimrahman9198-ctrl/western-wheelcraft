@@ -170,7 +170,7 @@ export default function QuotePage() {
                   <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-red/10 text-brand-red">
                     {step.icon}
                   </div>
-                  <div className="absolute -top-3 right-5 font-display text-display-lg text-brand-graphite-light select-none">
+                  <div className="absolute -top-3 right-5 font-display text-display-lg text-brand-smoke select-none">
                     {step.number}
                   </div>
                   <h3 className="mb-3 font-display text-display-sm text-brand-white">{step.title}</h3>
