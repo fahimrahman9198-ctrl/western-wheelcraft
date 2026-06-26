@@ -67,6 +67,12 @@ export const metadata: Metadata = {
         height: 630,
         alt: "Western Wheelcraft — Premium Wheel Refinishing",
       },
+      {
+        url: "/og-image-square.png",
+        width: 1200,
+        height: 1200,
+        alt: "Western Wheelcraft — Premium Wheel Refinishing",
+      },
     ],
   },
   twitter: {
