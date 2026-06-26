@@ -43,7 +43,7 @@ export const LocalBusinessSchema = {
     description: 'Lower Mainland BC, Vancouver Island, Okanagan',
   },
   priceRange: '$',
-  image: 'https://westernwheelcraft.ca/og-image.svg',
+  image: 'https://westernwheelcraft.ca/og-image.png',
 };
 
 export const OrganizationSchema = {

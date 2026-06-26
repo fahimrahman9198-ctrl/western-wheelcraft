@@ -62,7 +62,7 @@ export const metadata: Metadata = {
       "BC's trusted wheel refinishing experts. Mobile fleet service across Lower Mainland, Vancouver Island & Interior BC.",
     images: [
       {
-        url: "/og-image.svg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Western Wheelcraft — Premium Wheel Refinishing",
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     title: "Western Wheelcraft | Premium Wheel Refinishing",
     description:
       "BC's trusted wheel refinishing experts. Mobile fleet service across Lower Mainland, Vancouver Island & Interior BC.",
-    images: ["/og-image.svg"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
