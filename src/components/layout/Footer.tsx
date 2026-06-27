@@ -79,9 +79,9 @@ export function Footer() {
               <Image
                 src="/images/logo.png"
                 alt="Western Wheelcraft — mobile wheel refinishing experts"
-                height={48}
-                width={160}
-                style={{ height: '48px', width: 'auto' }}
+                height={80}
+                width={266}
+                style={{ height: '80px', width: 'auto' }}
                 className="object-contain"
               />
             </Link>
