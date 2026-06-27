@@ -111,6 +111,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -143,44 +144,81 @@ export default function RootLayout({
           />
           <Script id="video-upgrade" strategy="beforeInteractive">
             {`
-              function upgradeVideoSources() {
-                if (typeof window !== 'undefined' && window.innerWidth >= 768) {
-                  document.querySelectorAll('source[data-src-desktop]').forEach(source => {
-                    source.src = source.dataset.srcDesktop;
-                    const video = source.closest('video');
-                    if (video && video.readyState === 0) video.load();
-                  });
+              /* ES5-safe: this inline script is NOT transpiled, so it must avoid
+                 arrow functions, optional chaining, const/let, and NodeList.forEach
+                 to run on older Safari/Android/Chrome without throwing. */
+              (function () {
+                function toArray(list) {
+                  var arr = [];
+                  for (var i = 0; i < list.length; i++) { arr.push(list[i]); }
+                  return arr;
                 }
-              }
-              upgradeVideoSources();
-              window.addEventListener('resize', upgradeVideoSources);
 
-              // Force video autoplay on mobile, show play button if blocked
-              function initVideoAutoplay() {
-                document.querySelectorAll('video').forEach(video => {
-                  const section = video.closest('section');
-                  const playBtn = section?.querySelector('.video-play-btn');
+                /* Closest fallback for very old browsers */
+                function closestEl(el, selector) {
+                  if (el.closest) { return el.closest(selector); }
+                  var node = el;
+                  while (node && node.nodeType === 1) {
+                    if (node.matches && node.matches(selector)) { return node; }
+                    node = node.parentNode;
+                  }
+                  return null;
+                }
 
-                  // Attempt autoplay
-                  video.play().catch(() => {
-                    // Autoplay blocked, show play button
-                    if (playBtn) {
-                      playBtn.style.opacity = '1';
-                      playBtn.style.pointerEvents = 'auto';
-                      // Add click listener to play button
-                      playBtn.addEventListener('click', () => {
-                        video.play().catch(() => {});
-                        playBtn.style.display = 'none';
-                      });
-                    }
-                  });
-                });
-              }
-              if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initVideoAutoplay);
-              } else {
-                initVideoAutoplay();
-              }
+                /* Swap mobile -> desktop source on larger screens (better quality) */
+                function upgradeVideoSources() {
+                  if (typeof window === 'undefined' || window.innerWidth < 768) { return; }
+                  var sources = toArray(document.querySelectorAll('source[data-src-desktop]'));
+                  for (var i = 0; i < sources.length; i++) {
+                    var source = sources[i];
+                    var desktop = source.getAttribute('data-src-desktop');
+                    if (desktop) { source.setAttribute('src', desktop); }
+                    var video = closestEl(source, 'video');
+                    if (video && video.readyState === 0 && video.load) { video.load(); }
+                  }
+                }
+                upgradeVideoSources();
+                if (window.addEventListener) {
+                  window.addEventListener('resize', upgradeVideoSources);
+                }
+
+                /* Attempt autoplay; if blocked, reveal the play button */
+                function safePlay(video) {
+                  try {
+                    var p = video.play();
+                    if (p && typeof p.then === 'function') { return p; }
+                  } catch (e) {}
+                  return null;
+                }
+
+                function initVideoAutoplay() {
+                  var videos = toArray(document.querySelectorAll('video'));
+                  for (var i = 0; i < videos.length; i++) {
+                    (function (video) {
+                      var section = closestEl(video, 'section');
+                      var playBtn = section ? section.querySelector('.video-play-btn') : null;
+                      var p = safePlay(video);
+                      if (p && p['catch']) {
+                        p['catch'](function () {
+                          if (!playBtn) { return; }
+                          playBtn.style.opacity = '1';
+                          playBtn.style.pointerEvents = 'auto';
+                          playBtn.addEventListener('click', function () {
+                            safePlay(video);
+                            playBtn.style.display = 'none';
+                          });
+                        });
+                      }
+                    })(videos[i]);
+                  }
+                }
+
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', initVideoAutoplay);
+                } else {
+                  initVideoAutoplay();
+                }
+              })();
             `}
           </Script>
         </head>
