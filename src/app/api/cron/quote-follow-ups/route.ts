@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { processDueQuoteFollowUps } from "@/lib/quote-follow-ups";
+import { processDueEmailAutomations } from "@/lib/email-automations";
 
 export const runtime = "nodejs";
 
@@ -17,12 +17,12 @@ export async function GET(request: Request) {
   }
 
   try {
-    const result = await processDueQuoteFollowUps();
+    const result = await processDueEmailAutomations();
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Quote follow-up cron failed", error);
+    console.error("Email automation cron failed", error);
     return NextResponse.json(
-      { error: "Quote follow-up cron failed." },
+      { error: "Email automation cron failed." },
       { status: 500 }
     );
   }

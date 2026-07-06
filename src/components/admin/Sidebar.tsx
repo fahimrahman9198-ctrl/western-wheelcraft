@@ -10,6 +10,7 @@ import {
   FileText,
   Users,
   BarChart3,
+  Mail,
   Settings,
   LogOut,
   ChevronRight,
@@ -23,6 +24,7 @@ const navItems = [
   { label: 'Bookings', href: '/admin/bookings', icon: CalendarDays },
   { label: 'Invoices', href: '/admin/invoices', icon: FileText },
   { label: 'Customers', href: '/admin/customers', icon: Users },
+  { label: 'Funnel', href: '/admin/funnel', icon: Mail },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];
