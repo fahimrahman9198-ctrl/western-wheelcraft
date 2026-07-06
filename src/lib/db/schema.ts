@@ -58,6 +58,12 @@ export const communicationDirectionEnum = pgEnum("communication_direction", [
 ]);
 export const userRoleEnum = pgEnum("user_role", ["owner", "manager", "accountant", "it"]);
 export const quotePhotoKindEnum = pgEnum("quote_photo_kind", ["damage", "full_wheel", "vehicle", "other"]);
+export const quoteFollowUpStatusEnum = pgEnum("quote_follow_up_status", [
+  "scheduled",
+  "sent",
+  "skipped",
+  "failed",
+]);
 
 const timestamps = {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
@@ -294,6 +300,36 @@ export const communications = pgTable(
   })
 );
 
+export const quoteFollowUps = pgTable(
+  "quote_follow_ups",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    quoteId: uuid("quote_id")
+      .notNull()
+      .references(() => quotes.id, { onDelete: "cascade" }),
+    customerId: uuid("customer_id").references(() => customers.id, { onDelete: "set null" }),
+    sequenceStep: integer("sequence_step").notNull(),
+    scheduledFor: timestamp("scheduled_for", { withTimezone: true }).notNull(),
+    status: quoteFollowUpStatusEnum("status").default("scheduled").notNull(),
+    subject: varchar("subject", { length: 255 }),
+    body: text("body"),
+    providerMessageId: varchar("provider_message_id", { length: 255 }),
+    lastError: text("last_error"),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    skippedAt: timestamp("skipped_at", { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => ({
+    quoteStepIdx: uniqueIndex("quote_follow_ups_quote_step_idx").on(
+      table.quoteId,
+      table.sequenceStep
+    ),
+    dueIdx: index("quote_follow_ups_due_idx").on(table.status, table.scheduledFor),
+    quoteIdx: index("quote_follow_ups_quote_id_idx").on(table.quoteId),
+    customerIdx: index("quote_follow_ups_customer_id_idx").on(table.customerId),
+  })
+);
+
 export const adminUsers = pgTable(
   "admin_users",
   {
@@ -362,6 +398,7 @@ export const customersRelations = relations(customers, ({ many }) => ({
   invoices: many(invoices),
   payments: many(payments),
   communications: many(communications),
+  quoteFollowUps: many(quoteFollowUps),
 }));
 
 export const vehiclesRelations = relations(vehicles, ({ one, many }) => ({
@@ -393,6 +430,7 @@ export const quotesRelations = relations(quotes, ({ one, many }) => ({
   bookings: many(bookings),
   invoices: many(invoices),
   payments: many(payments),
+  followUps: many(quoteFollowUps),
 }));
 
 export const bookingsRelations = relations(bookings, ({ one, many }) => ({
@@ -436,6 +474,17 @@ export const communicationsRelations = relations(communications, ({ one }) => ({
   }),
 }));
 
+export const quoteFollowUpsRelations = relations(quoteFollowUps, ({ one }) => ({
+  quote: one(quotes, {
+    fields: [quoteFollowUps.quoteId],
+    references: [quotes.id],
+  }),
+  customer: one(customers, {
+    fields: [quoteFollowUps.customerId],
+    references: [customers.id],
+  }),
+}));
+
 export const invoiceLineItemsRelations = relations(invoiceLineItems, ({ one }) => ({
   invoice: one(invoices, {
     fields: [invoiceLineItems.invoiceId],
@@ -465,6 +514,7 @@ export type PaymentStatus = (typeof paymentStatusEnum.enumValues)[number];
 export type CommunicationType = (typeof communicationTypeEnum.enumValues)[number];
 export type CommunicationDirection = (typeof communicationDirectionEnum.enumValues)[number];
 export type UserRole = (typeof userRoleEnum.enumValues)[number];
+export type QuoteFollowUpStatus = (typeof quoteFollowUpStatusEnum.enumValues)[number];
 export type AdminActivity = typeof adminActivities.$inferSelect;
 
 export type Customer = typeof customers.$inferSelect;
@@ -479,5 +529,7 @@ export type Invoice = typeof invoices.$inferSelect;
 export type NewInvoice = typeof invoices.$inferInsert;
 export type Payment = typeof payments.$inferSelect;
 export type NewPayment = typeof payments.$inferInsert;
+export type QuoteFollowUp = typeof quoteFollowUps.$inferSelect;
+export type NewQuoteFollowUp = typeof quoteFollowUps.$inferInsert;
 
 export const healthCheck = sql`select 1`;

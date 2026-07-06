@@ -8,6 +8,7 @@ import {
   sendTransactionalEmail,
   type TransactionalEmailResult,
 } from "@/lib/email";
+import { queueQuoteFollowUps } from "@/lib/quote-follow-ups";
 
 type QuoteSource = "estimator" | "contact_form";
 type QuotePhotoKind = "damage" | "full_wheel" | "vehicle" | "other";
@@ -413,6 +414,8 @@ export async function createQuoteLead(
     customerId: customer.id,
     photoCount: savedPhotos.length,
   });
+
+  await queueQuoteFollowUps(quote);
 
   return {
     quote,
