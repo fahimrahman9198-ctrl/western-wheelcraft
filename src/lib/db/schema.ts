@@ -58,6 +58,29 @@ export const communicationDirectionEnum = pgEnum("communication_direction", [
 ]);
 export const userRoleEnum = pgEnum("user_role", ["owner", "manager", "accountant", "it"]);
 export const quotePhotoKindEnum = pgEnum("quote_photo_kind", ["damage", "full_wheel", "vehicle", "other"]);
+export const quoteFollowUpStatusEnum = pgEnum("quote_follow_up_status", [
+  "scheduled",
+  "sent",
+  "skipped",
+  "failed",
+]);
+export const emailAutomationKindEnum = pgEnum("email_automation_kind", [
+  "quote_follow_up",
+  "booking_reminder",
+  "missed_booking",
+  "post_service_review",
+  "post_service_care",
+  "post_service_referral",
+  "lost_quote_reactivation",
+  "seasonal_reminder",
+]);
+export const emailAutomationStatusEnum = pgEnum("email_automation_status", [
+  "scheduled",
+  "sent",
+  "skipped",
+  "failed",
+  "cancelled",
+]);
 
 const timestamps = {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
@@ -79,6 +102,8 @@ export const customers = pgTable(
     companyName: varchar("company_name", { length: 180 }),
     notes: text("notes"),
     marketingConsent: boolean("marketing_consent").default(false).notNull(),
+    emailOptOutAt: timestamp("email_opt_out_at", { withTimezone: true }),
+    emailOptOutReason: varchar("email_opt_out_reason", { length: 255 }),
     archivedAt: timestamp("archived_at", { withTimezone: true }),
     ...timestamps,
   },
@@ -286,11 +311,81 @@ export const communications = pgTable(
     relatedType: varchar("related_type", { length: 40 }),
     relatedId: uuid("related_id"),
     providerMessageId: varchar("provider_message_id", { length: 255 }),
+    providerStatus: varchar("provider_status", { length: 80 }),
+    providerEventAt: timestamp("provider_event_at", { withTimezone: true }),
+    providerError: text("provider_error"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => ({
     customerIdx: index("communications_customer_id_idx").on(table.customerId),
     relatedIdx: index("communications_related_idx").on(table.relatedType, table.relatedId),
+    providerMessageIdx: index("communications_provider_message_id_idx").on(table.providerMessageId),
+  })
+);
+
+export const emailAutomations = pgTable(
+  "email_automations",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    customerId: uuid("customer_id").references(() => customers.id, { onDelete: "set null" }),
+    relatedType: varchar("related_type", { length: 40 }).notNull(),
+    relatedId: uuid("related_id").notNull(),
+    kind: emailAutomationKindEnum("kind").notNull(),
+    sequenceStep: integer("sequence_step").default(1).notNull(),
+    scheduledFor: timestamp("scheduled_for", { withTimezone: true }).notNull(),
+    status: emailAutomationStatusEnum("status").default("scheduled").notNull(),
+    subject: varchar("subject", { length: 255 }),
+    body: text("body"),
+    providerMessageId: varchar("provider_message_id", { length: 255 }),
+    lastError: text("last_error"),
+    metadata: jsonb("metadata"),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    skippedAt: timestamp("skipped_at", { withTimezone: true }),
+    cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => ({
+    uniqueStepIdx: uniqueIndex("email_automations_related_step_idx").on(
+      table.relatedType,
+      table.relatedId,
+      table.kind,
+      table.sequenceStep
+    ),
+    dueIdx: index("email_automations_due_idx").on(table.status, table.scheduledFor),
+    relatedIdx: index("email_automations_related_idx").on(table.relatedType, table.relatedId),
+    kindIdx: index("email_automations_kind_idx").on(table.kind),
+    customerIdx: index("email_automations_customer_id_idx").on(table.customerId),
+    providerMessageIdx: index("email_automations_provider_message_id_idx").on(table.providerMessageId),
+  })
+);
+
+export const quoteFollowUps = pgTable(
+  "quote_follow_ups",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    quoteId: uuid("quote_id")
+      .notNull()
+      .references(() => quotes.id, { onDelete: "cascade" }),
+    customerId: uuid("customer_id").references(() => customers.id, { onDelete: "set null" }),
+    sequenceStep: integer("sequence_step").notNull(),
+    scheduledFor: timestamp("scheduled_for", { withTimezone: true }).notNull(),
+    status: quoteFollowUpStatusEnum("status").default("scheduled").notNull(),
+    subject: varchar("subject", { length: 255 }),
+    body: text("body"),
+    providerMessageId: varchar("provider_message_id", { length: 255 }),
+    lastError: text("last_error"),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    skippedAt: timestamp("skipped_at", { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => ({
+    quoteStepIdx: uniqueIndex("quote_follow_ups_quote_step_idx").on(
+      table.quoteId,
+      table.sequenceStep
+    ),
+    dueIdx: index("quote_follow_ups_due_idx").on(table.status, table.scheduledFor),
+    quoteIdx: index("quote_follow_ups_quote_id_idx").on(table.quoteId),
+    customerIdx: index("quote_follow_ups_customer_id_idx").on(table.customerId),
   })
 );
 
@@ -362,6 +457,8 @@ export const customersRelations = relations(customers, ({ many }) => ({
   invoices: many(invoices),
   payments: many(payments),
   communications: many(communications),
+  quoteFollowUps: many(quoteFollowUps),
+  emailAutomations: many(emailAutomations),
 }));
 
 export const vehiclesRelations = relations(vehicles, ({ one, many }) => ({
@@ -393,6 +490,7 @@ export const quotesRelations = relations(quotes, ({ one, many }) => ({
   bookings: many(bookings),
   invoices: many(invoices),
   payments: many(payments),
+  followUps: many(quoteFollowUps),
 }));
 
 export const bookingsRelations = relations(bookings, ({ one, many }) => ({
@@ -436,6 +534,24 @@ export const communicationsRelations = relations(communications, ({ one }) => ({
   }),
 }));
 
+export const emailAutomationsRelations = relations(emailAutomations, ({ one }) => ({
+  customer: one(customers, {
+    fields: [emailAutomations.customerId],
+    references: [customers.id],
+  }),
+}));
+
+export const quoteFollowUpsRelations = relations(quoteFollowUps, ({ one }) => ({
+  quote: one(quotes, {
+    fields: [quoteFollowUps.quoteId],
+    references: [quotes.id],
+  }),
+  customer: one(customers, {
+    fields: [quoteFollowUps.customerId],
+    references: [customers.id],
+  }),
+}));
+
 export const invoiceLineItemsRelations = relations(invoiceLineItems, ({ one }) => ({
   invoice: one(invoices, {
     fields: [invoiceLineItems.invoiceId],
@@ -465,6 +581,9 @@ export type PaymentStatus = (typeof paymentStatusEnum.enumValues)[number];
 export type CommunicationType = (typeof communicationTypeEnum.enumValues)[number];
 export type CommunicationDirection = (typeof communicationDirectionEnum.enumValues)[number];
 export type UserRole = (typeof userRoleEnum.enumValues)[number];
+export type QuoteFollowUpStatus = (typeof quoteFollowUpStatusEnum.enumValues)[number];
+export type EmailAutomationKind = (typeof emailAutomationKindEnum.enumValues)[number];
+export type EmailAutomationStatus = (typeof emailAutomationStatusEnum.enumValues)[number];
 export type AdminActivity = typeof adminActivities.$inferSelect;
 
 export type Customer = typeof customers.$inferSelect;
@@ -479,5 +598,9 @@ export type Invoice = typeof invoices.$inferSelect;
 export type NewInvoice = typeof invoices.$inferInsert;
 export type Payment = typeof payments.$inferSelect;
 export type NewPayment = typeof payments.$inferInsert;
+export type QuoteFollowUp = typeof quoteFollowUps.$inferSelect;
+export type NewQuoteFollowUp = typeof quoteFollowUps.$inferInsert;
+export type EmailAutomation = typeof emailAutomations.$inferSelect;
+export type NewEmailAutomation = typeof emailAutomations.$inferInsert;
 
 export const healthCheck = sql`select 1`;

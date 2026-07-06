@@ -14,6 +14,7 @@ import {
   sendTransactionalEmail,
   type TransactionalEmailResult,
 } from "@/lib/email";
+import { queueBookingAutomations } from "@/lib/email-automations";
 
 export interface BookingRequestInput {
   customerName: string;
@@ -290,6 +291,8 @@ export async function createBookingRequest(input: BookingRequestInput) {
     booking,
     customerId: customer.id,
   });
+
+  await queueBookingAutomations(booking);
 
   return { booking, customer };
 }
