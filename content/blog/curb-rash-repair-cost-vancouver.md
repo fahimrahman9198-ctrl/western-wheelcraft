@@ -41,7 +41,7 @@ For an exact number on your specific wheels, the fastest route is our [instant q
 
 ## Repair or replace?
 
-Replacement is almost always the more expensive path. A single OEM alloy wheel commonly runs several hundred to well over a thousand dollars depending on the vehicle, before mounting and balancing. Against a $50–$300 repair, the math rarely favours replacement for cosmetic damage.
+Replacement is almost always the more expensive path. A single replacement OEM alloy typically costs many times what a cosmetic repair does, before you add mounting and balancing — and prices vary enormously by vehicle, so it's worth pricing your specific wheel before assuming. For ordinary curb damage the math rarely favours replacement.
 
 Replacement makes sense in a narrow set of cases: a wheel cracked through a structural section, severe impact damage that compromised the barrel, or a rim so far out of round that straightening can't bring it back to spec safely. We'll tell you plainly if your wheel is in that category — refinishing a wheel that shouldn't be back on the road isn't a service worth selling.
 
@@ -78,7 +78,7 @@ No. You can bring just the wheels if you've had them removed, or bring the vehic
 
 **Is curb rash repair covered by insurance?**
 
-Usually not — cosmetic curb damage typically falls below deductible and is treated as wear rather than a claimable incident. It's worth checking your specific policy, but most customers pay out of pocket, which is part of why repair over replacement matters.
+That depends entirely on your policy and coverage, so check with your insurer or broker rather than assuming either way. Worth weighing against a repair cost in the $50–$300 range before you open a claim.
 
 **How do I get an exact price?**
 

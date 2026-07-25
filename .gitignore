@@ -40,3 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# macOS/iCloud conflict copies ("file 2.ts", "routes.d 3.ts"). These have been
+# committed by accident before and have broken typechecks from .next/types.
+# The real fix is keeping the repo out of an iCloud-synced folder.
+* [0-9].*
+* [0-9][0-9].*

@@ -21,7 +21,7 @@ When you're refinishing a set of wheels, the first real decision is how the colo
 | Chip and scratch resistance | Higher | Moderate |
 | Colour and effect range | Wide, but limited on some specialty effects | Widest — including precise OEM matching |
 | OEM colour matching | Very good | Best available |
-| Typical lifespan | 10+ years with normal use | Several years, finish-dependent |
+| Typical lifespan | Longer, with normal use | Long-lasting, but shorter than powder |
 | Repairability | Requires stripping the panel | Can be spot-repaired more easily |
 
 ## How powder coating works
@@ -70,7 +70,7 @@ They look exceptional, but they're the highest-maintenance option. Once the clea
 
 **Is powder coating actually more durable than paint?**
 
-Yes, in general. The cured powder film is thicker and harder, giving it better chip, scratch, and chemical resistance. With normal use a powder-coated wheel commonly holds up 10 or more years.
+Yes, in general. The cured powder film is thicker and harder, giving it better chip, scratch, and chemical resistance, so it holds its finish longer under the same conditions. How long depends on how and where you drive — winter salt, gravel, and aggressive wheel cleaners all shorten the life of any finish.
 
 **Can you match my factory wheel colour?**
 
