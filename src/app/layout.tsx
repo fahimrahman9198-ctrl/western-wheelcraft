@@ -5,8 +5,8 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
-import { LocalBusinessSchema, OrganizationSchema } from "@/lib/structured-data";
-import { getAggregateRatingSchema } from "@/lib/reviews";
+import { LocalBusinessSchema } from "@/lib/structured-data";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 const archivoBlack = Archivo_Black({
   weight: "400",
@@ -32,32 +32,24 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Western Wheelcraft | Premium Wheel Refinishing",
+    default: "Wheel Repair & Refinishing in BC | Western Wheelcraft",
     template: "%s | Western Wheelcraft",
   },
   description:
-    "Western Wheelcraft Ltd. — BC's trusted wheel refinishing experts. Curb-rash repair, scratch & gouge refinishing, custom finishes, and OEM color matching. Mobile fleet service across Lower Mainland, Vancouver Island & Interior BC.",
-  keywords: [
-    "wheel refinishing",
-    "curb rash repair",
-    "wheel repair Vancouver",
-    "OEM color matching",
-    "custom wheel finish",
-    "mobile wheel repair",
-    "Western Wheelcraft",
-    "Burnaby wheel repair",
-    "Victoria wheel repair",
-  ],
+    "Professional wheel repair & refinishing from our Burnaby shop — curb rash repair, rim repair, powder coating & OEM colour matching. Mobile service across Vancouver Island & Interior BC. Free photo quotes.",
   authors: [{ name: "Western Wheelcraft Ltd." }],
   creator: "Western Wheelcraft Ltd.",
   publisher: "Western Wheelcraft Ltd.",
   metadataBase: new URL("https://westernwheelcraft.ca"),
+  alternates: {
+    canonical: "./",
+  },
   openGraph: {
     type: "website",
     locale: "en_CA",
     url: "https://westernwheelcraft.ca",
     siteName: "Western Wheelcraft",
-    title: "Western Wheelcraft | Premium Wheel Refinishing",
+    title: "Wheel Repair & Refinishing in BC | Western Wheelcraft",
     description:
       "BC's trusted wheel refinishing experts. Mobile fleet service across Lower Mainland, Vancouver Island & Interior BC.",
     images: [
@@ -77,7 +69,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Western Wheelcraft | Premium Wheel Refinishing",
+    title: "Wheel Repair & Refinishing in BC | Western Wheelcraft",
     description:
       "BC's trusted wheel refinishing experts. Mobile fleet service across Lower Mainland, Vancouver Island & Interior BC.",
     images: ["/og-image.png"],
@@ -114,6 +106,8 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -127,22 +121,52 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <head>
-          <Script
-            id="organization-schema"
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(OrganizationSchema) }}
-          />
-          <Script
-            id="local-business-schema"
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(LocalBusinessSchema) }}
-          />
-          <Script
-            id="aggregate-rating-schema"
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(getAggregateRatingSchema()) }}
-          />
-          <Script id="video-upgrade" strategy="beforeInteractive">
+          <JsonLd id="local-business-schema" data={LocalBusinessSchema} />
+          {GA_ID && (
+            <>
+              <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+              <Script id="ga4-init" strategy="afterInteractive">
+                {`
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${GA_ID}');
+                `}
+              </Script>
+              <Script id="ga4-click-tracking" strategy="afterInteractive">
+                {`
+                  /* ES5-safe, see video-upgrade script above for why. Delegated
+                     listener catches tel:/mailto: links inside any component
+                     (including ones rendered from Server Components) without
+                     wiring onClick through each one individually. */
+                  (function () {
+                    function closestEl(el, selector) {
+                      if (el.closest) { return el.closest(selector); }
+                      var node = el;
+                      while (node && node.nodeType === 1) {
+                        if (node.matches && node.matches(selector)) { return node; }
+                        node = node.parentNode;
+                      }
+                      return null;
+                    }
+                    document.addEventListener('click', function (event) {
+                      if (!window.gtag) { return; }
+                      var link = closestEl(event.target, 'a[href^="tel:"]');
+                      if (link) {
+                        window.gtag('event', 'phone_click', { link_url: link.getAttribute('href') });
+                        return;
+                      }
+                      link = closestEl(event.target, 'a[href^="mailto:"]');
+                      if (link) {
+                        window.gtag('event', 'email_click', { link_url: link.getAttribute('href') });
+                      }
+                    });
+                  })();
+                `}
+              </Script>
+            </>
+          )}
+          <Script id="video-upgrade" strategy="afterInteractive">
             {`
               /* ES5-safe: this inline script is NOT transpiled, so it must avoid
                  arrow functions, optional chaining, const/let, and NodeList.forEach

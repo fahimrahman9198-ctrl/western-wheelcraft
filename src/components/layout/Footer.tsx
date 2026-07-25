@@ -17,17 +17,16 @@ const footerColumns = [
     title: 'Coverage',
     links: [
       { label: 'All Regions', href: '/regions' },
-      { label: 'Lower Mainland', href: '/regions' },
-      { label: 'Vancouver Island', href: '/regions' },
-      { label: 'Okanagan', href: '/regions' },
-      { label: 'Kelowna', href: '/regions' },
-      { label: 'Kamloops', href: '/regions' },
+      { label: 'Burnaby (Lower Mainland)', href: '/regions/burnaby' },
+      { label: 'Victoria (Vancouver Island)', href: '/regions/victoria' },
+      { label: 'Kelowna (Okanagan)', href: '/regions/kelowna' },
     ],
   },
   {
     title: 'Company',
     links: [
       { label: 'About Us', href: '/about' },
+      { label: 'Blog', href: '/blog' },
       { label: 'Contact', href: '/contact' },
       { label: 'Dealerships', href: '/dealerships' },
     ],
@@ -151,12 +150,12 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Western Wheelcraft Ltd. All rights reserved.
           </p>
           <div className="flex gap-5">
-            <a href="#" className="font-body text-caption text-brand-silver hover:text-brand-smoke transition-colors">
+            <Link href="/contact" className="font-body text-caption text-brand-silver hover:text-brand-smoke transition-colors">
               Privacy Policy
-            </a>
-            <a href="#" className="font-body text-caption text-brand-silver hover:text-brand-smoke transition-colors">
+            </Link>
+            <Link href="/contact" className="font-body text-caption text-brand-silver hover:text-brand-smoke transition-colors">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </div>

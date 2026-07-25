@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
@@ -7,6 +6,7 @@ import { Card, CardContent, CardTitle, CardDescription } from '@/components/ui/C
 import { FadeIn } from '@/components/ui/FadeIn';
 import { REGIONS, REGION_SLUGS } from '@/lib/region-data';
 import { LocalBusinessSchema } from '@/lib/structured-data';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -23,10 +23,10 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   if (!region) return {};
 
   return {
-    title: `${region.name} Wheel Refinishing | Western Wheelcraft`,
-    description: `${region.description} Professional wheel refinishing and repair services.`,
+    title: `Wheel Repair in ${region.name}, BC`,
+    description: `${region.description} Free photo quotes, most repairs done in 1–3 days.`,
     openGraph: {
-      title: `${region.name} Wheel Refinishing`,
+      title: `Wheel Repair in ${region.name}, BC`,
       description: region.shortDescription,
       type: 'website',
     },
@@ -76,30 +76,24 @@ export default async function RegionPage(props: PageProps) {
     notFound();
   }
 
-  const regionBusinessSchema = {
-    ...LocalBusinessSchema,
-    name: region.localBusiness.name,
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: region.localBusiness.address.split(',')[0],
-      addressLocality: region.name,
-      addressRegion: region.province,
-      addressCountry: 'CA',
-    },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: region.localBusiness.lat,
-      longitude: region.localBusiness.lng,
-    },
-  };
+  // Only the Burnaby shop has a real street address. Mobile-only regions
+  // (Victoria, Kelowna) keep the business's actual registered address and
+  // add areaServed instead — inventing a local address/geo for them would
+  // be fabricated structured data.
+  const regionBusinessSchema = region.hasPhysicalLocation
+    ? {
+        ...LocalBusinessSchema,
+        name: region.localBusiness.name,
+      }
+    : {
+        ...LocalBusinessSchema,
+        name: region.localBusiness.name,
+        areaServed: { '@type': 'City', name: region.name, containedInPlace: region.province },
+      };
 
   return (
     <>
-      <Script
-        id="region-business-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(regionBusinessSchema) }}
-      />
+      <JsonLd id="region-business-schema" data={regionBusinessSchema} />
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-brand-jet py-28">
@@ -197,6 +191,7 @@ export default async function RegionPage(props: PageProps) {
       </section>
 
       {/* Testimonials */}
+      {region.testimonials.length > 0 && (
       <section className="bg-brand-jet-light py-24">
         <div className="section-container">
           <FadeIn>
@@ -225,6 +220,7 @@ export default async function RegionPage(props: PageProps) {
           </div>
         </div>
       </section>
+      )}
     </>
   );
 }

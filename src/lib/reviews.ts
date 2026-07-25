@@ -6,44 +6,10 @@ export interface Review {
   verified: boolean;
 }
 
-// Sample reviews (these would come from Google, Trustpilot, or your own review system in production)
-export const REVIEWS: Review[] = [
-  {
-    author: 'John Martinez',
-    rating: 5,
-    text: 'Excellent work on my wheels. The refinishing looks factory-perfect. Highly recommend!',
-    date: '2026-06-15',
-    verified: true,
-  },
-  {
-    author: 'Sarah Chen',
-    rating: 5,
-    text: 'Fast turnaround and outstanding quality. My wheels look brand new.',
-    date: '2026-06-10',
-    verified: true,
-  },
-  {
-    author: 'Mike Thompson',
-    rating: 5,
-    text: 'Professional team, reasonable pricing, and they handle curb rash repairs perfectly.',
-    date: '2026-06-05',
-    verified: true,
-  },
-  {
-    author: 'Lisa Park',
-    rating: 5,
-    text: 'We use them for our dealership fleet. Consistently excellent work and reliable service.',
-    date: '2026-05-30',
-    verified: true,
-  },
-  {
-    author: 'Robert Walsh',
-    rating: 4,
-    text: 'Great work overall. Minor delivery delay but the quality was worth the wait.',
-    date: '2026-05-25',
-    verified: true,
-  },
-];
+// Real customer reviews only. Do not add placeholder/sample data here — this
+// feeds public AggregateRating/Review schema, and fabricated ratings are a
+// Google structured-data policy violation. Populate as real reviews come in.
+export const REVIEWS: Review[] = [];
 
 export function getAverageRating(): number {
   if (REVIEWS.length === 0) return 0;

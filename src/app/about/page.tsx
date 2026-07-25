@@ -77,10 +77,10 @@ const certifications = [
       "Accredited repair facility for ICBC claims. We work directly with the insurer so you don't have to.",
   },
   {
-    icon: <IconAward />,
-    title: 'Red Seal Certified',
+    icon: <IconBuilding />,
+    title: 'Family-Owned & Operated',
     description:
-      'Red Seal certified technicians — the national standard of excellence for skilled trades across Canada.',
+      'Every wheel that comes through our Burnaby shop is treated with the same care as if it were on our own car. No shortcuts, no compromises.',
   },
   {
     icon: <IconShield />,
@@ -103,7 +103,8 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-brand-jet py-24">
         <video
-          preload="auto"
+          preload="metadata"
+          poster="/images/posters/about-hero-poster.jpg"
           className="absolute inset-0 h-full w-full object-cover object-center"
           autoPlay
           muted
@@ -161,7 +162,7 @@ export default function AboutPage() {
         <div className="section-container py-10">
           <dl className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {[
-              { value: '5M+', label: 'Wheels Refinished' },
+              { value: 'Red Seal', label: 'Certified Technicians' },
               { value: '100%', label: 'Workmanship Guarantee' },
               { value: 'OEM', label: 'Factory-Match Finishes' },
               { value: '3', label: 'Service Regions' },
