@@ -2,6 +2,17 @@
  * JSON-LD structured data generators for SEO
  */
 
+// Cities the business publicly claims to serve elsewhere on the site
+// (services/regions pages) — kept here as the single source for schema so
+// areaServed never drifts ahead of what's actually promised in content.
+const SERVICE_AREA_CITIES = [
+  'Burnaby', 'Vancouver', 'Surrey', 'Richmond', 'Coquitlam', 'Langley',
+  'North Vancouver', 'Delta', 'New Westminster', 'Victoria', 'Nanaimo',
+  'Duncan', 'Kelowna', 'Penticton', 'Vernon', 'Kamloops',
+].map((name) => ({ '@type': 'City', name }));
+
+// Single business entity — AutoRepair is a subtype of LocalBusiness/Organization,
+// so a separate Organization node would just duplicate this one.
 export const LocalBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'AutoRepair',
@@ -10,13 +21,13 @@ export const LocalBusinessSchema = {
   description: "BC's trusted wheel refinishing and restoration experts",
   url: 'https://westernwheelcraft.ca',
   telephone: '+1-604-710-6174',
-  email: 'contact@westernwheelcraft.ca',
+  email: 'info@westernwheelcraft.ca',
   address: {
     '@type': 'PostalAddress',
     streetAddress: '3756 Napier Street',
     addressLocality: 'Burnaby',
     addressRegion: 'BC',
-    postalCode: 'V5C 3C6',
+    postalCode: 'V5C 3E5',
     addressCountry: 'CA',
   },
   geo: {
@@ -38,25 +49,9 @@ export const LocalBusinessSchema = {
       closes: '16:30',
     },
   ],
-  areaServed: {
-    '@type': 'GeoShape',
-    description: 'Lower Mainland BC, Vancouver Island, Okanagan',
-  },
-  priceRange: '$',
-  image: 'https://westernwheelcraft.ca/og-image.png',
-};
-
-export const OrganizationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  '@id': 'https://westernwheelcraft.ca/#org',
-  name: 'Western Wheelcraft',
-  url: 'https://westernwheelcraft.ca',
-  logo: 'https://westernwheelcraft.ca/images/logo.PNG',
-  description: 'Premium wheel refinishing and restoration for BC dealerships and individuals',
-  email: 'contact@westernwheelcraft.ca',
-  telephone: '+1-604-710-6174',
-  foundingDate: '1989',
+  areaServed: SERVICE_AREA_CITIES,
+  priceRange: '$$',
+  image: 'https://westernwheelcraft.ca/images/logo.png',
   knowsAbout: ['wheel refinishing', 'alloy wheel repair', 'diamond cut wheels', 'powder coating'],
 };
 
@@ -66,9 +61,7 @@ export const ServiceSchema = {
   name: 'Professional Wheel Refinishing',
   description: 'Expert wheel refinishing and restoration services including diamond cut, powder coating, and curb rash repair',
   provider: {
-    '@type': 'LocalBusiness',
-    name: 'Western Wheelcraft',
-    url: 'https://westernwheelcraft.ca',
+    '@id': 'https://westernwheelcraft.ca/#business',
   },
   areaServed: 'BC',
   availableChannel: {

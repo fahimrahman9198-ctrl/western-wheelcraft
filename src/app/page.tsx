@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/Card";
 import { FadeIn } from "@/components/ui/FadeIn";
+import { BrandMarquee } from "@/components/ui/BrandMarquee";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -90,7 +91,7 @@ function IconPhone() {
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const trustBadges = [
-  { value: "5M+", label: "Wheels Refinished", sublabel: "And counting" },
+  { value: "Red Seal", label: "Certified Technicians", sublabel: "ICBC Accredited" },
   { value: "3", label: "Regions Served", sublabel: "Across BC" },
   { value: "100%", label: "Satisfaction Guarantee", sublabel: "Or we re-do it" },
 ];
@@ -99,36 +100,42 @@ const whyUsCards = [
   {
     icon: <IconSparkle />,
     title: "OEM Color Matching",
+    image: "/images/service-backgrounds/oem-color-matching.png",
     description:
       "Factory-accurate finishes using spectrophotometer-matched paint. Your wheels leave looking exactly as they left the factory floor — or better.",
   },
   {
     icon: <IconWrench />,
-    title: "Curb Rash & Gouge Repair",
+    title: "Curb Rash Repair",
+    image: "/images/service-backgrounds/curb-rash-repair.png",
     description:
       "Precision welding, filling, and resurfacing eliminates scrapes down to bare metal. Structural integrity checked on every repair.",
   },
   {
     icon: <IconTruck />,
     title: "Mobile Fleet Service",
+    image: "/images/service-backgrounds/mobile-fleet-service.png",
     description:
       "Our fleet truck comes to your dealership, yard, or driveway across Vancouver Island and Interior BC. Shop service in the Lower Mainland.",
   },
   {
     icon: <IconPalette />,
-    title: "Custom Finishes",
+    title: "Custom Finish",
+    image: "/images/service-backgrounds/custom-finishes.png",
     description:
       "Matte, gloss, satin, two-tone, or full custom colour. Express your build without compromising quality.",
   },
   {
     icon: <IconShield />,
     title: "Lifetime Workmanship Warranty",
+    image: "/images/service-backgrounds/lifetime-warranty.png",
     description:
       "Every refinish is backed by our craftsmanship guarantee. If it peels, chips, or fades from our work — we fix it, no questions asked.",
   },
   {
     icon: <IconStar />,
     title: "Certified Technicians",
+    image: "/images/service-backgrounds/certified-technicians.png",
     description:
       "Red Seal certified and ICBC accredited. Decades of combined experience across passenger, performance, and commercial wheels.",
   },
@@ -140,21 +147,21 @@ const regions = [
     tag: "Shop Drop-Off",
     tagNote: "Visit Our Burnaby Shop",
     cities: ["Burnaby", "Vancouver", "Surrey", "Richmond", "Coquitlam", "Langley", "North Van"],
-    href: "/regions",
+    href: "/regions/burnaby",
   },
   {
     name: "Vancouver Island",
     tag: "Mobile Fleet",
     tagNote: "We Come to You",
     cities: ["Victoria", "Nanaimo", "Duncan", "Langford", "Courtenay"],
-    href: "/regions",
+    href: "/regions/victoria",
   },
   {
     name: "Okanagan & Interior",
     tag: "Mobile Fleet",
     tagNote: "We Come to You",
     cities: ["Kelowna", "Penticton", "Vernon", "Kamloops", "West Kelowna"],
-    href: "/regions",
+    href: "/regions/kelowna",
   },
 ];
 
@@ -166,7 +173,8 @@ export default function HomePage() {
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-brand-jet">
         <video
-          preload="auto"
+          preload="metadata"
+          poster="/images/posters/hero-poster.jpg"
           className="absolute inset-0 h-full w-full object-cover object-center"
           autoPlay
           muted
@@ -202,15 +210,14 @@ export default function HomePage() {
           <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-brand-red/30 bg-brand-red/10 px-4 py-2">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-red animate-pulse" />
             <span className="font-body text-caption font-semibold uppercase tracking-widest text-brand-red">
-              BC&rsquo;s Premier Wheel Refinishers
+              Setting the standard for others to follow
             </span>
           </div>
 
           <h1 className="mb-6 max-w-4xl font-display text-display-lg md:text-display-xl leading-[1.05] tracking-tight text-white">
-            Setting the standard{" "}
+            Wheel Repair &amp; Refinishing{" "}
             <br className="hidden sm:block" />
-            for{" "}
-            <span className="text-gradient-red">OTHERS</span> to follow.
+            for <span className="text-gradient-red">BC</span> Drivers
           </h1>
 
           <p className="mb-10 max-w-xl font-body text-body-lg text-white/85">
@@ -242,7 +249,7 @@ export default function HomePage() {
       {/* ── Trust Badges ── */}
       <section className="border-y border-brand-graphite/60 bg-brand-jet-light">
         <div className="section-container py-12">
-          <dl className="grid grid-cols-2 gap-px bg-brand-graphite/40 overflow-hidden rounded-2xl md:grid-cols-4">
+          <dl className="mx-auto grid max-w-4xl grid-cols-1 gap-px overflow-hidden rounded-2xl bg-brand-graphite/40 sm:grid-cols-3">
             {trustBadges.map((badge) => (
               <div
                 key={badge.value}
@@ -263,6 +270,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── Vehicle Makes Marquee ── */}
+      <BrandMarquee />
+
       {/* ── Why Us ── */}
       <section id="why-us" className="py-24 bg-brand-jet">
         <div className="section-container">
@@ -282,25 +292,30 @@ export default function HomePage() {
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {whyUsCards.map((card, i) => (
               <FadeIn key={card.title} delay={i * 60}>
-                <Card variant="default" padding="lg" className="h-full">
-                  <CardContent className="flex flex-col gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-red/10 text-brand-red">
+                <Card variant="default" padding="none" className="group h-full min-h-[320px] border-brand-graphite-light">
+                  <Image
+                    src={card.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/15"
+                  />
+                  <CardContent className="relative flex min-h-[320px] flex-col justify-end gap-4 p-8">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-brand-red ring-1 ring-white/15">
                       {card.icon}
                     </div>
-                    <CardTitle className="text-display-sm">{card.title}</CardTitle>
-                    <CardDescription className="text-body-sm leading-relaxed">
+                    <CardTitle className="text-display-sm text-white">{card.title}</CardTitle>
+                    <CardDescription className="text-body-sm leading-relaxed text-white/80">
                       {card.description}
                     </CardDescription>
                   </CardContent>
                 </Card>
               </FadeIn>
             ))}
-          </div>
-
-          <div className="mt-10 text-center">
-            <Button href="/services" variant="outline" size="md" rightIcon={<IconArrowRight />}>
-              View All Services
-            </Button>
           </div>
         </div>
       </section>
@@ -331,8 +346,7 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-t from-brand-jet/60 via-transparent to-transparent" aria-hidden="true" />
               <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
                 <div>
-                  <p className="font-display text-display-sm text-brand-white">Porsche — Wheel Refinishing</p>
-                  <p className="font-body text-body-sm text-brand-smoke">OEM colour match · Curb rash repair</p>
+                  <p className="font-body text-body-lg font-bold text-brand-white">OEM Colour Matching</p>
                 </div>
                 <Button href="/services" variant="primary" size="sm" rightIcon={<IconArrowRight />}>
                   See All Services
@@ -406,7 +420,19 @@ export default function HomePage() {
       <section id="contact" className="py-24 bg-brand-jet">
         <div className="section-container">
           <FadeIn>
-            <div className="relative overflow-hidden rounded-3xl border border-brand-red/20 bg-brand-graphite px-8 py-16 text-center shadow-card md:py-20">
+            <div className="group relative overflow-hidden rounded-3xl border border-brand-red/30 bg-brand-graphite px-8 py-16 text-center shadow-card md:py-20">
+              <Image
+                src="/images/service-backgrounds/custom-finishes.png"
+                alt=""
+                fill
+                sizes="(max-width: 1280px) 100vw, 1200px"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                aria-hidden="true"
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/85 via-black/65 to-black/45"
+              />
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -416,10 +442,10 @@ export default function HomePage() {
 
               <div className="relative">
                 <div className="accent-line mx-auto mb-6" aria-hidden="true" />
-                <h2 className="mb-4 font-display text-display-md md:text-display-lg text-brand-white">
+                <h2 className="mb-4 font-display text-display-md text-white md:text-display-lg">
                   Ready to refinish?
                 </h2>
-                <p className="mx-auto mb-10 max-w-lg font-body text-body-lg text-brand-smoke">
+                <p className="mx-auto mb-10 max-w-lg font-body text-body-lg text-white/80">
                   Call us for a same-day quote, or send us your photos and we&rsquo;ll
                   assess the damage and get back to you within a few hours.
                 </p>
@@ -433,7 +459,12 @@ export default function HomePage() {
                   >
                     Call 604.710.6174
                   </Button>
-                  <Button href="/quote/estimate" variant="secondary" size="lg">
+                  <Button
+                    href="/quote/estimate"
+                    variant="secondary"
+                    size="lg"
+                    className="border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                  >
                     Get a Free Quote
                   </Button>
                 </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { FadeIn } from '@/components/ui/FadeIn';
 
@@ -68,6 +69,7 @@ const mobileRegions = [
     tag: 'Mobile Fleet',
     description: 'Regular service routes covering the full island, from Victoria to Campbell River.',
     cities: ['Victoria', 'Saanich', 'Langford', 'Duncan', 'Nanaimo', 'Parksville', 'Courtenay'],
+    regionSlug: 'victoria',
   },
   {
     name: 'Okanagan',
@@ -80,6 +82,7 @@ const mobileRegions = [
     tag: 'Mobile Fleet',
     description: 'Dedicated service days in Kelowna — our highest-demand Interior BC location.',
     cities: ['Downtown Kelowna', 'Rutland', 'Lake Country', 'Peachland', 'Westbank'],
+    regionSlug: 'kelowna',
   },
   {
     name: 'Kamloops',
@@ -95,7 +98,8 @@ export default function RegionsPage() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-brand-jet py-24">
         <video
-          preload="auto"
+          preload="metadata"
+          poster="/images/posters/regions-hero-poster.jpg"
           className="absolute inset-0 h-full w-full object-cover object-center"
           autoPlay
           muted
@@ -230,14 +234,24 @@ export default function RegionsPage() {
                       'Coquitlam', 'Port Coquitlam', 'Langley', 'North Vancouver',
                       'West Vancouver', 'Delta', 'New Westminster', 'Abbotsford',
                       'White Rock', 'Pitt Meadows', 'Maple Ridge',
-                    ].map((city) => (
-                      <span
-                        key={city}
-                        className="rounded-lg bg-brand-graphite-light px-3 py-1.5 font-body text-caption text-brand-smoke"
-                      >
-                        {city}
-                      </span>
-                    ))}
+                    ].map((city) =>
+                      city === 'Burnaby' ? (
+                        <Link
+                          key={city}
+                          href="/regions/burnaby"
+                          className="rounded-lg bg-brand-graphite-light px-3 py-1.5 font-body text-caption text-brand-smoke hover:text-brand-red transition-colors"
+                        >
+                          {city}
+                        </Link>
+                      ) : (
+                        <span
+                          key={city}
+                          className="rounded-lg bg-brand-graphite-light px-3 py-1.5 font-body text-caption text-brand-smoke"
+                        >
+                          {city}
+                        </span>
+                      )
+                    )}
                   </div>
                   <p className="mt-6 font-body text-caption text-brand-silver">
                     Not in this list? Call us — if you&rsquo;re in the Lower Mainland we likely serve your area.
@@ -317,9 +331,19 @@ export default function RegionsPage() {
                       </span>
                     ))}
                   </div>
-                  <Button href="/contact" variant="outline" size="sm" rightIcon={<IconArrowRight />}>
-                    Book in This Region
-                  </Button>
+                  <div className="flex flex-wrap items-center gap-4">
+                    <Button href="/contact" variant="outline" size="sm" rightIcon={<IconArrowRight />}>
+                      Book in This Region
+                    </Button>
+                    {region.regionSlug && (
+                      <Link
+                        href={`/regions/${region.regionSlug}`}
+                        className="font-body text-body-sm font-semibold text-brand-red hover:text-brand-white transition-colors"
+                      >
+                        Region details →
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </FadeIn>
             ))}

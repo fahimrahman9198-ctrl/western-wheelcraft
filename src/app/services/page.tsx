@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardTitle, CardDescription } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { FadeIn } from '@/components/ui/FadeIn';
 import { ServiceSchema } from '@/lib/structured-data';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -136,21 +136,18 @@ const services = [
 export default function ServicesPage() {
   return (
     <>
-      <Script
-        id="service-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ServiceSchema) }}
-      />
+      <JsonLd id="service-schema" data={ServiceSchema} />
       {/* Hero */}
       <section className="relative overflow-hidden bg-brand-jet py-24">
         <video
-          preload="auto"
+          preload="metadata"
+          poster="/images/posters/services-hero-poster.jpg"
           className="absolute inset-0 h-full w-full object-cover object-center"
           autoPlay
           muted
           loop
           playsInline
-         
+
           aria-hidden="true"
         >
           <source src="/videos/services-hero-mobile.mp4" data-src-desktop="/videos/services-hero.mp4" type="video/mp4" />

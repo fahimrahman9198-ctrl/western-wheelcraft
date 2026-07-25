@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import {
   getAdminNotificationEmail,
+  getSiteBaseUrl,
   sendTransactionalEmail,
   type TransactionalEmailResult,
 } from "@/lib/email";
@@ -95,7 +96,12 @@ function escapeHtml(value: string | undefined | null): string {
     .replaceAll("'", "&#39;");
 }
 
-function htmlEmail(title: string, rows: Array<[string, string | number | undefined | null]>, message?: string) {
+function htmlEmail(
+  title: string,
+  rows: Array<[string, string | number | undefined | null]>,
+  message?: string,
+  extraHtml?: string
+) {
   const rowHtml = rows
     .filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== "")
     .map(([label, value]) => `
@@ -111,8 +117,43 @@ function htmlEmail(title: string, rows: Array<[string, string | number | undefin
       <h1 style="font-size:22px;margin:0 0 12px;">${escapeHtml(title)}</h1>
       ${message ? `<p style="margin:0 0 16px;">${escapeHtml(message)}</p>` : ""}
       <table style="border-collapse:collapse;width:100%;max-width:680px;">${rowHtml}</table>
+      ${extraHtml ?? ""}
     </div>
   `;
+}
+
+/**
+ * Photos are stored as private blobs, so the raw storage URL is not viewable
+ * from an inbox. Link the admin-authenticated delivery route instead — the
+ * recipient sees the image only after signing in as an admin.
+ */
+function photoLinksHtml(photos: Array<typeof schema.quotePhotos.$inferSelect>): string {
+  if (photos.length === 0) return "";
+
+  const baseUrl = getSiteBaseUrl();
+  const items = photos
+    .map((photo, index) => {
+      const label = escapeHtml(photo.fileName || `Photo ${index + 1}`);
+      const href = `${baseUrl}/api/admin/quote-photos/${photo.id}`;
+      return `<li style="margin:0 0 6px;"><a href="${escapeHtml(href)}" style="color:#C0212B;">${label}</a></li>`;
+    })
+    .join("");
+
+  return `
+    <p style="margin:16px 0 6px;font-weight:600;">Customer photos (${photos.length}) — admin sign-in required:</p>
+    <ul style="margin:0;padding-left:20px;">${items}</ul>
+  `;
+}
+
+function photoLinksText(photos: Array<typeof schema.quotePhotos.$inferSelect>): string {
+  if (photos.length === 0) return "";
+
+  const baseUrl = getSiteBaseUrl();
+  const items = photos
+    .map((photo, index) => `- ${photo.fileName || `Photo ${index + 1}`}: ${baseUrl}/api/admin/quote-photos/${photo.id}`)
+    .join("\n");
+
+  return `\n\nCustomer photos (${photos.length}) — admin sign-in required:\n${items}`;
 }
 
 function lines(rows: Array<[string, string | number | undefined | null]>) {
@@ -276,13 +317,14 @@ async function sendQuoteLeadEmails({
   input,
   quote,
   customerId,
-  photoCount,
+  photos,
 }: {
   input: QuoteLeadInput;
   quote: typeof schema.quotes.$inferSelect;
   customerId: string;
-  photoCount: number;
+  photos: Array<typeof schema.quotePhotos.$inferSelect>;
 }) {
+  const photoCount = photos.length;
   const adminEmail = getAdminNotificationEmail();
   if (!adminEmail) {
     console.warn("Skipping admin quote email: ADMIN_NOTIFICATION_EMAIL is not configured.");
@@ -310,7 +352,7 @@ async function sendQuoteLeadEmails({
     ["Photo count", photoCount],
     ["Damage/message", input.damageDescription],
   ];
-  const adminText = lines(adminRows);
+  const adminText = `${lines(adminRows)}${photoLinksText(photos)}`;
 
   const customerSubject = input.source === "contact_form"
     ? `We received your message - ${quote.quoteNumber}`
@@ -332,7 +374,7 @@ async function sendQuoteLeadEmails({
           to: adminEmail,
           subject: adminSubject,
           text: adminText,
-          html: htmlEmail(adminSubject, adminRows),
+          html: htmlEmail(adminSubject, adminRows, undefined, photoLinksHtml(photos)),
         })
       : Promise.resolve({ ok: false, skipped: true, error: "Missing admin notification email." }),
     sendTransactionalEmail({
@@ -412,7 +454,7 @@ export async function createQuoteLead(
     input,
     quote,
     customerId: customer.id,
-    photoCount: savedPhotos.length,
+    photos: savedPhotos,
   });
 
   await queueQuoteFollowUps(quote);

@@ -79,7 +79,7 @@ export async function POST(request: Request) {
 
             <div style="font-size: 12px; color: #666;">
               <p style="margin: 5px 0;"><strong>Western Wheelcraft Ltd.</strong></p>
-              <p style="margin: 5px 0;">3756 Napier Street, Burnaby, BC V5C 3C6</p>
+              <p style="margin: 5px 0;">3756 Napier Street, Burnaby, BC V5C 3E5</p>
               <p style="margin: 5px 0;">Phone: (604) 710-6174</p>
               <p style="margin: 5px 0;">Email: info@westernwheelcraft.ca</p>
             </div>
