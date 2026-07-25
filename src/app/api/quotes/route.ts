@@ -13,6 +13,9 @@ const baseLeadSchema = z.object({
   customerPhone: z.string().trim().max(40).optional(),
   region: z.string().trim().max(120).optional(),
   marketingConsent: z.boolean().default(false),
+  // Honeypot: hidden in the form, so a real user never fills it. Declared here
+  // because Zod strips unknown keys, which would discard the signal.
+  website: z.string().max(255).optional(),
 });
 
 const contactLeadSchema = baseLeadSchema.extend({
@@ -39,6 +42,39 @@ const estimatorLeadSchema = baseLeadSchema.extend({
 });
 
 const quoteLeadSchema = z.discriminatedUnion("source", [contactLeadSchema, estimatorLeadSchema]);
+
+type ParsedLead = z.infer<typeof quoteLeadSchema>;
+
+/**
+ * Cheap, high-confidence bot checks. Both signals are things a real submission
+ * cannot produce by accident, so neither risks dropping a genuine lead:
+ *
+ *  - the honeypot field is hidden from users and has no label to autofill
+ *  - a scripted filler writes the same string into every text input, so the
+ *    message ends up identical to the email address
+ *
+ * Deliberately does NOT guess from the name. Random-looking names are the most
+ * visible symptom, but real single-word names exist and a false positive costs
+ * a paying customer.
+ */
+function isLikelySpam(payload: ParsedLead): string | null {
+  if (payload.website && payload.website.trim() !== "") {
+    return "honeypot";
+  }
+
+  const message = payload.damageDescription?.trim().toLowerCase();
+  const email = payload.customerEmail.trim().toLowerCase();
+  if (message && message === email) {
+    return "message-equals-email";
+  }
+
+  const name = payload.customerName.trim().toLowerCase();
+  if (name === email) {
+    return "name-equals-email";
+  }
+
+  return null;
+}
 
 function parseMultipartPayload(formData: FormData) {
   const rawPayload = formData.get("payload");
@@ -70,6 +106,25 @@ export async function POST(request: Request) {
     const parsed = isMultipart
       ? parseMultipartPayload(await request.formData())
       : { payload: quoteLeadSchema.parse(await request.json()), photos: [] };
+
+    const spamReason = isLikelySpam(parsed.payload);
+    if (spamReason) {
+      // Respond as if it saved. Telling a bot it was blocked invites it to
+      // adapt; a plausible success keeps it submitting into a void.
+      console.warn(`Dropped suspected spam lead (${spamReason})`, {
+        email: parsed.payload.customerEmail,
+        source: parsed.payload.source,
+      });
+      return NextResponse.json(
+        {
+          quoteId: crypto.randomUUID(),
+          quoteNumber: `WWQ-${new Date().toISOString().slice(0, 10).replaceAll("-", "")}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
+          customerId: crypto.randomUUID(),
+          photoCount: 0,
+        },
+        { status: 201 }
+      );
+    }
 
     const result = await createQuoteLead(parsed.payload, { photos: parsed.photos });
 

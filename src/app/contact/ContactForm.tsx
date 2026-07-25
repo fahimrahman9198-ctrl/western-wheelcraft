@@ -17,6 +17,8 @@ interface FormState {
   region: string;
   service: string;
   message: string;
+  /** Honeypot — hidden from users, so any value means a bot filled it. */
+  website: string;
 }
 
 const regions = [
@@ -69,7 +71,7 @@ function IconTrash() {
 
 export function ContactForm() {
   const [form, setForm] = useState<FormState>({
-    name: '', email: '', phone: '', region: '', service: '', message: '',
+    name: '', email: '', phone: '', region: '', service: '', message: '', website: '',
   });
   const [photos, setPhotos] = useState<File[]>([]);
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
@@ -145,6 +147,7 @@ export function ContactForm() {
       requestedService: form.service || undefined,
       damageDescription: form.message || undefined,
       marketingConsent: false,
+      website: form.website || undefined,
     };
 
     try {
@@ -199,6 +202,24 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
+      {/*
+        Honeypot. Moved off-screen rather than display:none, since some bots
+        skip fields they can tell are hidden. aria-hidden and tabIndex keep it
+        away from screen readers and keyboard navigation.
+      */}
+      <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+        <label htmlFor="website">Website (leave blank)</label>
+        <input
+          id="website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={form.website}
+          onChange={handleChange}
+        />
+      </div>
+
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className={labelClass}>Full Name *</label>
