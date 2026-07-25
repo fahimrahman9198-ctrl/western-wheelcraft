@@ -44,6 +44,15 @@ export function isEmailDeliveryConfigured() {
   return getEmailConfig().ready;
 }
 
+/** Absolute origin for links in outbound email, which has no request context. */
+export function getSiteBaseUrl() {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  return "https://westernwheelcraft.ca";
+}
+
 export async function sendTransactionalEmail(
   input: TransactionalEmailInput
 ): Promise<TransactionalEmailResult> {

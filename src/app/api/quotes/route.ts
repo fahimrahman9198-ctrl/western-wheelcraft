@@ -47,7 +47,8 @@ function parseMultipartPayload(formData: FormData) {
     throw new QuotePhotoValidationError("Missing quote payload.");
   }
 
-  const payload = estimatorLeadSchema.parse(JSON.parse(rawPayload));
+  // Union, not estimatorLeadSchema: the contact form submits photos too.
+  const payload = quoteLeadSchema.parse(JSON.parse(rawPayload));
   const photos: QuotePhotoUpload[] = formData
     .getAll("photos")
     .filter((entry): entry is File => entry instanceof File && entry.size > 0)
