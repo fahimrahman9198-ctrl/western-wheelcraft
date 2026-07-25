@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getAllPosts } from '@/lib/blog-posts';
+import { getAllPosts } from '@/lib/blog';
 import { FadeIn } from '@/components/ui/FadeIn';
 
 export const metadata: Metadata = {
-  title: 'Blog — Wheel Refinishing Tips & Guides',
+  title: 'Blog',
   description:
-    'Expert guides on wheel refinishing, curb rash repair, powder coating, diamond cuts, and maintenance tips for your wheels.',
-  keywords: ['wheel refinishing', 'curb rash', 'wheel repair', 'diamond cut', 'powder coat'],
+    'Wheel care tips, curb rash repair guides, powder coating advice and refinishing know-how for BC drivers, from the Western Wheelcraft team in Burnaby.',
+  alternates: {
+    canonical: '/blog',
+  },
 };
 
 function IconCalendar() {
@@ -36,6 +38,16 @@ function IconArrowRight() {
   );
 }
 
+function formatDate(date: string) {
+  // Parse as UTC noon so the local-timezone render can't shift the day
+  return new Date(`${date}T12:00:00Z`).toLocaleDateString('en-CA', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+}
+
 export default function BlogPage() {
   const posts = getAllPosts();
 
@@ -54,7 +66,7 @@ export default function BlogPage() {
                 Wheel Refinishing Blog
               </h1>
               <p className="mb-8 max-w-lg font-body text-body-lg text-brand-smoke">
-                Expert guides, tips, and insights on wheel refinishing, maintenance, and care.
+                Wheel care tips, repair guides and refinishing insights for BC drivers.
               </p>
             </div>
           </FadeIn>
@@ -64,48 +76,44 @@ export default function BlogPage() {
       {/* Blog Posts */}
       <section className="bg-brand-jet-light py-24">
         <div className="section-container">
-          <div className="grid gap-6 md:grid-cols-2">
-            {posts.map((post, i) => (
-              <FadeIn key={post.slug} delay={i * 60}>
-                <Link href={`/blog/${post.slug}`}>
-                  <article className="group rounded-xl border border-brand-graphite bg-brand-jet p-6 shadow-card transition-all hover:border-brand-red hover:shadow-lg h-full flex flex-col">
-                    {/* Meta */}
-                    <div className="flex flex-wrap items-center gap-4 mb-4 text-caption text-brand-silver">
-                      <div className="flex items-center gap-1.5">
-                        <IconCalendar />
-                        {new Date(post.date).toLocaleDateString('en-CA', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        })}
+          {posts.length === 0 ? (
+            <p className="text-center font-body text-body-md text-brand-smoke">
+              New articles are on the way — check back soon.
+            </p>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2">
+              {posts.map((post, i) => (
+                <FadeIn key={post.slug} delay={i * 60}>
+                  <Link href={`/blog/${post.slug}`}>
+                    <article className="group rounded-xl border border-brand-graphite bg-brand-jet p-6 shadow-card transition-all hover:border-brand-red hover:shadow-lg h-full flex flex-col">
+                      <div className="flex flex-wrap items-center gap-4 mb-4 font-mono text-caption text-brand-silver">
+                        <div className="flex items-center gap-1.5">
+                          <IconCalendar />
+                          {formatDate(post.date)}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <IconClock />
+                          {post.readTime} min read
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <IconClock />
-                        {post.readTime} min read
+
+                      <h2 className="mb-2 font-display text-body-lg text-brand-white group-hover:text-brand-red transition-colors">
+                        {post.title}
+                      </h2>
+                      <p className="mb-4 flex-1 font-body text-body-sm text-brand-smoke">
+                        {post.description}
+                      </p>
+
+                      <div className="flex items-center gap-2 font-body text-body-sm font-semibold text-brand-red group-hover:gap-3 transition-all">
+                        Read More
+                        <IconArrowRight />
                       </div>
-                      <span className="rounded-full bg-brand-red/10 px-2.5 py-0.5 text-brand-red font-medium">
-                        {post.category}
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <h2 className="mb-2 font-display text-body-lg text-brand-white group-hover:text-brand-red transition-colors">
-                      {post.title}
-                    </h2>
-                    <p className="mb-4 flex-1 font-body text-body-sm text-brand-smoke">
-                      {post.excerpt}
-                    </p>
-
-                    {/* CTA */}
-                    <div className="flex items-center gap-2 font-body text-body-sm font-semibold text-brand-red group-hover:gap-3 transition-all">
-                      Read More
-                      <IconArrowRight />
-                    </div>
-                  </article>
-                </Link>
-              </FadeIn>
-            ))}
-          </div>
+                    </article>
+                  </Link>
+                </FadeIn>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>

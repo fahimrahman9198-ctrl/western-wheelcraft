@@ -1,9 +1,14 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getPost, getAllPosts } from '@/lib/blog-posts';
+import ReactMarkdown, { type Components } from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { getAllPosts, getPostBySlug } from '@/lib/blog';
 import { FadeIn } from '@/components/ui/FadeIn';
 import { Button } from '@/components/ui/Button';
+import { JsonLd } from '@/components/seo/JsonLd';
+
+const BASE_URL = 'https://westernwheelcraft.ca';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -15,19 +20,31 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;
-  const post = getPost(params.slug);
+  const post = getPostBySlug(params.slug);
 
   if (!post) return {};
 
   return {
-    title: `${post.title} | Western Wheelcraft Blog`,
-    description: post.seoDescription,
+    title: post.title,
+    description: post.description,
+    keywords: post.keywords,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
       type: 'article',
+      url: `${BASE_URL}/blog/${post.slug}`,
+      title: post.title,
+      description: post.description,
       publishedTime: post.date,
-      authors: [post.author],
+      authors: ['Western Wheelcraft Ltd.'],
+      ...(post.ogImage && { images: [{ url: post.ogImage, width: 1200, height: 630, alt: post.title }] }),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description,
+      ...(post.ogImage && { images: [post.ogImage] }),
     },
   };
 }
@@ -58,9 +75,79 @@ function IconArrowLeft() {
   );
 }
 
+function formatDate(date: string) {
+  // Parse as UTC noon so the local-timezone render can't shift the day
+  return new Date(`${date}T12:00:00Z`).toLocaleDateString('en-CA', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+}
+
+// Markdown element styling — brand tokens only, Tailwind v3.4 classes
+const markdownComponents: Components = {
+  h2: ({ children }) => (
+    <h2 className="mt-12 mb-4 font-display text-display-sm md:text-display-md text-brand-white">
+      {children}
+    </h2>
+  ),
+  h3: ({ children }) => (
+    <h3 className="mt-8 mb-3 font-body text-body-lg font-bold text-brand-white">{children}</h3>
+  ),
+  p: ({ children }) => (
+    <p className="mb-5 font-body text-body-md leading-relaxed text-brand-smoke">{children}</p>
+  ),
+  a: ({ href, children }) => (
+    <Link
+      href={href ?? '#'}
+      className="font-semibold text-brand-red underline decoration-brand-red/40 underline-offset-4 transition-colors hover:text-brand-red-hover hover:decoration-brand-red-hover"
+    >
+      {children}
+    </Link>
+  ),
+  strong: ({ children }) => <strong className="font-bold text-brand-white">{children}</strong>,
+  ul: ({ children }) => (
+    <ul className="mb-5 ml-5 list-disc space-y-2 font-body text-body-md text-brand-smoke marker:text-brand-red">
+      {children}
+    </ul>
+  ),
+  ol: ({ children }) => (
+    <ol className="mb-5 ml-5 list-decimal space-y-2 font-body text-body-md text-brand-smoke marker:text-brand-red">
+      {children}
+    </ol>
+  ),
+  li: ({ children }) => <li className="pl-1 leading-relaxed">{children}</li>,
+  blockquote: ({ children }) => (
+    <blockquote className="mb-5 border-l-2 border-brand-red bg-brand-graphite/50 py-3 pl-5 pr-4 font-body text-body-md italic text-brand-silver [&>p]:mb-0">
+      {children}
+    </blockquote>
+  ),
+  hr: () => <hr className="my-10 border-brand-graphite" />,
+  table: ({ children }) => (
+    <div className="mb-8 overflow-x-auto rounded-xl border border-brand-ash/60">
+      <table className="w-full border-collapse font-body text-body-sm">{children}</table>
+    </div>
+  ),
+  thead: ({ children }) => <thead className="bg-brand-graphite">{children}</thead>,
+  th: ({ children }) => (
+    <th className="border-b border-brand-ash/60 px-4 py-3 text-left font-mono text-caption uppercase tracking-wider text-brand-white">
+      {children}
+    </th>
+  ),
+  td: ({ children }) => (
+    <td className="border-b border-brand-graphite px-4 py-3 text-brand-smoke">{children}</td>
+  ),
+  code: ({ children }) => (
+    <code className="rounded bg-brand-graphite px-1.5 py-0.5 font-mono text-[0.875em] text-brand-cream">
+      {children}
+    </code>
+  ),
+};
+
 export default async function PostPage(props: PageProps) {
   const params = await props.params;
-  const post = getPost(params.slug);
+  const post = getPostBySlug(params.slug);
 
   if (!post) {
     notFound();
@@ -70,109 +157,93 @@ export default async function PostPage(props: PageProps) {
     .filter((p) => p.slug !== post.slug)
     .slice(0, 2);
 
+  const blogPostingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    keywords: post.keywords.join(', '),
+    ...(post.ogImage && { image: `${BASE_URL}${post.ogImage}` }),
+    author: {
+      '@type': 'Organization',
+      name: 'Western Wheelcraft Ltd.',
+      url: BASE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Western Wheelcraft Ltd.',
+      url: BASE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${BASE_URL}/images/logo.png`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${BASE_URL}/blog/${post.slug}`,
+    },
+  };
+
   return (
     <>
+      <JsonLd id={`blog-posting-${post.slug}`} data={blogPostingSchema} />
+
       {/* Header */}
       <section className="bg-brand-jet py-16 border-b border-brand-graphite">
         <div className="section-container">
           <FadeIn>
-            <Link href="/blog" className="inline-flex items-center gap-2 text-brand-red hover:gap-3 transition-all mb-6 font-body text-body-sm font-semibold">
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-2 text-brand-red hover:gap-3 transition-all mb-6 font-body text-body-sm font-semibold"
+            >
               <IconArrowLeft />
               Back to Blog
             </Link>
-            <h1 className="mb-4 font-display text-display-md text-brand-white">{post.title}</h1>
-            <div className="flex flex-wrap items-center gap-4 text-caption text-brand-silver">
+            <h1 className="mb-4 max-w-3xl font-display text-display-sm md:text-display-md text-brand-white">
+              {post.title}
+            </h1>
+            <div className="flex flex-wrap items-center gap-4 font-mono text-caption text-brand-silver">
               <div className="flex items-center gap-1.5">
                 <IconCalendar />
-                {new Date(post.date).toLocaleDateString('en-CA', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                {formatDate(post.date)}
               </div>
               <div className="flex items-center gap-1.5">
                 <IconClock />
                 {post.readTime} min read
               </div>
-              <span className="rounded-full bg-brand-red/10 px-2.5 py-0.5 text-brand-red font-medium">
-                {post.category}
-              </span>
             </div>
           </FadeIn>
         </div>
       </section>
 
       {/* Content */}
-      <section className="bg-brand-jet py-24">
-        <div className="section-container max-w-2xl">
+      <section className="bg-brand-jet py-16 md:py-24">
+        <div className="section-container">
           <FadeIn>
-            <article className="prose prose-invert max-w-none">
-              <style>{`
-                .prose-invert h2 {
-                  font-family: var(--font-archivo);
-                  font-size: 1.875rem;
-                  font-weight: bold;
-                  color: #ffffff;
-                  margin-top: 2rem;
-                  margin-bottom: 1rem;
-                }
-                .prose-invert h3 {
-                  font-size: 1.25rem;
-                  font-weight: 600;
-                  color: #ffffff;
-                  margin-top: 1.5rem;
-                  margin-bottom: 0.75rem;
-                }
-                .prose-invert p {
-                  font-family: var(--font-manrope);
-                  font-size: 1rem;
-                  line-height: 1.6;
-                  color: #cccccc;
-                  margin-bottom: 1rem;
-                }
-                .prose-invert ul, .prose-invert ol {
-                  color: #cccccc;
-                  margin-bottom: 1rem;
-                }
-                .prose-invert li {
-                  margin-bottom: 0.5rem;
-                }
-                .prose-invert strong {
-                  color: #ffffff;
-                }
-              `}</style>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: post.content
-                    .split('\n\n')
-                    .map((para) => {
-                      if (para.startsWith('##')) {
-                        return `<h2>${para.replace(/^## /, '')}</h2>`;
-                      } else if (para.startsWith('###')) {
-                        return `<h3>${para.replace(/^### /, '')}</h3>`;
-                      } else if (para.startsWith('-')) {
-                        const items = para.split('\n').map((line) => `<li>${line.replace(/^- /, '')}</li>`).join('');
-                        return `<ul>${items}</ul>`;
-                      } else if (para.startsWith('1.')) {
-                        const items = para.split('\n').map((line) => `<li>${line.replace(/^\d+\. /, '')}</li>`).join('');
-                        return `<ol>${items}</ol>`;
-                      }
-                      return `<p>${para}</p>`;
-                    })
-                    .join(''),
-                }}
-              />
-            </article>
+            <article className="mx-auto max-w-prose">
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                {post.content}
+              </ReactMarkdown>
 
-            {/* CTA */}
-            <div className="mt-12 rounded-xl border border-brand-ash bg-brand-graphite p-8 text-center">
-              <p className="mb-4 font-body text-body-lg text-brand-white">
-                Ready to refinish your wheels?
-              </p>
-              <Button href="/quote" variant="primary" size="lg">
-                Get a Free Quote
-              </Button>
-            </div>
+              {/* CTA */}
+              <div className="mt-14 rounded-xl border border-brand-ash bg-brand-graphite p-8 text-center">
+                <p className="mb-2 font-display text-display-sm text-brand-white">
+                  Ready to fix your wheels?
+                </p>
+                <p className="mb-6 font-body text-body-md text-brand-smoke">
+                  Snap a photo, get a price in minutes — or lock in a repair date now.
+                </p>
+                <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  <Button href="/quote/estimate" variant="primary" size="lg">
+                    Get an instant quote
+                  </Button>
+                  <Button href="/booking" variant="secondary" size="lg">
+                    Book a repair
+                  </Button>
+                </div>
+              </div>
+            </article>
           </FadeIn>
         </div>
       </section>
@@ -195,14 +266,10 @@ export default async function PostPage(props: PageProps) {
                         {relatedPost.title}
                       </h3>
                       <p className="flex-1 font-body text-body-sm text-brand-smoke mb-4">
-                        {relatedPost.excerpt}
+                        {relatedPost.description}
                       </p>
-                      <div className="text-caption text-brand-silver">
-                        {new Date(relatedPost.date).toLocaleDateString('en-CA', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
+                      <div className="font-mono text-caption text-brand-silver">
+                        {formatDate(relatedPost.date)}
                       </div>
                     </article>
                   </Link>
