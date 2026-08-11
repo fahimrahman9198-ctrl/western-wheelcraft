@@ -19,7 +19,6 @@ const CreateCustomerSchema = z.object({
   notes: z.string().max(2000).optional().or(z.literal('')),
 });
 
-type CreateCustomerInput = z.infer<typeof CreateCustomerSchema>;
 
 export async function POST(request: Request) {
   try {
@@ -122,7 +121,7 @@ export async function PATCH(request: Request) {
     }
 
     // Build update object
-    const updateData: Record<string, any> = {};
+    const updateData: Partial<typeof customers.$inferInsert> = {};
     if (data.name !== undefined) updateData.name = data.name;
     if (data.email !== undefined) updateData.email = data.email;
     if (data.phone !== undefined) updateData.phone = data.phone || null;

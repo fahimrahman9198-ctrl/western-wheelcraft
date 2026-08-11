@@ -96,23 +96,6 @@ const STEP_LABELS = [
 const TOTAL_STEPS = 6;
 const MAX_PHOTOS = 8;
 
-// ── Pricing helpers ───────────────────────────────────────────────────────────
-
-function sizePremium(size: string): number {
-  if (size === '18"' || size === '19"') return 25;
-  if (size === '20"' || size === '21"') return 50;
-  if (size === '22"+') return 75;
-  return 0;
-}
-
-
-function getRegionFee(region: string): number {
-  return REGIONS.find(r => r.value === region)?.fee ?? 0;
-}
-
-function getFinishPremium(type: string): number {
-  return FINISHES.find(f => f.value === type)?.premium ?? 0;
-}
 
 function formatPhone(raw: string): string {
   const digits = raw.replace(/\D/g, '').slice(0, 10);
@@ -183,13 +166,6 @@ function IconSpark() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
-    </svg>
-  );
-}
-function IconWarning() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -497,7 +473,6 @@ export default function EstimatePage() {
 
   // ── Pricing ──
 
-  const pricing = calcFixedWheelPricing(vehicle.wheelCount);
   const years = Array.from({ length: 27 }, (_, i) => (2026 - i).toString());
 
   // ── Render ──

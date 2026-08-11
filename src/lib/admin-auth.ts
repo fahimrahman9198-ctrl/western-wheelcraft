@@ -21,10 +21,6 @@ function splitEnvList(value: string | undefined): string[] {
     .filter(Boolean);
 }
 
-function isAdminRole(value: unknown): value is AdminRole {
-  return typeof value === 'string' && ADMIN_ROLES.includes(value as AdminRole);
-}
-
 function roleFromUsername(username: string): AdminRole | null {
   const normalized = username.toLowerCase();
   const usernameRoles: Array<[AdminRole, string[]]> = [

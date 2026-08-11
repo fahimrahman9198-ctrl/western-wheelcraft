@@ -4,14 +4,15 @@ import { useState } from 'react';
 import { AlertCircle, Plus, Receipt, Search } from 'lucide-react';
 import { InvoiceCardClient } from './InvoiceCardClient';
 import { CreateInvoiceModal } from './CreateInvoiceModal';
+import type { AdminInvoice, CompanyInfo } from '@/lib/admin-types';
 
 interface InvoicesPageClientProps {
-  invoices: any[];
-  allInvoices: any[];
+  invoices: AdminInvoice[];
+  allInvoices: AdminInvoice[];
   counts: Record<string, number>;
   activeStatus: string;
   query: string;
-  company: any;
+  company: CompanyInfo;
   tabs: Array<{ key: string; label: string }>;
 }
 
@@ -89,7 +90,7 @@ export function InvoicesPageClient({
               <Receipt className="mx-auto text-brand-silver" size={36} />
               <h2 className="mt-4 font-display text-body-lg text-brand-white">No invoices yet</h2>
               <p className="mx-auto mt-2 max-w-xl text-body-sm text-brand-smoke">
-                Click "Create Invoice" to generate your first invoice with custom pricing and taxes.
+                Click &ldquo;Create Invoice&rdquo; to generate your first invoice with custom pricing and taxes.
               </p>
             </div>
           ) : invoices.length === 0 ? (
@@ -103,7 +104,7 @@ export function InvoicesPageClient({
           ) : (
             <div className="grid gap-4">
               {invoices.map((invoice) => (
-                <InvoiceCardClient key={invoice.id} invoice={invoice as any} company={company} />
+                <InvoiceCardClient key={invoice.id} invoice={invoice} company={company} />
               ))}
             </div>
           )}

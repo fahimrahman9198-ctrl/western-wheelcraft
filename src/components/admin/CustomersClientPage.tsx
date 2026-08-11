@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Trash2, Edit2, Plus, Loader2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Trash2, Edit2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
-import { CustomerForm } from './CustomerForm';
+import { CustomerForm, type CustomerFormInput } from './CustomerForm';
 
-interface Customer {
+export interface Customer {
   id: string;
   name: string;
   email: string;
@@ -49,7 +49,7 @@ export function CustomersClientPage({ customers: initialCustomers }: CustomersCl
     setSelectedCustomer(null);
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: CustomerFormInput) => {
     setIsSubmitting(true);
     try {
       const url = '/api/admin/customers';
@@ -252,7 +252,7 @@ export function CustomersClientPage({ customers: initialCustomers }: CustomersCl
               </button>
             </div>
             <CustomerForm
-              initialData={selectedCustomer}
+              initialData={selectedCustomer ?? undefined}
               onSubmit={handleSubmit}
               onCancel={handleCloseModal}
               isLoading={isSubmitting}

@@ -20,7 +20,6 @@ const CreateInvoiceFormSchema = z.object({
   discount: z.number().min(0).default(0),
 });
 
-type CreateInvoiceFormInput = z.infer<typeof CreateInvoiceFormSchema>;
 
 export async function POST(request: Request) {
   try {

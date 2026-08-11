@@ -4,6 +4,7 @@ import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { enUS } from 'date-fns/locale/en-US';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import type { AdminBooking } from '@/lib/admin-types';
 
 const locales = { 'en-US': enUS };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
@@ -14,7 +15,7 @@ interface BookingEvent {
   start: Date;
   end: Date;
   resource: {
-    booking: any;
+    booking: AdminBooking;
     statusColor: string;
   };
 }
@@ -34,7 +35,7 @@ function getStatusColor(status: string): string {
   }
 }
 
-function convertBookingsToEvents(bookings: any[]): BookingEvent[] {
+function convertBookingsToEvents(bookings: AdminBooking[]): BookingEvent[] {
   return bookings.map((booking) => ({
     id: booking.id,
     title: `${booking.customer?.name || 'Unknown'} - ${booking.serviceType || booking.service} (${booking.slot})`,
@@ -48,8 +49,8 @@ function convertBookingsToEvents(bookings: any[]): BookingEvent[] {
 }
 
 interface BookingCalendarProps {
-  bookings: any[];
-  onSelectEvent: (booking: any) => void;
+  bookings: AdminBooking[];
+  onSelectEvent: (booking: AdminBooking) => void;
   onSelectSlot: (start: Date, end: Date) => void;
   onNavigate?: (date: Date) => void;
 }
@@ -85,7 +86,7 @@ export function BookingCalendar({
 
   return (
     <div className="h-full bg-white rounded-lg border border-brand-ash overflow-hidden">
-      <Calendar
+      <Calendar<BookingEvent>
         localizer={localizer}
         events={events}
         startAccessor="start"
@@ -95,7 +96,7 @@ export function BookingCalendar({
         onSelectSlot={handleSelectSlot}
         selectable
         popup
-        eventPropGetter={EventStyleGetter as any}
+        eventPropGetter={EventStyleGetter}
         onNavigate={onNavigate}
         defaultView="month"
         views={['month', 'week', 'day']}

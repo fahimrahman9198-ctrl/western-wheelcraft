@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
-import { CreateBookingModal } from './CreateBookingModal';
+import { CreateBookingModal, type CreateBookingInput } from './CreateBookingModal';
 import { BookingsListView } from './BookingsListView';
+import type { AdminBooking, AdminCustomer } from '@/lib/admin-types';
 
 interface BookingsTabsClientProps {
-  bookings: any[];
-  customers: any[];
+  bookings: AdminBooking[];
+  customers: AdminCustomer[];
   onBookingsUpdated?: () => void;
 }
 
@@ -20,7 +21,7 @@ export function BookingsTabsClient({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [localBookings, setLocalBookings] = useState(bookings);
 
-  const handleCreateBooking = async (data: any) => {
+  const handleCreateBooking = async (data: CreateBookingInput) => {
     try {
       const response = await fetch('/api/admin/bookings', {
         method: 'POST',
@@ -45,7 +46,7 @@ export function BookingsTabsClient({
     }
   };
 
-  const handleStatusChange = async (booking: any, newStatus: string) => {
+  const handleStatusChange = async (booking: AdminBooking, newStatus: string) => {
     try {
       const response = await fetch(`/api/admin/bookings/${booking.id}`, {
         method: 'PATCH',
@@ -59,7 +60,9 @@ export function BookingsTabsClient({
 
       setLocalBookings(
         localBookings.map((b) =>
-          b.id === booking.id ? { ...b, status: newStatus } : b
+          b.id === booking.id
+            ? { ...b, status: newStatus as AdminBooking['status'] }
+            : b
         )
       );
       toast.success(`Booking marked as ${newStatus}`);

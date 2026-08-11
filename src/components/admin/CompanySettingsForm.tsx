@@ -17,10 +17,10 @@ const CompanySettingsSchema = z.object({
   bankDetails: z.string().max(500).optional().or(z.literal('')),
 });
 
-type CompanySettingsInput = z.infer<typeof CompanySettingsSchema>;
+export type CompanySettingsInput = z.infer<typeof CompanySettingsSchema>;
 
 interface CompanySettingsFormProps {
-  initialData?: any;
+  initialData?: Partial<CompanySettingsInput> & { logoBlobUrl?: string | null };
   onSubmit: (data: CompanySettingsInput & { logo?: File }) => Promise<void>;
   isLoading?: boolean;
 }

@@ -12,7 +12,6 @@ const ResendInvoiceSchema = z.object({
   invoiceId: z.string().uuid(),
 });
 
-type ResendInvoiceInput = z.infer<typeof ResendInvoiceSchema>;
 
 export async function POST(request: Request) {
   try {

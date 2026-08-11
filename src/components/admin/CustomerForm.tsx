@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, X } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const CustomerFormSchema = z.object({
@@ -21,10 +21,10 @@ const CustomerFormSchema = z.object({
   notes: z.string().max(2000).optional().or(z.literal('')).nullable(),
 });
 
-type CustomerFormInput = z.infer<typeof CustomerFormSchema>;
+export type CustomerFormInput = z.infer<typeof CustomerFormSchema>;
 
 interface CustomerFormProps {
-  initialData?: any;
+  initialData?: Partial<CustomerFormInput>;
   onSubmit: (data: CustomerFormInput) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;

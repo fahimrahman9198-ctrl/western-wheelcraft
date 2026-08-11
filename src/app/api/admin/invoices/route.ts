@@ -125,7 +125,7 @@ export async function PATCH(request: Request) {
 
     const data = UpdateInvoiceSchema.parse(body);
 
-    const updateData: Record<string, any> = {};
+    const updateData: Partial<typeof invoices.$inferInsert> = {};
     if (data.status) updateData.status = data.status;
     if (data.notes !== undefined) updateData.notes = data.notes;
 

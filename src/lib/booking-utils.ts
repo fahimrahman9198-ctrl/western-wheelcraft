@@ -9,10 +9,10 @@ export interface ConflictCheckInput {
   excludeBookingId?: string; // Exclude when editing
 }
 
-export function findConflicts(
-  allBookings: Booking[],
+export function findConflicts<T extends Booking>(
+  allBookings: T[],
   newBooking: ConflictCheckInput
-): Booking[] {
+): T[] {
   const newStart = parse(newBooking.startTime, 'HH:mm', newBooking.scheduledDate);
   const newEnd = parse(newBooking.endTime, 'HH:mm', newBooking.scheduledDate);
 

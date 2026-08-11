@@ -20,7 +20,7 @@ export default async function LeadsPage() {
         </p>
       </div>
 
-      <LeadsClientPage leads={leads as any} company={defaultCompany} />
+      <LeadsClientPage leads={leads} company={defaultCompany} />
     </div>
   );
 }

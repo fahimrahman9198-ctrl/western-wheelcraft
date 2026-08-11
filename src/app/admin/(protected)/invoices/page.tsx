@@ -1,11 +1,4 @@
-import {
-  AlertCircle,
-  Plus,
-  Receipt,
-  Search,
-} from 'lucide-react';
 import { getAdminInvoicesData } from '@/lib/admin-data';
-import { InvoiceCardClient } from '@/components/admin/InvoiceCardClient';
 import { InvoicesPageClient } from '@/components/admin/InvoicesPageClient';
 
 type Invoice = Awaited<ReturnType<typeof getAdminInvoicesData>>[number];

@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { format } from 'date-fns';
 import { AlertCircle, Loader2, Calendar } from 'lucide-react';
 import { toast } from 'sonner';
-import type { Customer, Booking } from '@/lib/db/schema';
+import type { AdminBooking, AdminCustomer } from '@/lib/admin-types';
 import { findConflicts, SERVICE_DURATIONS, generateTimeSlots } from '@/lib/booking-utils';
 import { DatePickerModal } from './DatePickerModal';
 
@@ -25,17 +25,17 @@ const CreateBookingSchema = z.object({
   notes: z.string().optional(),
 });
 
-type CreateBookingInput = z.infer<typeof CreateBookingSchema>;
+export type CreateBookingInput = z.infer<typeof CreateBookingSchema>;
 
 interface CreateBookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: CreateBookingInput) => Promise<void>;
-  customers: any[];
-  existingBookings: any[];
+  customers: AdminCustomer[];
+  existingBookings: AdminBooking[];
   prefilledDate?: Date;
   prefilledCustomerId?: string;
-  onCustomerCreated?: (customer: any) => void;
+  onCustomerCreated?: (customer: AdminCustomer) => void;
 }
 
 const SERVICES = [
@@ -71,7 +71,7 @@ export function CreateBookingModal({
   onCustomerCreated,
 }: CreateBookingModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [conflict, setConflict] = useState<Booking | null>(null);
+  const [conflict, setConflict] = useState<AdminBooking | null>(null);
   const [showNewCustomerForm, setShowNewCustomerForm] = useState(false);
   const [newCustomerForm, setNewCustomerForm] = useState({ name: '', email: '', phone: '' });
   const [localCustomers, setLocalCustomers] = useState(customers);
@@ -100,7 +100,6 @@ export function CreateBookingModal({
   const selectedCustomerId = watch('customerId');
   const selectedService = watch('serviceType');
   const startTime = watch('startTime');
-  const serviceType = watch('serviceType');
   const slot = watch('slot');
   const scheduledDate = watch('scheduledDate');
   const selectedCustomer = localCustomers.find((c) => c.id === selectedCustomerId);
@@ -434,7 +433,7 @@ export function CreateBookingModal({
                 <div className="text-sm text-red-400">
                   <p className="font-semibold">Conflict detected</p>
                   <p>
-                    {(conflict as any).customer?.name || 'Customer'} already booked {(conflict as any).startTime} – {(conflict as any).endTime}
+                    {conflict.customer?.name || 'Customer'} already booked {conflict.startTime} – {conflict.endTime}
                   </p>
                 </div>
               </div>

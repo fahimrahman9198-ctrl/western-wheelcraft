@@ -30,7 +30,7 @@ export default function BookingCheckoutPage() {
             You should receive a confirmation email shortly. Our team will contact you to confirm your appointment date and time.
           </p>
           <p className="mt-4 font-body text-body-sm text-brand-smoke">
-            We'll discuss pricing and payment details when we confirm your booking.
+            We&apos;ll discuss pricing and payment details when we confirm your booking.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link

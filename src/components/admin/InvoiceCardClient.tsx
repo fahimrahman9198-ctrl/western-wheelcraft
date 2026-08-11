@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { Eye, Lock, CheckCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { InvoicePreviewModal } from './InvoicePreviewModal';
+import type { AdminInvoice, CompanyInfo } from '@/lib/admin-types';
 
 interface InvoiceCardClientProps {
-  invoice: any;
-  company: any;
+  invoice: AdminInvoice;
+  company: CompanyInfo;
 }
 
 function money(value: string | null): string {
@@ -19,7 +20,7 @@ function statusLabel(status: string): string {
   return status.charAt(0).toUpperCase() + status.slice(1);
 }
 
-function customerLine(invoice: any): string {
+function customerLine(invoice: AdminInvoice): string {
   const email = invoice.customer?.email;
   return email ? email : 'No email on file';
 }
@@ -37,8 +38,8 @@ export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) 
   const [isMarkingPaid, setIsMarkingPaid] = useState(false);
   const [isResending, setIsResending] = useState(false);
 
-  const succeededPayments = invoice.payments?.filter((payment: any) => payment.status === 'succeeded') || [];
-  const paymentTotal = succeededPayments.reduce((sum: number, payment: any) => sum + Number(payment.amount || 0), 0);
+  const succeededPayments = invoice.payments?.filter((payment) => payment.status === 'succeeded') || [];
+  const paymentTotal = succeededPayments.reduce((sum: number, payment) => sum + Number(payment.amount || 0), 0);
 
   const handleMarkAsPaid = async () => {
     setIsMarkingPaid(true);
@@ -129,7 +130,7 @@ export function InvoiceCardClient({ invoice, company }: InvoiceCardClientProps) 
                 </tr>
               </thead>
               <tbody>
-                {invoice.lineItems?.slice(0, 4).map((item: any) => (
+                {invoice.lineItems?.slice(0, 4).map((item) => (
                   <tr key={item.id} className="border-b border-brand-ash/50 last:border-0">
                     <td className="px-3 py-2 text-brand-smoke">{item.description}</td>
                     <td className="px-3 py-2 text-right font-mono text-brand-smoke">{Number(item.quantity)}</td>

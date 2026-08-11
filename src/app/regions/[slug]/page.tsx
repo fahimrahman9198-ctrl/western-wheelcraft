@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardTitle, CardDescription } from '@/components/ui/Card';
 import { FadeIn } from '@/components/ui/FadeIn';
 import { REGIONS, REGION_SLUGS } from '@/lib/region-data';
 import { LocalBusinessSchema } from '@/lib/structured-data';

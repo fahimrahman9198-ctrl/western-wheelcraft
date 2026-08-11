@@ -3,12 +3,11 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { MoreVertical, Phone, Mail, Calendar } from 'lucide-react';
+import type { AdminBooking } from '@/lib/admin-types';
 
 interface BookingsListViewProps {
-  bookings: any[];
-  onEditBooking?: (booking: any) => void;
-  onDeleteBooking?: (booking: any) => void;
-  onStatusChange?: (booking: any, newStatus: string) => void;
+  bookings: AdminBooking[];
+  onStatusChange?: (booking: AdminBooking, newStatus: string) => void;
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -27,8 +26,6 @@ const STATUS_LABELS: Record<string, string> = {
 
 export function BookingsListView({
   bookings,
-  onEditBooking,
-  onDeleteBooking,
   onStatusChange,
 }: BookingsListViewProps) {
   const [expandedBookingId, setExpandedBookingId] = useState<string | null>(null);

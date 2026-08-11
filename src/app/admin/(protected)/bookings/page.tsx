@@ -1,56 +1,6 @@
-import {
-  CalendarDays,
-  Car,
-  Clock,
-  FileText,
-  Mail,
-  MapPin,
-  Phone,
-  Wrench,
-} from 'lucide-react';
-import { getAdminBookingsData } from '@/lib/admin-data';
-import { getAdminCustomersData } from '@/lib/admin-data';
-import { BookingWorkflowControls } from '@/components/admin/WorkflowControls';
+import { CalendarDays } from 'lucide-react';
+import { getAdminBookingsData, getAdminCustomersData } from '@/lib/admin-data';
 import { BookingsTabsClient } from '@/components/admin/BookingsTabsClient';
-
-const STATUS_COLORS: Record<string, string> = {
-  pending: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
-  confirmed: 'bg-green-500/15 text-green-400 border-green-500/30',
-  completed: 'bg-brand-ash/40 text-brand-smoke border-brand-ash/50',
-  cancelled: 'bg-red-500/15 text-red-400 border-red-500/30',
-};
-
-const slotLabels: Record<string, string> = {
-  shop: 'Shop Bay',
-  mobile_1: 'Mobile Truck 1',
-  mobile_2: 'Mobile Truck 2',
-};
-
-function formatDate(value: string): string {
-  return new Date(`${value}T00:00:00`).toLocaleDateString('en-CA', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-}
-
-function formatMoney(value: string | null): string {
-  if (!value) return 'No amount';
-  return Number(value).toLocaleString('en-CA', { style: 'currency', currency: 'CAD' });
-}
-
-function vehicleLabel(booking: any): string {
-  if (booking.vehicle) {
-    return [booking.vehicle.year, booking.vehicle.make, booking.vehicle.model].filter(Boolean).join(' ');
-  }
-
-  const vehicleLine = booking.notes
-    ?.split('\n')
-    .find((line: string) => line.toLowerCase().startsWith('vehicle:'));
-
-  return vehicleLine?.replace(/^vehicle:\s*/i, '') ?? 'Vehicle not provided';
-}
 
 export default async function AdminBookingsPage() {
   const [bookings, customers] = await Promise.all([getAdminBookingsData(), getAdminCustomersData()]);
@@ -91,7 +41,7 @@ export default async function AdminBookingsPage() {
           </p>
         </div>
       ) : (
-        <BookingsTabsClient bookings={bookings as any} customers={customers as any} />
+        <BookingsTabsClient bookings={bookings} customers={customers} />
       )}
     </div>
   );

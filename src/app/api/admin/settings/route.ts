@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { put, del } from '@vercel/blob';
+import { put } from '@vercel/blob';
 import { db } from '@/lib/db';
 import { adminSettings, adminActivities } from '@/lib/db/schema';
 import { requireAdminUser } from '@/lib/admin-auth';
@@ -17,11 +17,9 @@ const CompanySettingsSchema = z.object({
   logoBlobUrl: z.string().optional().or(z.literal('')),
 });
 
-type CompanySettingsInput = z.infer<typeof CompanySettingsSchema>;
-
 const COMPANY_INFO_KEY = 'company_info';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     await requireAdminUser();
 
@@ -51,7 +49,7 @@ export async function POST(request: Request) {
     const formData = await request.formData();
 
     // Extract form fields
-    const data: any = {
+    const data = {
       name: formData.get('name'),
       address: formData.get('address'),
       phone: formData.get('phone'),

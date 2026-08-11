@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { Eye, Plus, Loader2 } from 'lucide-react';
 import { PhotoGallery } from './PhotoGallery';
 import { QuotePreviewModal } from './QuotePreviewModal';
+import type { AdminLead, CompanyInfo } from '@/lib/admin-types';
 
 interface LeadsClientPageProps {
-  leads: any[];
-  company: any;
+  leads: AdminLead[];
+  company: CompanyInfo;
 }
 
 const STATUS_STYLES: Record<string, string> = {
@@ -27,17 +28,22 @@ function statusLabel(status: string): string {
   return status.charAt(0).toUpperCase() + status.slice(1);
 }
 
+// Money columns are stored as numeric strings, so format defensively.
+function money(value: string | null): string {
+  return Number(value ?? 0).toFixed(2);
+}
+
 export function LeadsClientPage({ leads, company }: LeadsClientPageProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [selectedQuote, setSelectedQuote] = useState<any>(null);
+  const [selectedQuote, setSelectedQuote] = useState<AdminLead | null>(null);
   const [isCreatingBooking, setIsCreatingBooking] = useState(false);
 
-  const handleViewQuote = (quote: any) => {
+  const handleViewQuote = (quote: AdminLead) => {
     setSelectedQuote(quote);
     setPreviewOpen(true);
   };
 
-  const handleCreateBooking = async (quote: any) => {
+  const handleCreateBooking = async (quote: AdminLead) => {
     setIsCreatingBooking(true);
     try {
       // This would trigger opening a booking modal with pre-filled data
@@ -48,7 +54,7 @@ export function LeadsClientPage({ leads, company }: LeadsClientPageProps) {
         const event = new CustomEvent('pre-fill-booking', {
           detail: {
             customerId: quote.customerId,
-            service: quote.service,
+            service: quote.requestedService,
             amount: quote.estimatedTotal,
             quoteId: quote.id,
           },
@@ -100,7 +106,7 @@ export function LeadsClientPage({ leads, company }: LeadsClientPageProps) {
                   </p>
                 </div>
                 <div className="font-display text-display-sm text-brand-white">
-                  ${lead.estimatedTotal?.toFixed(2) || '0.00'}
+                  ${money(lead.estimatedTotal)}
                 </div>
               </div>
 
@@ -143,7 +149,7 @@ export function LeadsClientPage({ leads, company }: LeadsClientPageProps) {
                   <div className="text-caption font-semibold uppercase tracking-wider text-brand-silver mb-1">
                     Service
                   </div>
-                  <p className="text-body-sm text-brand-white">{lead.service || 'Not specified'}</p>
+                  <p className="text-body-sm text-brand-white">{lead.requestedService || 'Not specified'}</p>
                 </div>
               </div>
 
@@ -153,7 +159,13 @@ export function LeadsClientPage({ leads, company }: LeadsClientPageProps) {
                   <p className="text-caption font-semibold uppercase tracking-wider text-brand-silver mb-2">
                     Photos ({lead.photos.length})
                   </p>
-                  <PhotoGallery photos={lead.photos} />
+                  <PhotoGallery
+                    photos={lead.photos.map((p) => ({
+                      id: p.id,
+                      blobUrl: `/api/admin/quote-photos/${p.id}`,
+                      uploadedAt: p.createdAt,
+                    }))}
+                  />
                 </div>
               )}
 
@@ -163,19 +175,19 @@ export function LeadsClientPage({ leads, company }: LeadsClientPageProps) {
                   <div>
                     <p className="text-caption text-brand-silver">Subtotal</p>
                     <p className="font-mono font-bold text-brand-white">
-                      ${lead.estimatedSubtotal?.toFixed(2) || '0.00'}
+                      ${money(lead.estimatedSubtotal)}
                     </p>
                   </div>
                   <div>
                     <p className="text-caption text-brand-silver">GST (5%)</p>
                     <p className="font-mono font-bold text-brand-white">
-                      ${lead.estimatedGst?.toFixed(2) || '0.00'}
+                      ${money(lead.estimatedGst)}
                     </p>
                   </div>
                   <div>
                     <p className="text-caption text-brand-silver">Total</p>
                     <p className="font-mono font-bold text-brand-white">
-                      ${lead.estimatedTotal?.toFixed(2) || '0.00'}
+                      ${money(lead.estimatedTotal)}
                     </p>
                   </div>
                 </div>

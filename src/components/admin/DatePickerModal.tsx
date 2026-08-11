@@ -35,7 +35,6 @@ export function DatePickerModal({
     return date;
   });
 
-  const lastDayOfMonth = monthEnd.getDate();
   const lastDayOfWeek = monthEnd.getDay();
   const nextMonthDays = Array(6 - lastDayOfWeek).fill(null).map((_, i) => {
     const date = new Date(monthEnd);
@@ -44,9 +43,6 @@ export function DatePickerModal({
   });
 
   const allDays = [...prevMonthDays, ...days, ...nextMonthDays];
-  const weeks = Array(Math.ceil(allDays.length / 7)).fill(null).map((_, weekIdx) =>
-    allDays.slice(weekIdx * 7, (weekIdx + 1) * 7)
-  );
 
   const handleSelectDate = (date: Date) => {
     onSelectDate(date);

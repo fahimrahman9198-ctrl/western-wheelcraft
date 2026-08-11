@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { CompanySettingsForm } from './CompanySettingsForm';
+import { CompanySettingsForm, type CompanySettingsInput } from './CompanySettingsForm';
+
+type CompanySettings = Partial<CompanySettingsInput> & { logoBlobUrl?: string | null };
 
 interface SettingsClientPageProps {
-  initialData?: any;
+  initialData?: CompanySettings;
 }
 
 export function SettingsClientPage({ initialData }: SettingsClientPageProps) {
@@ -22,11 +24,11 @@ export function SettingsClientPage({ initialData }: SettingsClientPageProps) {
             const data = await response.json();
             setSettings(data);
           } else {
-            setSettings(null);
+            setSettings(undefined);
           }
         } catch (error) {
           console.error('Failed to fetch settings:', error);
-          setSettings(null);
+          setSettings(undefined);
         } finally {
           setIsLoading(false);
         }
@@ -36,7 +38,7 @@ export function SettingsClientPage({ initialData }: SettingsClientPageProps) {
     }
   }, [initialData]);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: CompanySettingsInput & { logo?: File }) => {
     try {
       const formData = new FormData();
 

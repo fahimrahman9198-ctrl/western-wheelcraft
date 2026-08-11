@@ -59,8 +59,10 @@ export default function BookingWizardPage() {
   const [takenSlots, setTakenSlots] = useState<Set<string>>(new Set());
 
   // Load already-booked times whenever the date changes, to prevent double-booking.
+  // No date means no slots are rendered, so there is nothing to reset here — the
+  // next selected date's fetch overwrites any stale value.
   useEffect(() => {
-    if (!date) { setTakenSlots(new Set()); return; }
+    if (!date) return;
     let active = true;
     fetch(`/api/bookings/availability?date=${date}`)
       .then((r) => (r.ok ? r.json() : { taken: [] }))

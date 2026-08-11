@@ -30,7 +30,7 @@ export default function QuoteCheckoutPage() {
             You should receive a confirmation email shortly. Our team will review your quote and contact you to discuss final pricing and payment options.
           </p>
           <p className="mt-4 font-body text-body-sm text-brand-smoke">
-            No payment is due at this time. We'll reach out within 24 hours with a final quote.
+            No payment is due at this time. We&apos;ll reach out within 24 hours with a final quote.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link

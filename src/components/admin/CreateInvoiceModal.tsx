@@ -49,8 +49,8 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
       wheelsWorked: '4',
       description: '',
       price: 0,
-      discount: 0 as any,
-    } as any,
+      discount: 0,
+    },
   });
 
   const price = watch('price') || 0;

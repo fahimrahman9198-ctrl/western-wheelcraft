@@ -5,17 +5,13 @@ import { X, Download, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { QuotePDFPreview } from './QuotePDFPreview';
 import { generatePDFFromElement } from '@/lib/pdf-generator';
+import type { AdminLead, CompanyInfo } from '@/lib/admin-types';
 
 interface QuotePreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  quote: any;
-  company: {
-    name: string;
-    address: string;
-    phone: string;
-    email: string;
-  };
+  quote: AdminLead | null;
+  company: CompanyInfo;
 }
 
 export function QuotePreviewModal({
@@ -32,7 +28,7 @@ export function QuotePreviewModal({
 
     setIsDownloading(true);
     try {
-      await generatePDFFromElement(previewRef.current, `quote_${quote.quoteNumber}.pdf`);
+      await generatePDFFromElement(previewRef.current, `quote_${quote?.quoteNumber ?? 'quote'}.pdf`);
       toast.success('Quote downloaded successfully');
     } catch (error) {
       console.error('Download failed:', error);
@@ -42,7 +38,34 @@ export function QuotePreviewModal({
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !quote) return null;
+
+  // Map the DB row into the presentational shape the PDF template expects.
+  const pdfQuote = {
+    id: quote.id,
+    quoteNumber: quote.quoteNumber,
+    customer: {
+      name: quote.customer?.name ?? quote.customerName,
+      email: quote.customer?.email ?? quote.customerEmail,
+      phone: quote.customer?.phone ?? undefined,
+      city: quote.region ?? undefined,
+    },
+    vehicle: quote.vehicle
+      ? {
+          year: quote.vehicle.year ?? undefined,
+          make: quote.vehicle.make ?? undefined,
+          model: quote.vehicle.model ?? undefined,
+          wheelSize: quote.vehicle.wheelSize ?? undefined,
+        }
+      : undefined,
+    service: quote.requestedService ?? '',
+    damage: { wheelCount: quote.wheelCount ?? undefined },
+    estimatedSubtotal: Number(quote.estimatedSubtotal ?? 0),
+    estimatedGst: Number(quote.estimatedGst ?? 0),
+    estimatedTotal: Number(quote.estimatedTotal ?? 0),
+    createdAt: quote.createdAt,
+    photos: quote.photos?.map((p) => ({ blobUrl: `/api/admin/quote-photos/${p.id}` })),
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
@@ -81,7 +104,7 @@ export function QuotePreviewModal({
         <div className="flex-1 overflow-auto bg-gray-100 p-4">
           <div className="mx-auto bg-white">
             <div ref={previewRef} className="print:p-0">
-              <QuotePDFPreview quote={quote} company={company} />
+              <QuotePDFPreview quote={pdfQuote} company={company} />
             </div>
           </div>
         </div>

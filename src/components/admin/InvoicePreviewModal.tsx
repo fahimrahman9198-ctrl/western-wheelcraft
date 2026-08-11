@@ -5,26 +5,20 @@ import { X, Download, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { InvoiceTemplate } from './InvoiceTemplate';
 import { generatePDFFromElement } from '@/lib/pdf-generator';
+import type { AdminInvoice, CompanyInfo } from '@/lib/admin-types';
 
 interface InvoicePreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  invoice: any;
-  company: {
-    name: string;
-    logo?: string;
-    address: string;
-    phone: string;
-    email: string;
-    taxId?: string;
-  };
+  invoice: AdminInvoice;
+  // Accepted for API symmetry with the card; the template composes its own header.
+  company?: CompanyInfo;
 }
 
 export function InvoicePreviewModal({
   isOpen,
   onClose,
   invoice,
-  company,
 }: InvoicePreviewModalProps) {
   const [isDownloading, setIsDownloading] = useState(false);
   const invoiceRef = useRef<HTMLDivElement>(null);
@@ -88,8 +82,8 @@ export function InvoicePreviewModal({
             <InvoiceTemplate
               invoice={{
                 invoiceNumber: invoice.invoiceNumber,
-                issuedAt: invoice.issuedAt,
-                dueAt: invoice.dueAt,
+                issuedAt: invoice.issuedAt ?? '',
+                dueAt: invoice.dueAt ?? '',
                 customer: {
                   name: invoice.customer?.name || 'Unknown Customer',
                   email: invoice.customer?.email || '',
@@ -104,7 +98,7 @@ export function InvoicePreviewModal({
                     ? invoice.notes.split('Plate/Stock: ')[1] || ''
                     : '',
                 },
-                lineItems: (invoice.lineItems || []).map((item: any) => ({
+                lineItems: (invoice.lineItems || []).map((item) => ({
                   description: item.description,
                   quantity: Number(item.quantity) || 1,
                   unitPrice: Number(item.total) / (Number(item.quantity) || 1) || 0,
