@@ -29,10 +29,10 @@ export default function AdminLoginPage() {
             variables: {
               colorPrimary: '#D81E2A',
               colorBackground: '#111114',
-              colorInputBackground: '#1E1E22',
-              colorInputText: '#F5F5F7',
-              colorText: '#F5F5F7',
-              colorTextSecondary: '#A1A1AA',
+              colorInput: '#1E1E22',
+              colorInputForeground: '#F5F5F7',
+              colorForeground: '#F5F5F7',
+              colorMutedForeground: '#A1A1AA',
               borderRadius: '0.5rem',
             },
             elements: {
