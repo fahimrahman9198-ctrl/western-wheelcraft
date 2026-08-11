@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, FormEvent } from 'react';
 import Image from 'next/image';
+import { upload } from '@vercel/blob/client';
 import { Button } from '@/components/ui/Button';
 
 // Mirrors the server limits in lib/quote-persistence.ts so the user gets
@@ -151,22 +152,31 @@ export function ContactForm() {
     };
 
     try {
-      let response: Response;
+      // Upload photos straight to Blob storage first (bypasses the 4.5 MB
+      // serverless body limit that used to reject multi-photo submissions),
+      // then send the lead with references to the uploaded files.
+      const uploadedPhotos = await Promise.all(
+        photos.map(async (file) => {
+          const blob = await upload(file.name, file, {
+            access: 'private',
+            handleUploadUrl: '/api/quotes/upload',
+            contentType: file.type,
+          });
+          return {
+            url: blob.url,
+            pathname: blob.pathname,
+            fileName: file.name,
+            mimeType: file.type,
+            sizeBytes: file.size,
+          };
+        })
+      );
 
-      if (photos.length > 0) {
-        // Multipart carries the JSON payload alongside the files; the route
-        // reads the "payload" field and any number of "photos" entries.
-        const formData = new FormData();
-        formData.append('payload', JSON.stringify(payload));
-        photos.forEach((photo) => formData.append('photos', photo));
-        response = await fetch('/api/quotes', { method: 'POST', body: formData });
-      } else {
-        response = await fetch('/api/quotes', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-      }
+      const response = await fetch('/api/quotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...payload, photos: uploadedPhotos }),
+      });
 
       if (!response.ok) {
         const body = await response.json().catch(() => null);

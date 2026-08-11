@@ -1,6 +1,5 @@
 import "server-only";
 
-import { put } from "@vercel/blob";
 import { eq } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import {
@@ -58,8 +57,18 @@ export interface EstimatorLeadInput extends BaseLeadInput {
 
 export type QuoteLeadInput = ContactLeadInput | EstimatorLeadInput;
 
+/**
+ * A photo the browser already uploaded directly to Vercel Blob (see
+ * app/api/quotes/upload/route.ts). We store the reference, not the bytes —
+ * the file never passes through this function, which is what keeps large
+ * uploads from hitting the 4.5 MB serverless body limit.
+ */
 export interface QuotePhotoUpload {
-  file: File;
+  url: string;
+  pathname?: string;
+  fileName: string;
+  mimeType: string;
+  sizeBytes: number;
   kind?: QuotePhotoKind;
 }
 
@@ -179,6 +188,15 @@ function safeFileName(fileName: string | undefined, index: number): string {
   return cleaned || `photo-${index + 1}`;
 }
 
+function isTrustedBlobUrl(url: string): boolean {
+  try {
+    const { protocol, hostname } = new URL(url);
+    return protocol === "https:" && hostname.endsWith(".blob.vercel-storage.com");
+  } catch {
+    return false;
+  }
+}
+
 export function validateQuotePhotos(photos: QuotePhotoUpload[], { requirePhoto = false } = {}) {
   if (requirePhoto && photos.length < 1) {
     throw new QuotePhotoValidationError("At least one wheel photo is required.");
@@ -189,12 +207,18 @@ export function validateQuotePhotos(photos: QuotePhotoUpload[], { requirePhoto =
   }
 
   for (const [index, upload] of photos.entries()) {
-    const file = upload.file;
-    if (!ALLOWED_QUOTE_PHOTO_TYPES.has(file.type)) {
+    // The bytes are already in Blob, so these checks guard the reference the
+    // client reports rather than the file itself. The URL check keeps a
+    // tampered client from linking an arbitrary external URL to a lead.
+    if (!isTrustedBlobUrl(upload.url)) {
+      throw new QuotePhotoValidationError(`Photo ${index + 1} has an invalid upload reference.`);
+    }
+
+    if (!ALLOWED_QUOTE_PHOTO_TYPES.has(upload.mimeType)) {
       throw new QuotePhotoValidationError(`Photo ${index + 1} must be a JPG, PNG, WEBP, HEIC, or HEIF image.`);
     }
 
-    if (file.size > MAX_QUOTE_PHOTO_SIZE_BYTES) {
+    if (upload.sizeBytes > MAX_QUOTE_PHOTO_SIZE_BYTES) {
       throw new QuotePhotoValidationError(`Photo ${index + 1} must be 8 MB or smaller.`);
     }
   }
@@ -240,32 +264,25 @@ async function createVehicleIfPresent(customerId: string, input: QuoteLeadInput)
   return vehicle;
 }
 
-async function persistQuotePhotos(quoteId: string, quoteNumber: string, photos: QuotePhotoUpload[]) {
+async function persistQuotePhotos(quoteId: string, photos: QuotePhotoUpload[]) {
   if (photos.length === 0) return [];
 
   const rows = [];
 
+  // The browser already uploaded each file to Blob, so we only record the
+  // reference here — no put(), so no large body flows through this function.
   for (const [index, upload] of photos.entries()) {
-    const file = upload.file;
-    const fileName = safeFileName(file.name, index);
-    const blob = await put(
-      `quotes/${quoteNumber}/${index + 1}-${Date.now()}-${fileName}`,
-      file,
-      {
-        access: "private",
-        addRandomSuffix: true,
-      }
-    );
+    const fileName = safeFileName(upload.fileName, index);
 
     const [photo] = await db
       .insert(schema.quotePhotos)
       .values({
         quoteId,
         kind: upload.kind ?? "damage",
-        storageUrl: blob.url,
-        fileName: file.name || fileName,
-        mimeType: file.type,
-        sizeBytes: file.size,
+        storageUrl: upload.url,
+        fileName: upload.fileName || fileName,
+        mimeType: upload.mimeType,
+        sizeBytes: upload.sizeBytes,
         sortOrder: index,
       })
       .returning();
@@ -436,7 +453,7 @@ export async function createQuoteLead(
     })
     .returning();
 
-  const savedPhotos = await persistQuotePhotos(quote.id, quote.quoteNumber, photos);
+  const savedPhotos = await persistQuotePhotos(quote.id, photos);
 
   if (input.damageDescription) {
     await db.insert(schema.communications).values({

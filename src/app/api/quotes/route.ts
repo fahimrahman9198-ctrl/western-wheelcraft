@@ -3,9 +3,19 @@ import { z } from "zod";
 import {
   createQuoteLead,
   QuotePhotoValidationError,
-  type QuotePhotoUpload,
 } from "@/lib/quote-persistence";
-import { enforceRateLimit, getRateLimitHeaders } from "@/lib/rate-limit";
+import { enforceRateLimit } from "@/lib/rate-limit";
+
+// A photo the browser already uploaded to Blob via /api/quotes/upload. Only the
+// reference travels in the JSON body, so the request stays well under the
+// serverless body limit no matter how large the images are.
+const uploadedPhotoSchema = z.object({
+  url: z.string().url().max(2048),
+  pathname: z.string().max(1024).optional(),
+  fileName: z.string().trim().min(1).max(255),
+  mimeType: z.string().trim().min(1).max(120),
+  sizeBytes: z.number().int().nonnegative(),
+});
 
 const baseLeadSchema = z.object({
   customerName: z.string().trim().min(2).max(160),
@@ -13,6 +23,7 @@ const baseLeadSchema = z.object({
   customerPhone: z.string().trim().max(40).optional(),
   region: z.string().trim().max(120).optional(),
   marketingConsent: z.boolean().default(false),
+  photos: z.array(uploadedPhotoSchema).max(8).optional(),
   // Honeypot: hidden in the form, so a real user never fills it. Declared here
   // because Zod strips unknown keys, which would discard the signal.
   website: z.string().max(255).optional(),
@@ -76,23 +87,6 @@ function isLikelySpam(payload: ParsedLead): string | null {
   return null;
 }
 
-function parseMultipartPayload(formData: FormData) {
-  const rawPayload = formData.get("payload");
-
-  if (typeof rawPayload !== "string") {
-    throw new QuotePhotoValidationError("Missing quote payload.");
-  }
-
-  // Union, not estimatorLeadSchema: the contact form submits photos too.
-  const payload = quoteLeadSchema.parse(JSON.parse(rawPayload));
-  const photos: QuotePhotoUpload[] = formData
-    .getAll("photos")
-    .filter((entry): entry is File => entry instanceof File && entry.size > 0)
-    .map((file) => ({ file }));
-
-  return { payload, photos };
-}
-
 export async function POST(request: Request) {
   // Rate limit check
   const rateLimitCheck = enforceRateLimit(request);
@@ -101,11 +95,10 @@ export async function POST(request: Request) {
   }
 
   try {
-    const contentType = request.headers.get("content-type") ?? "";
-    const isMultipart = contentType.includes("multipart/form-data");
-    const parsed = isMultipart
-      ? parseMultipartPayload(await request.formData())
-      : { payload: quoteLeadSchema.parse(await request.json()), photos: [] };
+    // Photos are uploaded straight to Blob by the browser and arrive here only
+    // as references inside the JSON body — see /api/quotes/upload.
+    const payload = quoteLeadSchema.parse(await request.json());
+    const parsed = { payload, photos: payload.photos ?? [] };
 
     const spamReason = isLikelySpam(parsed.payload);
     if (spamReason) {

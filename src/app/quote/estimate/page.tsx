@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
+import { upload } from '@vercel/blob/client';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
@@ -452,13 +453,29 @@ export default function EstimatePage() {
         },
       };
 
-      const formData = new FormData();
-      formData.append('payload', JSON.stringify(payload));
-      photos.forEach(photo => formData.append('photos', photo));
+      // Upload photos directly to Blob first so large images don't hit the
+      // 4.5 MB serverless body limit, then send the lead with their references.
+      const uploadedPhotos = await Promise.all(
+        photos.map(async photo => {
+          const blob = await upload(photo.name, photo, {
+            access: 'private',
+            handleUploadUrl: '/api/quotes/upload',
+            contentType: photo.type,
+          });
+          return {
+            url: blob.url,
+            pathname: blob.pathname,
+            fileName: photo.name,
+            mimeType: photo.type,
+            sizeBytes: photo.size,
+          };
+        })
+      );
 
       const response = await fetch('/api/quotes', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...payload, photos: uploadedPhotos }),
       });
 
       if (!response.ok) {
