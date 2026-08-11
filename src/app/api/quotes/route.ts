@@ -5,6 +5,7 @@ import {
   QuotePhotoValidationError,
 } from "@/lib/quote-persistence";
 import { enforceRateLimit } from "@/lib/rate-limit";
+import { isLikelySpam } from "@/lib/lead-spam";
 
 // A photo the browser already uploaded to Blob via /api/quotes/upload. Only the
 // reference travels in the JSON body, so the request stays well under the
@@ -53,39 +54,6 @@ const estimatorLeadSchema = baseLeadSchema.extend({
 });
 
 const quoteLeadSchema = z.discriminatedUnion("source", [contactLeadSchema, estimatorLeadSchema]);
-
-type ParsedLead = z.infer<typeof quoteLeadSchema>;
-
-/**
- * Cheap, high-confidence bot checks. Both signals are things a real submission
- * cannot produce by accident, so neither risks dropping a genuine lead:
- *
- *  - the honeypot field is hidden from users and has no label to autofill
- *  - a scripted filler writes the same string into every text input, so the
- *    message ends up identical to the email address
- *
- * Deliberately does NOT guess from the name. Random-looking names are the most
- * visible symptom, but real single-word names exist and a false positive costs
- * a paying customer.
- */
-function isLikelySpam(payload: ParsedLead): string | null {
-  if (payload.website && payload.website.trim() !== "") {
-    return "honeypot";
-  }
-
-  const message = payload.damageDescription?.trim().toLowerCase();
-  const email = payload.customerEmail.trim().toLowerCase();
-  if (message && message === email) {
-    return "message-equals-email";
-  }
-
-  const name = payload.customerName.trim().toLowerCase();
-  if (name === email) {
-    return "name-equals-email";
-  }
-
-  return null;
-}
 
 export async function POST(request: Request) {
   // Rate limit check

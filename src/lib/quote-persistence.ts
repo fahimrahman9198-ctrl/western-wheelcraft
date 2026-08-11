@@ -9,19 +9,21 @@ import {
   type TransactionalEmailResult,
 } from "@/lib/email";
 import { queueQuoteFollowUps } from "@/lib/quote-follow-ups";
+import {
+  safeFileName,
+  validateQuotePhotos,
+  type QuotePhotoUpload,
+} from "@/lib/quote-photo-validation";
+
+// Re-exported so existing importers (e.g. the quote API route) keep a single
+// import site; the validation logic itself lives in the pure module.
+export {
+  QuotePhotoValidationError,
+  validateQuotePhotos,
+  type QuotePhotoUpload,
+} from "@/lib/quote-photo-validation";
 
 type QuoteSource = "estimator" | "contact_form";
-type QuotePhotoKind = "damage" | "full_wheel" | "vehicle" | "other";
-
-const MAX_QUOTE_PHOTOS = 8;
-const MAX_QUOTE_PHOTO_SIZE_BYTES = 8 * 1024 * 1024;
-const ALLOWED_QUOTE_PHOTO_TYPES = new Set([
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/heic",
-  "image/heif",
-]);
 
 interface BaseLeadInput {
   customerName: string;
@@ -56,28 +58,6 @@ export interface EstimatorLeadInput extends BaseLeadInput {
 }
 
 export type QuoteLeadInput = ContactLeadInput | EstimatorLeadInput;
-
-/**
- * A photo the browser already uploaded directly to Vercel Blob (see
- * app/api/quotes/upload/route.ts). We store the reference, not the bytes —
- * the file never passes through this function, which is what keeps large
- * uploads from hitting the 4.5 MB serverless body limit.
- */
-export interface QuotePhotoUpload {
-  url: string;
-  pathname?: string;
-  fileName: string;
-  mimeType: string;
-  sizeBytes: number;
-  kind?: QuotePhotoKind;
-}
-
-export class QuotePhotoValidationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "QuotePhotoValidationError";
-  }
-}
 
 function clean(value: string | undefined): string | undefined {
   const trimmed = value?.trim();
@@ -176,52 +156,6 @@ function generateQuoteNumber(): string {
   const today = new Date().toISOString().slice(0, 10).replaceAll("-", "");
   const suffix = Math.random().toString(36).slice(2, 7).toUpperCase();
   return `WWQ-${today}-${suffix}`;
-}
-
-function safeFileName(fileName: string | undefined, index: number): string {
-  const cleaned = fileName
-    ?.trim()
-    .replace(/[^a-zA-Z0-9._-]/g, "-")
-    .replace(/-+/g, "-")
-    .slice(0, 160);
-
-  return cleaned || `photo-${index + 1}`;
-}
-
-function isTrustedBlobUrl(url: string): boolean {
-  try {
-    const { protocol, hostname } = new URL(url);
-    return protocol === "https:" && hostname.endsWith(".blob.vercel-storage.com");
-  } catch {
-    return false;
-  }
-}
-
-export function validateQuotePhotos(photos: QuotePhotoUpload[], { requirePhoto = false } = {}) {
-  if (requirePhoto && photos.length < 1) {
-    throw new QuotePhotoValidationError("At least one wheel photo is required.");
-  }
-
-  if (photos.length > MAX_QUOTE_PHOTOS) {
-    throw new QuotePhotoValidationError(`A maximum of ${MAX_QUOTE_PHOTOS} photos can be uploaded.`);
-  }
-
-  for (const [index, upload] of photos.entries()) {
-    // The bytes are already in Blob, so these checks guard the reference the
-    // client reports rather than the file itself. The URL check keeps a
-    // tampered client from linking an arbitrary external URL to a lead.
-    if (!isTrustedBlobUrl(upload.url)) {
-      throw new QuotePhotoValidationError(`Photo ${index + 1} has an invalid upload reference.`);
-    }
-
-    if (!ALLOWED_QUOTE_PHOTO_TYPES.has(upload.mimeType)) {
-      throw new QuotePhotoValidationError(`Photo ${index + 1} must be a JPG, PNG, WEBP, HEIC, or HEIF image.`);
-    }
-
-    if (upload.sizeBytes > MAX_QUOTE_PHOTO_SIZE_BYTES) {
-      throw new QuotePhotoValidationError(`Photo ${index + 1} must be 8 MB or smaller.`);
-    }
-  }
 }
 
 async function findOrCreateCustomer(input: QuoteLeadInput) {
