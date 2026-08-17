@@ -42,7 +42,7 @@ EMP_NAME = "Fahim Rahman"
 EMP_DESIGNATION = "Operational Manager (CAD)"
 EMP_JOINING = "01 June 2025"
 EMP_STATUS = "Full-Time / Permanent"
-MONTHLY_SALARY = "USD $5,500"
+MONTHLY_SALARY = "CAD $5,500"
 
 
 def build():
