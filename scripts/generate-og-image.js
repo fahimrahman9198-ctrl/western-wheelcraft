@@ -5,17 +5,13 @@
  * Requires: sharp (npm install sharp)
  */
 
-const fs = require('fs');
 const path = require('path');
 
 async function generateOgImage() {
   try {
     const sharp = require('sharp');
 
-    // Brand colors
-    const bgColor = { r: 26, g: 26, b: 26 }; // #1a1a1a (jet)
-    const accentColor = { r: 220, g: 38, b: 38 }; // #dc2626 (red)
-    const textColor = 'white';
+    // Brand colors are baked directly into the SVG below (#1a1a1a / #dc2626).
 
     // Create SVG base
     const svg = `
