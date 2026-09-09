@@ -1,5 +1,4 @@
 import { pgTable, uniqueIndex, uuid, varchar, jsonb, timestamp, index, boolean, foreignKey, integer, text, numeric, date, pgEnum } from "drizzle-orm/pg-core"
-import { sql } from "drizzle-orm"
 
 export const bookingSlot = pgEnum("booking_slot", ['shop', 'island', 'kamloops'])
 export const bookingStatus = pgEnum("booking_status", ['pending', 'confirmed', 'completed', 'cancelled'])

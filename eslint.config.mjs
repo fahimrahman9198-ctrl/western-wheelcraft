@@ -33,6 +33,14 @@ const eslintConfig = defineConfig([
       "@next/next/no-img-element": "off",
     },
   },
+  {
+    // Standalone Node build/maintenance scripts run outside the bundler and are
+    // CommonJS (the package has no "type": "module"), so require() is correct.
+    files: ["scripts/**/*.js"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

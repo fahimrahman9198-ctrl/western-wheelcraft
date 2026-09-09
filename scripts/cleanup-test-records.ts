@@ -16,25 +16,25 @@ async function cleanupRecords() {
     console.log("\n=== Cleaning Test Records ===\n");
 
     // Delete communications first (foreign key dependency)
-    const commResult = await db
+    await db
       .delete(schema.communications)
       .where(eq(schema.communications.customerId, "32c2aed2-0735-41b0-b5a2-ffae0e016bfc"));
     console.log(`Deleted communications`);
 
     // Delete quotes
-    const quoteResult = await db
+    await db
       .delete(schema.quotes)
       .where(eq(schema.quotes.customerId, "32c2aed2-0735-41b0-b5a2-ffae0e016bfc"));
     console.log(`Deleted quotes`);
 
     // Delete bookings
-    const bookingResult = await db
+    await db
       .delete(schema.bookings)
       .where(eq(schema.bookings.customerId, "32c2aed2-0735-41b0-b5a2-ffae0e016bfc"));
     console.log(`Deleted bookings`);
 
     // Delete customer
-    const customerResult = await db
+    await db
       .delete(schema.customers)
       .where(eq(schema.customers.id, "32c2aed2-0735-41b0-b5a2-ffae0e016bfc"));
     console.log(`Deleted customer\n`);
